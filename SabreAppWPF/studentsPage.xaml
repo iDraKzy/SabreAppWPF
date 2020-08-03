@@ -1,0 +1,28 @@
+﻿<Page x:Class="SabreAppWPF.studentsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SabreAppWPF"
+      mc:Ignorable="d" 
+      d:DesignHeight="679" d:DesignWidth="1100"
+      Title="studentsPage"
+      Loaded="Students_Load">
+    <Grid>
+        <Grid Width="Auto" Background="White">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ScrollViewer CanContentScroll="True" IsEnabled="True" Grid.Column="0" Name="sv">
+                <Border BorderThickness="1">
+                    <StackPanel VerticalAlignment="Top" Orientation="Vertical" x:Name="studentListPanel"/>
+                </Border>
+            </ScrollViewer>
+            <Frame Grid.Column="1" NavigationUIVisibility="Hidden" x:Name="_addFrame"/>
+        </Grid>
+    </Grid>
+</Page>

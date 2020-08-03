@@ -1,0 +1,35 @@
+﻿<Window x:Class="SabreAppWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SabreAppWPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="700" Width="1200"
+        Loaded="Main_Load">
+    <Grid ShowGridLines="True">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button Content="Menu Principal" Grid.Column="0" Grid.Row="0" Click="Main_Button_Click"></Button>
+            <Button Content="Etudiants" Grid.Column="0" Grid.Row="1" Click="Students_Button_Click"></Button>
+            <Button Content="Classes" Grid.Column="0" Grid.Row="2"></Button>
+            <Button Content="Plans" Grid.Column="0" Grid.Row="3"></Button>
+        </Grid>
+        <Frame Grid.Column="1" Grid.Row="0" x:Name="_mainFrame" NavigationUIVisibility="Hidden"></Frame>
+    </Grid>
+</Window>
