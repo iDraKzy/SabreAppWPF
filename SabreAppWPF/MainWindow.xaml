@@ -14,6 +14,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="0.25*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Grid.Column="0">
             <Grid.ColumnDefinitions>
@@ -30,6 +31,7 @@
             <Button Content="Classes" Grid.Column="0" Grid.Row="2"></Button>
             <Button Content="Plans" Grid.Column="0" Grid.Row="3"></Button>
         </Grid>
-        <Frame Grid.Column="1" Grid.Row="0" x:Name="_mainFrame" NavigationUIVisibility="Hidden"></Frame>
+        <Frame x:FieldModifier="public" Grid.Column="1" Grid.Row="0" x:Name="_mainFrame" NavigationUIVisibility="Hidden"/>
+        <Frame x:FieldModifier="public" Grid.Column="2" x:Name="_addFrame" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>

@@ -28,6 +28,48 @@ namespace SabreAppWPF
             //this.int32id = int.Parse(id);
         }
 
+        public void AddStudentToUI(int studentId, string name, string classroom, string lastNote, int upvotes, int downvotes)
+        {
+            //Create newStudent
+            student newStudent = new student();
+
+            //Handle texts
+            newStudent.studentName.Content = name;
+            newStudent.studentClassroom.Content = classroom ?? "Classe";
+            newStudent.studentNote.Text = lastNote ?? "Note par défaut";
+
+            //Handle votesText
+            newStudent.studentUpvote.Content = upvotes.ToString();
+            newStudent.studentDownvote.Content = downvotes.ToString();
+
+            //Handle upvoteButton
+            newStudent.upvoteButton.Tag = studentId;
+            newStudent.upvoteButton.Click += (object s, RoutedEventArgs e) =>
+            {
+                int studentId = (int)((Button)s).Tag;
+                int score = int.Parse((string)newStudent.studentUpvote.Content);
+                score++;
+                newStudent.studentUpvote.Content = score.ToString();
+                AddVotesToDb(studentId, true, "Upvote rapide");
+            };
+
+            //Handle downvoteButton
+            newStudent.downvoteButton.Tag = studentId;
+            newStudent.downvoteButton.Click += (s, e) =>
+            {
+                int studentId = (int)((Button)s).Tag;
+                int score = int.Parse((string)newStudent.studentDownvote.Content);
+                score++;
+                newStudent.studentDownvote.Content = score.ToString();
+                AddVotesToDb(studentId, false, "Downvote rapide");
+            };
+
+            newStudent.punishButton.Tag = studentId;
+
+
+            studentListPanel.Children.Add(newStudent);
+        }
+
         private void AddVotesToDb(int studentId, bool vote, string description)
         {
             using SQLiteConnection connection = new SQLiteConnection("Data Source=" + GlobalVariable.path);
@@ -66,12 +108,12 @@ namespace SabreAppWPF
 
             while (rdr.Read())
             {
-                StudentInfo studentInfo = new StudentInfo
+                StudentInfo studentInfo = new StudentInfo()
                 {
                     studentId = rdr.GetInt32(0),
-                    name = rdr.GetString(1),
-                    gender = rdr.GetBoolean(2),
-                    classroomId = rdr.GetInt32(3),
+                    classroomId = rdr.GetInt32(1),
+                    name = rdr.GetString(2),
+                    gender = rdr.GetBoolean(3),
                     board = rdr.GetInt32(4),
                     interrogation = rdr.GetBoolean(5)
                 };
@@ -143,44 +185,7 @@ namespace SabreAppWPF
 
                 NoteInfo lastNote = GetLastNote(notesList);
 
-                //Create newStudent
-                student newStudent = new student();
-
-                //Handle texts
-                newStudent.studentName.Content = studentList[i].name;
-                newStudent.studentClassroom.Content = classroomName ?? "Classe";
-                newStudent.studentNote.Text = lastNote.content ?? "Note par défaut";
-
-                //Handle votesText
-                newStudent.studentUpvote.Content = upvotes.ToString();
-                newStudent.studentDownvote.Content = downvotes.ToString();
-
-                //Handle upvoteButton
-                newStudent.upvoteButton.Tag = studentList[i].studentId;
-                newStudent.upvoteButton.Click += (object s, RoutedEventArgs e) =>
-                {
-                    int studentId = (int)((Button)s).Tag;
-                    int score = int.Parse((string)newStudent.studentUpvote.Content);
-                    score++;
-                    newStudent.studentUpvote.Content = score.ToString();
-                    AddVotesToDb(studentId, true, "Upvote rapide");
-                };
-
-                //Handle downvoteButton
-                newStudent.downvoteButton.Tag = studentList[i].studentId;
-                newStudent.downvoteButton.Click += (s, e) =>
-                {
-                    int studentId = (int)((Button)s).Tag;
-                    int score = int.Parse((string)newStudent.studentDownvote.Content);
-                    score++;
-                    newStudent.studentDownvote.Content = score.ToString();
-                    AddVotesToDb(studentId, false, "Downvote rapide");
-                };
-
-                newStudent.punishButton.Tag = studentList[i].studentId;
-
-
-                studentListPanel.Children.Add(newStudent);
+                AddStudentToUI(studentList[i].studentId, studentList[i].name, classroomName, lastNote.content ?? "Note par défaut", upvotes, downvotes);
             }
         }
     }

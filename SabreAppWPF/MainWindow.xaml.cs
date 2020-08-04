@@ -33,7 +33,7 @@ namespace SabreAppWPF
             using SQLiteCommand cmd = new SQLiteCommand(connection)
             {
                 CommandText = @"CREATE TABLE IF NOT EXISTS
-                                students(studentId INTEGER PRIMARY KEY, name TEXT, gender BOOLEAN, classroomId INTEGER, board INTEGER, interrogation BOOLEAN);
+                                students(studentId INTEGER PRIMARY KEY, classroomId INTEGER, name TEXT, gender BOOLEAN, board INTEGER, interrogation BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
                                 punishments(punishmentId INTEGER PRIMARY KEY, studentId INTEGER,
@@ -76,9 +76,10 @@ namespace SabreAppWPF
             cmd.Prepare();
             cmd.ExecuteNonQuery();
 
-            for (int i = 0; i < 300; i++)
+            for (int i = 0; i < 2; i++)
             {
-                cmd.CommandText = "INSERT INTO students(name, classroomId, board, gender, interrogation) VALUES(@name, @classroomId, @board, @gender, @interrogation)";
+                cmd.CommandText = "INSERT INTO students(classroomId, name, gender, board, interrogation) VALUES(@classroomId, @name, @gender, @board, @interrogation)";
+                cmd.Parameters.AddWithValue("classroomId", 1);
                 if (i % 2 == 0)
                 {
                     cmd.Parameters.AddWithValue("name", "Emeric Clas");
@@ -87,7 +88,6 @@ namespace SabreAppWPF
                 {
                     cmd.Parameters.AddWithValue("name", "Youlan Collard");
                 }
-                cmd.Parameters.AddWithValue("classroomId", 1);
                 cmd.Parameters.AddWithValue("board", 0);
                 cmd.Parameters.AddWithValue("gender", true);
                 cmd.Parameters.AddWithValue("interrogation", false);
@@ -102,17 +102,13 @@ namespace SabreAppWPF
 
         private void Students_Button_Click(object sender, RoutedEventArgs e)
         {
-            _mainFrame.Navigate(AllWindows.sutdents1);
-
+            _mainFrame.Navigate(new studentsPage());
+            _addFrame.Navigate(new AddTemplate("student"));
         }
 
         private void Main_Button_Click(object sender, RoutedEventArgs e)
         {
             //_mainFrame.Navigate(new studentsPage());
-        }
-        public static class AllWindows
-        {
-            public static studentsPage sutdents1 = new studentsPage();
         }
     }
 }
