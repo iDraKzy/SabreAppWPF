@@ -24,6 +24,8 @@ namespace SabreAppWPF
         public MainWindow()
         {
             InitializeComponent();
+            studentsPage students1 = new studentsPage();
+            Application.Current.Properties["studentsPage"] = students1;
         }
 
         private void Main_Load(object sender, RoutedEventArgs e)
@@ -102,7 +104,7 @@ namespace SabreAppWPF
 
         private void Students_Button_Click(object sender, RoutedEventArgs e)
         {
-            _mainFrame.Navigate(new studentsPage());
+            _mainFrame.Navigate(Application.Current.Properties["studentsPage"]);
             _addFrame.Navigate(new AddTemplate("student"));
         }
 

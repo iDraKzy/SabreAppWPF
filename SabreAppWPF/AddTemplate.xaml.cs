@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
+using SabreAppWPF.Students;
 
 namespace SabreAppWPF
 {
@@ -136,14 +137,17 @@ namespace SabreAppWPF
                         cmd.Parameters.AddWithValue("gender", trueGender);
                         cmd.Prepare();
                         int studentId = cmd.ExecuteNonQuery();
+                        //studentsPage studentsPage = (studentsPage)Application.Current.Properties["studentsPage"];
 
-                        foreach (Window window in Application.Current.Windows)
-                        {
-                            if (window.GetType() == typeof(MainWindow))
-                            {
-                                (window as MainWindow)._mainFrame.Navigate(new studentsPage());
-                            }
-                        }
+                        StudentsShared.AddStudentToUI((studentsPage)Application.Current.Properties["studentsPage"], studentId, name, classroomName, "Note par défaut", 0, 0);
+
+                        //foreach (Window window in Application.Current.Windows)
+                        //{
+                        //    if (window.GetType() == typeof(MainWindow))
+                        //    {
+                        //        (window as MainWindow)._mainFrame.Navigate(new studentsPage());
+                        //    }
+                        //}
                     };
                     break;
                 case "punishment":
