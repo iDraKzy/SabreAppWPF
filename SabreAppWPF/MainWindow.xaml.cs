@@ -45,7 +45,7 @@ namespace SabreAppWPF
                                 notes(noteId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, content TEXT);
                                 
                                 CREATE TABLE IF NOT EXISTS
-                                grades(gradeId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER);
+                                grades(gradeId INTEGER PRIMARY KEY, studentId INTEGER, grade FLOAT, coeff INTEGER, creationDate INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
                                 votes(voteId INTEGER PRIMARY KEY, studentId INTEGER, upvotes BOOLEAN, description TEXT, creationDate INTEGER);
