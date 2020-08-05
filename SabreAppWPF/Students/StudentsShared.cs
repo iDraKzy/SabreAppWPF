@@ -62,7 +62,13 @@ namespace SabreAppWPF.Students
             };
 
             newStudent.punishButton.Tag = studentId;
-
+            newStudent.punishButton.Click += (s, e) =>
+            {
+                int studentId = (int)((Button)s).Tag;
+                MainWindow window = GlobalFunction.GetMainWindow();
+                window._addFrame.Navigate(new AddTemplate("punishment", studentId));
+                //window._mainFrame.Navigate(new StudentDetail(studentId));
+            };
 
             page.studentListPanel.Children.Add(newStudent);
         }
