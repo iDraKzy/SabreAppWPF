@@ -7,31 +7,37 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1200"
         Loaded="Main_Load">
-    <Grid ShowGridLines="True">
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="0.25*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+    <Border BorderBrush="Black" BorderThickness="1" Margin="1">
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="0.05*"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Content="Menu Principal" Grid.Column="0" Grid.Row="0" Click="Main_Button_Click" FontFamily="Segoe UI Semibold"></Button>
-            <Button Content="Etudiants" Grid.Column="0" Grid.Row="1" Click="Students_Button_Click" FontFamily="Segoe UI Semibold"></Button>
-            <Button Content="Classes" Grid.Column="0" Grid.Row="2" FontFamily="Segoe UI Semibold"></Button>
-            <Button Content="Plans" Grid.Column="0" Grid.Row="3" FontFamily="Segoe UI Semibold"></Button>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="0.25*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button Content="Menu Principal" Grid.Column="0" Grid.Row="0" Click="Main_Button_Click" FontFamily="Segoe UI Semibold"></Button>
+                <Button Content="Etudiants" Grid.Column="1" Grid.Row="0" Click="Students_Button_Click" FontFamily="Segoe UI Semibold"></Button>
+                <Button Content="Classes" Grid.Column="2" Grid.Row="0" FontFamily="Segoe UI Semibold"></Button>
+                <Button Content="Plans" Grid.Column="3" Grid.Row="0" FontFamily="Segoe UI Semibold"></Button>
+            </Grid>
+            <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+                <Frame x:FieldModifier="public" x:Name="_mainFrame" NavigationUIVisibility="Hidden"/>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+                <Frame x:FieldModifier="public" x:Name="_addFrame" NavigationUIVisibility="Hidden"/>
+            </Border>
         </Grid>
-        <Frame x:FieldModifier="public" Grid.Column="1" Grid.Row="0" x:Name="_mainFrame" NavigationUIVisibility="Hidden"/>
-        <Frame x:FieldModifier="public" Grid.Column="2" x:Name="_addFrame" NavigationUIVisibility="Hidden"/>
-    </Grid>
+    </Border>
 </Window>

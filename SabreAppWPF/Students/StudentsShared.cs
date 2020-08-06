@@ -4,6 +4,7 @@ using System.Text;
 using System.Data.SQLite;
 using System.Windows;
 using System.Windows.Controls;
+using SabreAppWPF.Students.StudentDetails;
 
 namespace SabreAppWPF.Students
 {
@@ -68,6 +69,14 @@ namespace SabreAppWPF.Students
                 MainWindow window = GlobalFunction.GetMainWindow();
                 window._addFrame.Navigate(new AddTemplate("punishment", studentId));
                 //window._mainFrame.Navigate(new StudentDetail(studentId));
+            };
+
+            newStudent.detailButton.Tag = studentId;
+            newStudent.detailButton.Click += (s, e) =>
+            {
+                int studentId = (int)((Button)s).Tag;
+                MainWindow window = GlobalFunction.GetMainWindow();
+                window._mainFrame.Navigate(new StudentDetailsPage(studentId));
             };
 
             page.studentListPanel.Children.Add(newStudent);
