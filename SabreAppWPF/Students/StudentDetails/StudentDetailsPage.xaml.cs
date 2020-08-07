@@ -23,5 +23,10 @@ namespace SabreAppWPF.Students.StudentDetails
             InitializeComponent();
             this.studentId = studentId;
         }
+
+        private void PunishmentButton_Click(object sender, RoutedEventArgs e)
+        {
+            _detailsFrame.Navigate(new PunishmentsDetails(studentId));
+        }
     }
 }

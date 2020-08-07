@@ -39,7 +39,7 @@ namespace SabreAppWPF
 
                                 CREATE TABLE IF NOT EXISTS
                                 punishments(punishmentId INTEGER PRIMARY KEY, studentId INTEGER,
-                                creationDate INTEGER, endDate INTEGER, description TEXT);
+                                creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT);
 
                                 CREATE TABLE IF NOT EXISTS
                                 notes(noteId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, content TEXT);
@@ -76,6 +76,8 @@ namespace SabreAppWPF
             cmd.Parameters.AddWithValue("planId", 1);
             cmd.Parameters.AddWithValue("name", "103");
             cmd.Prepare();
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = $"INSERT INTO punishments(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1000000, 10000022, 0, 'Test5')";
             cmd.ExecuteNonQuery();
 
             for (int i = 0; i < 2; i++)

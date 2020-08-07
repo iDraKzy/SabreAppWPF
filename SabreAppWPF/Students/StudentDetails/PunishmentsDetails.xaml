@@ -1,0 +1,38 @@
+﻿<Page x:Class="SabreAppWPF.Students.StudentDetails.PunishmentsDetails"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SabreAppWPF.Students.StudentDetails"
+        mc:Ignorable="d"
+        d:Height="581" d:Width="915"
+        Title="PunishmentsDetails">
+    <Page.Resources>
+        <Style TargetType="{x:Type DataGridRow}">
+            <Style.Setters>
+                <Setter Property="Background" Value="{Binding StatusColor}"/>
+            </Style.Setters>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="IsEnabled" Value="{Binding ButtonEnabled}"/>
+        </Style>
+    </Page.Resources>
+    <Grid ShowGridLines="True">
+        <DataGrid x:Name="punishmentDataGrid" AutoGenerateColumns="False" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="0.25*"/>
+                <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="1*"/>
+                <DataGridTextColumn Header="Echéance" Binding="{Binding EndDate}" Width="1*"/>
+                <DataGridTextColumn Header="Rendu" Binding="{Binding Returned}" Width="1*"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="4*"/>
+                <DataGridTemplateColumn Header="Récupérer">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Récupérer" Click="Retrieved_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

@@ -260,11 +260,12 @@ namespace SabreAppWPF
                 cmd.CommandText = $"SELECT studentId FROM students WHERE name = '{name}'";
                 long enteredStudentId = (long)cmd.ExecuteScalar();
 
-                cmd.CommandText = @"INSERT INTO punishments(studentId, creationDate, endDate, description)
-                                    VALUES(@studentId, @creationDate, @endDate, @description)";
+                cmd.CommandText = @"INSERT INTO punishments(studentId, creationDate, endDate, retrieveDate, description)
+                                    VALUES(@studentId, @creationDate, @endDate, @retrieveDate, @description)";
                 cmd.Parameters.AddWithValue("studentId", enteredStudentId);
                 cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
                 cmd.Parameters.AddWithValue("endDate", endTimestamp);
+                cmd.Parameters.AddWithValue("retrieveDate", 0);
                 cmd.Parameters.AddWithValue("description", description);
                 cmd.Prepare();
                 cmd.ExecuteNonQuery();
