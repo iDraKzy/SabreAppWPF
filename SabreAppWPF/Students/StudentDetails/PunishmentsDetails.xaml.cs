@@ -12,9 +12,20 @@ namespace SabreAppWPF.Students.StudentDetails
     public partial class PunishmentsDetails : Page
     {
         public List<PunishmentDetails> punishmentsList;
+        public int studentId;
         public PunishmentsDetails(int studentId)
         {
             InitializeComponent();
+            this.studentId = studentId;
+        }
+        /// <summary>
+        /// Populates punishments list and handles the logic for the initialization of the datagrid
+        /// </summary>
+        /// <param name="sender"/>
+        /// <param name="e"/>
+        private void Punishments_Load(object sender, RoutedEventArgs e)
+        {
+            //Get all punishments of this student from the database
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = $"SELECT * FROM punishments WHERE studentId = {studentId}";
 
@@ -23,26 +34,43 @@ namespace SabreAppWPF.Students.StudentDetails
             using SQLiteDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                //EndDate with DateTime format use in multiple automation later on
+                //EndDate and ReturnedDate with DateTime format use in multiple automation later on
                 DateTime endDate = DateTimeOffset.FromUnixTimeSeconds(rdr.GetInt32(3)).LocalDateTime;
+                DateTime returnedDateTime = DateTimeOffset.FromUnixTimeSeconds(rdr.GetInt32(4)).LocalDateTime;
 
-                //color string for row color
-                string color = "Transparent";
+                //All DateTime to timestamp for later automation
+                int currentTimestamp = Convert.ToInt32(new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds());
+                int endTimestamp = Convert.ToInt32(new DateTimeOffset(endDate).ToUnixTimeSeconds());
+                int returnedTimestamp = Convert.ToInt32(new DateTimeOffset(returnedDateTime).ToUnixTimeSeconds());
+
+                //Tempenddate for checking if the date is past
+                DateTime tempEndDate = endDate.AddDays(1);
+                int tempEndTimestamp = Convert.ToInt32(new DateTimeOffset(tempEndDate).ToUnixTimeSeconds());
+
+                //background and foreground color string for row color
+                string backgroundColor = "Transparent";
+                string foregroundColor = "Back";
 
                 //buttonenabled bool
                 bool buttonEnabled = true;
 
                 //Handle Returned Time which is empty by default
                 string returnedTime = "";
-                if (rdr.GetInt32(4) != 0)
+                if (rdr.GetInt32(4) != 0) //Raw int from Returned Date (index 4)
                 {
                     buttonEnabled = false;
-                    DateTime returnedDateTime = DateTimeOffset.FromUnixTimeSeconds(rdr.GetInt32(4)).LocalDateTime;
                     returnedTime = returnedDateTime.ToString("G", GlobalVariable.culture);
                     //Handle row color
-                    int endTimestamp = Convert.ToInt32(new DateTimeOffset(endDate).ToUnixTimeSeconds());
-                    int returnedTimestamp = Convert.ToInt32(new DateTimeOffset(returnedDateTime).ToUnixTimeSeconds());
-                    if (returnedTimestamp > endTimestamp) color = "DarkRed";
+                    if (returnedTimestamp > tempEndTimestamp)
+                    {
+                        backgroundColor = "DarkRed";
+                        foregroundColor = "White";
+                    }
+                }
+                else if (currentTimestamp > tempEndTimestamp)
+                {
+                    backgroundColor = "DarkRed";
+                    foregroundColor = "White";
                 }
 
                 PunishmentDetails punishmentDetails = new PunishmentDetails()
@@ -52,7 +80,8 @@ namespace SabreAppWPF.Students.StudentDetails
                     EndDate = endDate.ToString("d", GlobalVariable.culture),
                     Returned = returnedTime,
                     Description = rdr.GetString(5),
-                    StatusColor = color,
+                    StatusColor = backgroundColor,
+                    ForegroundColor = foregroundColor,
                     ButtonEnabled = buttonEnabled
                 };
                 punishmentsList.Add(punishmentDetails);
@@ -69,7 +98,7 @@ namespace SabreAppWPF.Students.StudentDetails
 
             rowDetails.ButtonEnabled = false;
 
-            int currentTimestamp = Convert.ToInt32(new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds());
+            int currentTimestamp = Convert.ToInt32(new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds());
 
             cmd.CommandText = $"UPDATE punishments SET retrieveDate = @retrieveDate WHERE punishmentId = @id";
             cmd.Parameters.AddWithValue("retrieveDate", currentTimestamp);
@@ -104,6 +133,7 @@ namespace SabreAppWPF.Students.StudentDetails
         public string Returned { get; set; }
         public string Description { get; set; }
         public string StatusColor { get; set; }
+        public string ForegroundColor { get; set; }
         public bool ButtonEnabled { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace SabreAppWPF
     {
         static public string Punishment(string surname, string lastname, DateTime? endDate)
         {
-            int currentTimeStamp = Convert.ToInt32(new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds());
+            int currentTimeStamp = Convert.ToInt32(new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds());
             if (surname == null) return "Le champ prénom est obligatoire";
             if (lastname == null) return "Le champ nom est obligatoire";
             if (endDate == null) { return "Le champ Echéance est obligatoire"; }

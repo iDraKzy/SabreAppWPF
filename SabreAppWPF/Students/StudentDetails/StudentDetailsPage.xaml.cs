@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.SQLite;
 
 namespace SabreAppWPF.Students.StudentDetails
 {
@@ -22,11 +23,30 @@ namespace SabreAppWPF.Students.StudentDetails
         {
             InitializeComponent();
             this.studentId = studentId;
+
+            string studentName = "";
+            int classroomId = 1;
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = $"SELECT name, classroomId FROM students WHERE studentId = {studentId}";
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                studentName = rdr.GetString(0);
+                classroomId = rdr.GetInt32(1);
+            }
+            rdr.Close();
+            cmd.CommandText = $"SELECT name FROM classrooms WHERE classroomId = {classroomId}";
+            string classroomName = (string)cmd.ExecuteScalar();
+
+            name.Content = studentName;
+            classroom.Content = classroomName;
         }
 
         private void PunishmentButton_Click(object sender, RoutedEventArgs e)
         {
             _detailsFrame.Navigate(new PunishmentsDetails(studentId));
+            MainWindow window = GlobalFunction.GetMainWindow();
+            window._addFrame.Navigate(new AddTemplate("punishment", studentId));
         }
     }
 }

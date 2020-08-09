@@ -21,7 +21,7 @@ namespace SabreAppWPF.Students
             cmd.Parameters.AddWithValue("studentId", studentId);
             cmd.Parameters.AddWithValue("upvotes", vote);
             cmd.Parameters.AddWithValue("description", description);
-            cmd.Parameters.AddWithValue("creationDate", Convert.ToInt32(new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds()));
+            cmd.Parameters.AddWithValue("creationDate", Convert.ToInt32(new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()));
             cmd.Prepare();
             cmd.ExecuteNonQuery();
         }

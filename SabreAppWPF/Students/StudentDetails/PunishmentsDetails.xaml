@@ -6,11 +6,13 @@
         xmlns:local="clr-namespace:SabreAppWPF.Students.StudentDetails"
         mc:Ignorable="d"
         d:Height="581" d:Width="915"
-        Title="PunishmentsDetails">
+        Title="PunishmentsDetails"
+        Loaded="Punishments_Load">
     <Page.Resources>
         <Style TargetType="{x:Type DataGridRow}">
             <Style.Setters>
                 <Setter Property="Background" Value="{Binding StatusColor}"/>
+                <Setter Property="Foreground" Value="{Binding ForegroundColor}"/>
             </Style.Setters>
         </Style>
         <Style TargetType="Button">

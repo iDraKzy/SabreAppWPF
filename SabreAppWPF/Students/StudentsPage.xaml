@@ -11,7 +11,9 @@
     <Grid Background="White">
         <ScrollViewer CanContentScroll="True" IsEnabled="True" Grid.Column="0" Name="sv">
             <Border BorderThickness="1">
+
                 <StackPanel VerticalAlignment="Top" Orientation="Vertical" x:Name="studentListPanel"/>
+
             </Border>
         </ScrollViewer>
     </Grid>

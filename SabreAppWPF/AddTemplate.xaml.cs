@@ -238,7 +238,7 @@ namespace SabreAppWPF
                 using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
 
                 //Extract data from the from
-                int currentTimestamp = Convert.ToInt32(new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds());
+                int currentTimestamp = Convert.ToInt32(new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds());
                 string surname = surnameTextBox.Text;
                 string lastname = lastnameTextBox.Text;
                 DateTime? endDate = endDatePicker.SelectedDate;
