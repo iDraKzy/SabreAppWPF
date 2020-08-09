@@ -37,5 +37,13 @@ namespace SabreAppWPF
 
             return "valid";
         }
+
+        static public string Note(string lastname, string surname, string content)
+        {
+            if (lastname == null) return "Le champ nom est obligatoire";
+            if (surname == null) return "Le champ prénom est obligatoire";
+            if (content == null) return "Le champ contenu est obligatoire";
+            return "valid";
+        }
     }
 }

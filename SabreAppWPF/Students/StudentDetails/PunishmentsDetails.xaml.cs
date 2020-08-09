@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Data.SQLite;
+using System.Collections.ObjectModel;
 
 namespace SabreAppWPF.Students.StudentDetails
 {
@@ -11,12 +12,13 @@ namespace SabreAppWPF.Students.StudentDetails
     /// </summary>
     public partial class PunishmentsDetails : Page
     {
-        public List<PunishmentDetails> punishmentsList;
+        public static ObservableCollection<PunishmentDetails> punishmentsList = new ObservableCollection<PunishmentDetails>();
         public int studentId;
         public PunishmentsDetails(int studentId)
         {
             InitializeComponent();
             this.studentId = studentId;
+            punishmentsList = new ObservableCollection<PunishmentDetails>();
         }
         /// <summary>
         /// Populates punishments list and handles the logic for the initialization of the datagrid
@@ -25,11 +27,10 @@ namespace SabreAppWPF.Students.StudentDetails
         /// <param name="e"/>
         private void Punishments_Load(object sender, RoutedEventArgs e)
         {
+            punishmentDataGrid.ItemsSource = punishmentsList;
             //Get all punishments of this student from the database
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = $"SELECT * FROM punishments WHERE studentId = {studentId}";
-
-            punishmentsList = new List<PunishmentDetails>();
 
             using SQLiteDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
@@ -88,7 +89,6 @@ namespace SabreAppWPF.Students.StudentDetails
             }
             rdr.Close();
 
-            punishmentDataGrid.ItemsSource = punishmentsList;
         }
 
         private void Retrieved_Click(object sender, RoutedEventArgs e)

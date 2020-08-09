@@ -22,7 +22,6 @@
     <Grid ShowGridLines="True">
         <DataGrid x:Name="punishmentDataGrid" AutoGenerateColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="0.25*"/>
                 <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="1*"/>
                 <DataGridTextColumn Header="Echéance" Binding="{Binding EndDate}" Width="1*"/>
                 <DataGridTextColumn Header="Rendu" Binding="{Binding Returned}" Width="1*"/>

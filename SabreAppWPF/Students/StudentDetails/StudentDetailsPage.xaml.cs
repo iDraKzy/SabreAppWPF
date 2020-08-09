@@ -24,24 +24,28 @@ namespace SabreAppWPF.Students.StudentDetails
         {
             InitializeComponent();
             this.studentId = studentId;
+        }
 
+        private void StudentDetailsPage_Load(object sender, RoutedEventArgs e)
+        {
             string studentName = "";
-            int classroomId = 1;
+            int classroomId = 0;
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = $"SELECT name, classroomId FROM students WHERE studentId = {studentId}";
+            cmd.CommandText = $"SELECT lastname, surname, classroomId FROM students WHERE studentId = {studentId}";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                studentName = rdr.GetString(0);
-                classroomId = rdr.GetInt32(1);
+                studentName = rdr.GetString(1) + " " + rdr.GetString(0);
+                classroomId = rdr.GetInt32(2);
             }
             rdr.Close();
             cmd.CommandText = $"SELECT name FROM classrooms WHERE classroomId = {classroomId}";
             string classroomName = (string)cmd.ExecuteScalar();
 
             name.Content = studentName;
-            classroom.Content = classroomName;
-            _detailsFrame.Navigate(new PunishmentsDetails(studentId));
+            classroom.Content = classroomName ?? "Classe N/A";
+            _detailsFrame.Navigate(new NotesDetails(studentId));
+            window._addFrame.Navigate(new AddTemplate("note", studentId));
         }
 
         private void PunishmentButton_Click(object sender, RoutedEventArgs e)
@@ -52,7 +56,7 @@ namespace SabreAppWPF.Students.StudentDetails
 
         private void NotesButton_Click(object sender, RoutedEventArgs e)
         {
-
+            _detailsFrame.Navigate(new NotesDetails(studentId));
             window._addFrame.Navigate(new AddTemplate("note", studentId));
         }
     }

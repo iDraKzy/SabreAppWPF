@@ -15,6 +15,7 @@ using System.Data.SQLite;
 using SabreAppWPF.Students;
 using System.Xml;
 using System.Diagnostics.Contracts;
+using SabreAppWPF.Students.StudentDetails;
 
 namespace SabreAppWPF
 {
@@ -107,6 +108,12 @@ namespace SabreAppWPF
             return tempDatePicker;
         }
 
+        private void ReturnError(string content)
+        {
+            error.Foreground = new SolidColorBrush(Colors.Red);
+            error.Content = content;
+        }
+
         /// <summary>
         /// Call the right initalizing function for the Add page
         /// </summary>
@@ -140,7 +147,7 @@ namespace SabreAppWPF
                 case "grades":
                     //InitializeGradeCreation(studentId);
                     break;
-                case "notes":
+                case "note":
                     InitializeNoteCreation(studentId);
                     break;
 
@@ -203,8 +210,7 @@ namespace SabreAppWPF
                 string validation = DataValidation.Student(surname, lastname);
                 if (validation != "valid")
                 {
-                    error.Foreground = new SolidColorBrush(Colors.Red);
-                    error.Content = validation;
+                    ReturnError(validation);
                     return;
                 }
 
@@ -256,7 +262,8 @@ namespace SabreAppWPF
                 using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
 
                 //Extract data from the from
-                int currentTimestamp = Convert.ToInt32(new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds());
+                DateTime currentDate = DateTime.Now;
+                int currentTimestamp = Convert.ToInt32(new DateTimeOffset(currentDate).ToUnixTimeSeconds());
                 string surname = surnameTextBox.Text;
                 string lastname = lastnameTextBox.Text;
                 DateTime? endDate = endDatePicker.SelectedDate;
@@ -266,8 +273,7 @@ namespace SabreAppWPF
                 string validation = DataValidation.Punishment(surname, lastname, endDate);
                 if (validation != "valid")
                 {
-                    error.Foreground = new SolidColorBrush(Colors.Red);
-                    error.Content = validation;
+                    ReturnError(validation);
                     return;
                 }
 
@@ -279,8 +285,7 @@ namespace SabreAppWPF
                 long? enteredStudentId = (long)cmd.ExecuteScalar();
                 if (enteredStudentId == null)
                 {
-                    error.Foreground = new SolidColorBrush(Colors.Red);
-                    error.Content = "Cet étudiant n'existe pas, vérifié l'orthographe";
+                    ReturnError("Etudiant(e) introuvable");
                     return;
                 }
 
@@ -293,21 +298,36 @@ namespace SabreAppWPF
                 cmd.Parameters.AddWithValue("description", description);
                 cmd.Prepare();
                 cmd.ExecuteNonQuery();
+                cmd.CommandText = "SELECT last_insert_rowid()";
+                long punishmentId = (long)cmd.ExecuteScalar();
                 error.Foreground = new SolidColorBrush(Colors.Green);
                 error.Content = "Punition ajoutée avec succès!";
+
+                PunishmentDetails punishmentDetail = new PunishmentDetails()
+                {
+                    ID = (int)punishmentId,
+                    Date = currentDate.ToString("g", GlobalVariable.culture),
+                    EndDate = endDate?.ToString("d", GlobalVariable.culture),
+                    Description = description,
+                    StatusColor = "Transparent",
+                    ForegroundColor = "Black",
+                    ButtonEnabled = true
+                };
+                PunishmentsDetails.punishmentsList.Add(punishmentDetail);
 
             };
         }
 
         private void InitializeNoteCreation(int studentId)
         {
+            title.Content = "Ajouter une remarque";
             string[] nameArray = StudentsShared.GetStudentNameFromID(studentId);
 
             TextBox surnameTextBox = CreateTextBox(1);
             surnameTextBox.Text = nameArray[1];
 
             TextBox lastnameTextBox = CreateTextBox(2);
-            lastnameTextBox.Text = nameArray[2];
+            lastnameTextBox.Text = nameArray[0];
 
             TextBox noteTextBox = CreateTextBox(3);
 
@@ -316,12 +336,58 @@ namespace SabreAppWPF
 
             confirmButton.Click += (s, e) =>
             {
+                using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
 
+                DateTime currentDate = DateTime.Now;
+                int currentTimestamp = Convert.ToInt32(new DateTimeOffset(currentDate).ToUnixTimeSeconds());
+                string surname = surnameTextBox.Text;
+                string lastname = lastnameTextBox.Text;
+                string content = noteTextBox.Text;
+                string validation = DataValidation.Note(surname, lastname, content);
+                if (validation != "valid")
+                {
+                    ReturnError(validation);
+                    return;
+                }
+
+                cmd.CommandText = $"SELECT studentId FROM students WHERE lastname = @lastname AND surname = @surname";
+                cmd.Parameters.AddWithValue("lastname", lastname);
+                cmd.Parameters.AddWithValue("surname", surname);
+                cmd.Prepare();
+                long? selectedStudentId = (long?)cmd.ExecuteScalar();
+                if (selectedStudentId == null)
+                {
+                    ReturnError("Etudiant(e) introuvable");
+                    return;
+                }
+
+                cmd.CommandText = "INSERT INTO notes(studentId, creationDate, content) VALUES(@studentId, @creationDate, @content)";
+                cmd.Parameters.AddWithValue("studentId", selectedStudentId);
+                cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
+                cmd.Parameters.AddWithValue("content", content);
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+
+                error.Foreground = new SolidColorBrush(Colors.Green);
+                error.Content = "Remarque ajoutée avec succès";
+
+                cmd.CommandText = "SELECT last_insert_rowid()";
+                long noteId = (long)cmd.ExecuteScalar();
+
+                NoteDetails noteDetail = new NoteDetails()
+                {
+                    ID = (int)noteId,
+                    CreationDate = currentDate.ToString("g", GlobalVariable.culture),
+                    Content = content
+                };
+
+                NotesDetails.noteCollection.Add(noteDetail);
             };
         }
 
         private void InitializeRoomCreation()
         {
+            title.Content = "Ajouter une salle";
             TextBox nameTextBox = CreateTextBox(1);
 
             TextBox rowTextBox = CreateTextBox(2);

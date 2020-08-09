@@ -56,7 +56,7 @@ namespace SabreAppWPF
                     studentId = rdr.GetInt32(0),
                     classroomId = rdr.GetInt32(1),
                     lastname = rdr.GetString(2),
-                    surname = rdr.GetString(3)
+                    surname = rdr.GetString(3),
                     gender = rdr.GetBoolean(4),
                     board = rdr.GetInt32(5),
                     interrogation = rdr.GetBoolean(6)
@@ -99,9 +99,9 @@ namespace SabreAppWPF
                 int upvotes = 0;
                 int downvotes = 0;
 
-                foreach(bool element in votesList)
+                foreach(bool vote in votesList)
                 {
-                    if(element)
+                    if(vote)
                     {
                         upvotes++;
                     }

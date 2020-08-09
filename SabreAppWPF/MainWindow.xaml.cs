@@ -34,7 +34,6 @@ namespace SabreAppWPF
             connection.Open();
             using SQLiteCommand cmd = new SQLiteCommand(connection)
             {
-                //TODO: refactor name students into surname and lastname cause sabre's students are retarded and can't have normal name
                 CommandText = @"CREATE TABLE IF NOT EXISTS
                                 students(studentId INTEGER PRIMARY KEY, classroomId INTEGER, lastname TEXT, surname TEXT, gender BOOLEAN, board INTEGER, interrogation BOOLEAN);
 
@@ -83,7 +82,7 @@ namespace SabreAppWPF
 
             for (int i = 0; i < 2; i++)
             {
-                cmd.CommandText = "INSERT INTO students(classroomId, lastname, surname gender, board, interrogation) VALUES(@classroomId, @lastname, @surname, @gender, @board, @interrogation)";
+                cmd.CommandText = "INSERT INTO students(classroomId, lastname, surname, gender, board, interrogation) VALUES(@classroomId, @lastname, @surname, @gender, @board, @interrogation)";
                 cmd.Parameters.AddWithValue("classroomId", 1);
                 if (i % 2 == 0)
                 {

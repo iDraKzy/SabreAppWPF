@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:SabreAppWPF.Students.StudentDetails"
         mc:Ignorable="d"
         d:DesignHeight="661" d:DesignWidth="950"
-        Title="StudentDetailsPage">
+        Title="StudentDetailsPage"
+        Loaded="StudentDetailsPage_Load">
     <Grid Background="White" ShowGridLines="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="35"/>
