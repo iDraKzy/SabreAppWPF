@@ -55,10 +55,11 @@ namespace SabreAppWPF
                 {
                     studentId = rdr.GetInt32(0),
                     classroomId = rdr.GetInt32(1),
-                    name = rdr.GetString(2),
-                    gender = rdr.GetBoolean(3),
-                    board = rdr.GetInt32(4),
-                    interrogation = rdr.GetBoolean(5)
+                    lastname = rdr.GetString(2),
+                    surname = rdr.GetString(3)
+                    gender = rdr.GetBoolean(4),
+                    board = rdr.GetInt32(5),
+                    interrogation = rdr.GetBoolean(6)
                 };
                 studentList.Add(studentInfo);
             }
@@ -128,7 +129,9 @@ namespace SabreAppWPF
 
                 NoteInfo lastNote = GetLastNote(notesList);
 
-                StudentsShared.AddStudentToUI(this, studentList[i].studentId, studentList[i].name, classroomName, lastNote.content ?? "Note par défaut", upvotes, downvotes);
+                string name = studentList[i].surname + " " + studentList[i].lastname;
+
+                StudentsShared.AddStudentToUI(this, studentList[i].studentId, name, classroomName, lastNote.content ?? "Note par défaut", upvotes, downvotes);
             }
         }
     }

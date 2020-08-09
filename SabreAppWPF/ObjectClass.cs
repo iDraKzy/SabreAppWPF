@@ -3,7 +3,7 @@
     public class StudentInfo
     {
         public int studentId, classroomId, board;
-        public string name;
+        public string lastname, surname;
         public bool gender, interrogation;
     }
 

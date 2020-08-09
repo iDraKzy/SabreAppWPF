@@ -35,7 +35,7 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button Content="Remarques" Grid.Row="0" FontFamily="Segoe UI Semibold" Margin="0">
+                <Button Content="Remarques" Click="NotesButton_Click" Grid.Row="0" FontFamily="Segoe UI Semibold" Margin="0">
                     <Button.LayoutTransform>
                         <RotateTransform Angle="+90"/>
                     </Button.LayoutTransform>

@@ -81,5 +81,24 @@ namespace SabreAppWPF.Students
 
             page.studentListPanel.Children.Add(newStudent);
         }
+        /// <summary>
+        /// Returns the name and lastname of a student based on his id
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <returns>string[lastname, surname]</returns>
+        public static string[] GetStudentNameFromID(int studentId)
+        {
+            string[] nameArray = new string[2];
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = $"SELECT lastname, surname FROM students WHERE studentId = {studentId}";
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                nameArray[0] = rdr.GetString(0);
+                nameArray[1] = rdr.GetString(1);
+            }
+
+            return nameArray;
+        }
     }
 }

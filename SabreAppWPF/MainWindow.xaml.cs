@@ -34,8 +34,9 @@ namespace SabreAppWPF
             connection.Open();
             using SQLiteCommand cmd = new SQLiteCommand(connection)
             {
+                //TODO: refactor name students into surname and lastname cause sabre's students are retarded and can't have normal name
                 CommandText = @"CREATE TABLE IF NOT EXISTS
-                                students(studentId INTEGER PRIMARY KEY, classroomId INTEGER, name TEXT, gender BOOLEAN, board INTEGER, interrogation BOOLEAN);
+                                students(studentId INTEGER PRIMARY KEY, classroomId INTEGER, lastname TEXT, surname TEXT, gender BOOLEAN, board INTEGER, interrogation BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
                                 punishments(punishmentId INTEGER PRIMARY KEY, studentId INTEGER,
@@ -51,7 +52,7 @@ namespace SabreAppWPF
                                 votes(voteId INTEGER PRIMARY KEY, studentId INTEGER, upvotes BOOLEAN, description TEXT, creationDate INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
-                                rooms(roomId INTEGER PRIMARY KEY, rows INTEGER, columns INTEGER);
+                                rooms(roomId INTEGER PRIMARY KEY, name TEXT, rows INTEGER, columns INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
                                 classrooms(classroomId INTEGER PRIMARY KEY, planId INTEGER, name TEXT);
@@ -82,15 +83,17 @@ namespace SabreAppWPF
 
             for (int i = 0; i < 2; i++)
             {
-                cmd.CommandText = "INSERT INTO students(classroomId, name, gender, board, interrogation) VALUES(@classroomId, @name, @gender, @board, @interrogation)";
+                cmd.CommandText = "INSERT INTO students(classroomId, lastname, surname gender, board, interrogation) VALUES(@classroomId, @lastname, @surname, @gender, @board, @interrogation)";
                 cmd.Parameters.AddWithValue("classroomId", 1);
                 if (i % 2 == 0)
                 {
-                    cmd.Parameters.AddWithValue("name", "Emeric Clas");
+                    cmd.Parameters.AddWithValue("lastname", "Clas");
+                    cmd.Parameters.AddWithValue("surname", "Emeric");
 
                 } else
                 {
-                    cmd.Parameters.AddWithValue("name", "Youlan Collard");
+                    cmd.Parameters.AddWithValue("lastname", "Collard");
+                    cmd.Parameters.AddWithValue("surname", "Youlan");
                 }
                 cmd.Parameters.AddWithValue("board", 0);
                 cmd.Parameters.AddWithValue("gender", true);

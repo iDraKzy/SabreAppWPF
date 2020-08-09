@@ -19,6 +19,7 @@ namespace SabreAppWPF.Students.StudentDetails
     public partial class StudentDetailsPage : Page
     {
         public int studentId;
+        public MainWindow window = GlobalFunction.GetMainWindow();
         public StudentDetailsPage(int studentId)
         {
             InitializeComponent();
@@ -40,13 +41,19 @@ namespace SabreAppWPF.Students.StudentDetails
 
             name.Content = studentName;
             classroom.Content = classroomName;
+            _detailsFrame.Navigate(new PunishmentsDetails(studentId));
         }
 
         private void PunishmentButton_Click(object sender, RoutedEventArgs e)
         {
             _detailsFrame.Navigate(new PunishmentsDetails(studentId));
-            MainWindow window = GlobalFunction.GetMainWindow();
             window._addFrame.Navigate(new AddTemplate("punishment", studentId));
+        }
+
+        private void NotesButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            window._addFrame.Navigate(new AddTemplate("note", studentId));
         }
     }
 }

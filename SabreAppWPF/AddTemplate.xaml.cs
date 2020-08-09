@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Data.SQLite;
 using SabreAppWPF.Students;
 using System.Xml;
+using System.Diagnostics.Contracts;
 
 namespace SabreAppWPF
 {
@@ -32,14 +33,12 @@ namespace SabreAppWPF
         }
 
         /// <summary>
-        /// Add labels recursively based on the number of rows provided along with
-        /// the array of string
+        /// Add labels recursively based on the length of the array of string
         /// </summary>
-        /// <param name="number"></param>
         /// <param name="prompts"></param>
-        private void AddPromptsLabel(int number, string[] prompts)
+        private void AddPromptsLabel(string[] prompts)
         {
-            for (int i = 0; i < number; i++)
+            for (int i = 0; i < prompts.Length; i++)
             {
                 Label tempLabel = new Label
                 {
@@ -127,17 +126,24 @@ namespace SabreAppWPF
                     //InitializeClassroomCreation();
                     break;
                 case "room":
-                    //InitializeRoomCreation();
+                    InitializeRoomCreation();
                     break;
                 case "upvote":
-                    //InitializeVotesCreation(true);
+                    //InitializeVoteCreation(true);
                     break;
                 case "downvote":
-                    //InitializeVotesCreation(false);
+                    //InitializeVoteCreation(false);
                     break;
                 case "homework":
                     //InitializeHomeworkCreation();
                     break;
+                case "grades":
+                    //InitializeGradeCreation(studentId);
+                    break;
+                case "notes":
+                    InitializeNoteCreation(studentId);
+                    break;
+
             }
         }
         /// <summary>
@@ -176,33 +182,48 @@ namespace SabreAppWPF
 
             //Add Labels
             string[] promptsArray = new string[] { "Prénom", "Nom", "Sexe", "Classe" };
-            AddPromptsLabel(4, promptsArray);
+            AddPromptsLabel(promptsArray);
 
             //Confirmation Button
             confirmButton.Click += (s, e) =>
             {
                 //Log to db
-                using SQLiteConnection connection = new SQLiteConnection("Data Source=" + GlobalVariable.path);
-                connection.Open();
-                using SQLiteCommand cmd = new SQLiteCommand(connection);
+                using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
 
                 //Retrieve forms value
                 string surname = surnameTextBox.Text;
                 string lastname = lastNameTextBox.Text;
                 string name = surname + " " + lastname;
                 int gender = genderComboBox.SelectedIndex;
-                bool trueGender = true;
-                trueGender = gender == 0;
+                bool trueGender = gender == 0;
                 int classroomId = classroomComboBox.SelectedIndex + 1;
                 string classroomName = (string)classroomComboBox.SelectedValue;
-                // TODO: Validate data
+
+                //Validate the data
+                string validation = DataValidation.Student(surname, lastname);
+                if (validation != "valid")
+                {
+                    error.Foreground = new SolidColorBrush(Colors.Red);
+                    error.Content = validation;
+                    return;
+                }
+
                 //Insert to db
-                cmd.CommandText = "INSERT INTO students(classroomId, name, gender, board, interrogation) VALUES(@classroomId, @name, @gender, 1, false)";
+                cmd.CommandText = "INSERT INTO students(classroomId, lastname, surname, gender, board, interrogation) VALUES(@classroomId, @lastname, @surname, @gender, 1, false)";
                 cmd.Parameters.AddWithValue("classroomId", classroomId);
-                cmd.Parameters.AddWithValue("name", name);
+                cmd.Parameters.AddWithValue("lastname", lastname);
+                cmd.Parameters.AddWithValue("surname", surname);
                 cmd.Parameters.AddWithValue("gender", trueGender);
                 cmd.Prepare();
                 int studentId = cmd.ExecuteNonQuery();
+                error.Foreground = new SolidColorBrush(Colors.Green);
+                if (trueGender)
+                {
+                    error.Content = "Etudiant ajouté avec succès";
+                } else
+                {
+                    error.Content = "Etudiante ajoutée avec succès";
+                }
                 studentsPage studentsPage = (studentsPage)Application.Current.Properties["studentsPage"];
 
                 StudentsShared.AddStudentToUI(studentsPage, studentId, name, classroomName, "Note par défaut", 0, 0);
@@ -214,24 +235,21 @@ namespace SabreAppWPF
         /// <param name="studentId">The id of the student for autofilling purposes</param>
         private void InitializePunishmentCreation(int studentId)
         {
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             title.Content = "Ajouter une punition";
-            cmd.CommandText = $"SELECT name FROM students WHERE studentId = {studentId}";
-            string name = (string)cmd.ExecuteScalar();
-            string[] nameArray = name.Split(" ");
+            string[] nameArray = StudentsShared.GetStudentNameFromID(studentId);
 
             TextBox surnameTextBox = CreateTextBox(1);
-            surnameTextBox.Text = nameArray[0];
+            surnameTextBox.Text = nameArray[1];
 
             TextBox lastnameTextBox = CreateTextBox(2);
-            lastnameTextBox.Text = nameArray[1];
+            lastnameTextBox.Text = nameArray[0];
 
             DatePicker endDatePicker = CreateDatePicker(3);
 
             TextBox descriptionTextBox = CreateTextBox(4);
             descriptionTextBox.TextWrapping = TextWrapping.Wrap;
             string[] promptsArray = new string[] { "Prénom", "Nom", "Echéance", "Description" };
-            AddPromptsLabel(4, promptsArray);
+            AddPromptsLabel(promptsArray);
 
             confirmButton.Click += (s, e) =>
             {
@@ -244,7 +262,7 @@ namespace SabreAppWPF
                 DateTime? endDate = endDatePicker.SelectedDate;
                 string description = descriptionTextBox.Text;
 
-                //Validate the date
+                //Validate the data
                 string validation = DataValidation.Punishment(surname, lastname, endDate);
                 if (validation != "valid")
                 {
@@ -257,8 +275,14 @@ namespace SabreAppWPF
                 string name = surname + " " + lastname;
                 long endTimestamp = Convert.ToInt32(new DateTimeOffset((DateTime)endDatePicker.SelectedDate).ToUnixTimeSeconds());
 
-                cmd.CommandText = $"SELECT studentId FROM students WHERE name = '{name}'";
-                long enteredStudentId = (long)cmd.ExecuteScalar();
+                cmd.CommandText = $"SELECT studentId FROM students WHERE lastname = '{lastname}' AND surname = '{surname}'";
+                long? enteredStudentId = (long)cmd.ExecuteScalar();
+                if (enteredStudentId == null)
+                {
+                    error.Foreground = new SolidColorBrush(Colors.Red);
+                    error.Content = "Cet étudiant n'existe pas, vérifié l'orthographe";
+                    return;
+                }
 
                 cmd.CommandText = @"INSERT INTO punishments(studentId, creationDate, endDate, retrieveDate, description)
                                     VALUES(@studentId, @creationDate, @endDate, @retrieveDate, @description)";
@@ -270,8 +294,71 @@ namespace SabreAppWPF
                 cmd.Prepare();
                 cmd.ExecuteNonQuery();
                 error.Foreground = new SolidColorBrush(Colors.Green);
-                error.Content = "Punition ajouté avec succès!";
+                error.Content = "Punition ajoutée avec succès!";
 
+            };
+        }
+
+        private void InitializeNoteCreation(int studentId)
+        {
+            string[] nameArray = StudentsShared.GetStudentNameFromID(studentId);
+
+            TextBox surnameTextBox = CreateTextBox(1);
+            surnameTextBox.Text = nameArray[1];
+
+            TextBox lastnameTextBox = CreateTextBox(2);
+            lastnameTextBox.Text = nameArray[2];
+
+            TextBox noteTextBox = CreateTextBox(3);
+
+            string[] promptsLabelArray = new string[] { "Prénom", "Nom", "Remarque" };
+            AddPromptsLabel(promptsLabelArray);
+
+            confirmButton.Click += (s, e) =>
+            {
+
+            };
+        }
+
+        private void InitializeRoomCreation()
+        {
+            TextBox nameTextBox = CreateTextBox(1);
+
+            TextBox rowTextBox = CreateTextBox(2);
+
+            TextBox columnTextBox = CreateTextBox(3);
+            string[] promptsArray = new string[] { "Nom", "Nombre de lignes", "Nombre de colonnes" };
+            AddPromptsLabel(promptsArray);
+
+            confirmButton.Click += (s, e) =>
+            {
+                using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+
+                string name = nameTextBox.Text;
+
+                string rows = rowTextBox.Text;
+
+                string columns = columnTextBox.Text;
+
+                string validation = DataValidation.Room(name, rows, columns);
+                if (validation != "valid")
+                {
+                    error.Foreground = new SolidColorBrush(Colors.Red);
+                    error.Content = validation;
+                    return;
+                }
+                int rowNumbers = int.Parse(rows);
+
+                int columnNumbers = int.Parse(columns);
+
+                cmd.CommandText = "INSERT INTO rooms(name, rows, columns) VALUES(@name, @rows, @columns";
+                cmd.Parameters.AddWithValue("name", name);
+                cmd.Parameters.AddWithValue("rows", rowNumbers);
+                cmd.Parameters.AddWithValue("columns", columnNumbers);
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+                error.Foreground = new SolidColorBrush(Colors.Green);
+                error.Content = $"Salle {name} ajoutée avec succès";
             };
         }
     }
