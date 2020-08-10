@@ -27,9 +27,72 @@ namespace SabreAppWPF
         {
             InitializeComponent();
             //this.int32id = int.Parse(id);
+            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + GlobalVariable.path);
+            connection.Open();
+            using SQLiteCommand cmd = new SQLiteCommand(connection);
+            List<StudentInfo> studentList = ReadStudents(cmd);
+
+
+
+            for (int i = 0; i < studentList.Count; i++)
+            {
+                //Get classroom name
+                cmd.CommandText = $"SELECT name FROM classrooms WHERE classroomId = {studentList[i].classroomId}";
+                string classroomName = (string)cmd.ExecuteScalar();
+
+                //Get all votes from the student
+                cmd.CommandText = $"SELECT * FROM votes WHERE studentId = {studentList[i].studentId}";
+                using SQLiteDataReader rdrVotes = cmd.ExecuteReader();
+
+                List<bool> votesList = new List<bool>();
+
+                while (rdrVotes.Read())
+                {
+                    votesList.Add(rdrVotes.GetBoolean(2));
+                }
+                rdrVotes.Close();
+
+                //Count the downvotes and upvotes
+                int upvotes = 0;
+                int downvotes = 0;
+
+                foreach (bool vote in votesList)
+                {
+                    if (vote)
+                    {
+                        upvotes++;
+                    }
+                    else
+                    {
+                        downvotes++;
+                    }
+                }
+
+                cmd.CommandText = $"SELECT * FROM notes WHERE studentId = {studentList[i].studentId}";
+                using SQLiteDataReader rdrNotes = cmd.ExecuteReader();
+
+                List<NoteInfo> notesList = new List<NoteInfo>();
+
+                while (rdrNotes.Read())
+                {
+                    NoteInfo noteInfo = new NoteInfo
+                    {
+                        noteId = rdrNotes.GetInt32(0),
+                        creationDate = rdrNotes.GetInt32(2),
+                        content = rdrNotes.GetString(3)
+                    };
+                    notesList.Add(noteInfo);
+                }
+
+                NoteInfo lastNote = GetLastNote(notesList);
+
+                string name = studentList[i].surname + " " + studentList[i].lastname;
+
+                StudentsShared.AddStudentToUI(this, studentList[i].studentId, name, classroomName, lastNote.content ?? "Note par défaut", upvotes, downvotes);
+            }
         }
 
-        private NoteInfo GetLastNote(List<NoteInfo> notesList)
+        public static NoteInfo GetLastNote(List<NoteInfo> notesList)
         {
             NoteInfo lastNote = new NoteInfo();
             foreach (NoteInfo note in notesList)
@@ -67,72 +130,9 @@ namespace SabreAppWPF
             rdr.Close();
             return studentList;
         }
-
+        //TODO: Rework all students presentation to be used with an itemscontrol alongside a collection
         private void Students_Load(object sender, RoutedEventArgs e)
         {
-            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + GlobalVariable.path);
-            connection.Open();
-            using SQLiteCommand cmd = new SQLiteCommand(connection);
-            List<StudentInfo> studentList = ReadStudents(cmd);
-
-
-
-            for (int i = 0; i < studentList.Count; i++)
-            {
-                //Get classroom name
-                cmd.CommandText = $"SELECT name FROM classrooms WHERE classroomId = {studentList[i].classroomId}";
-                string classroomName = (string)cmd.ExecuteScalar();
-
-                //Get all votes from the student
-                cmd.CommandText = $"SELECT * FROM votes WHERE studentId = {studentList[i].studentId}";
-                using SQLiteDataReader rdrVotes = cmd.ExecuteReader();
-
-                List<bool> votesList = new List<bool>();
-
-                while (rdrVotes.Read())
-                {
-                    votesList.Add(rdrVotes.GetBoolean(2));
-                }
-                rdrVotes.Close();
-
-                //Count the downvotes and upvotes
-                int upvotes = 0;
-                int downvotes = 0;
-
-                foreach(bool vote in votesList)
-                {
-                    if(vote)
-                    {
-                        upvotes++;
-                    }
-                    else
-                    {
-                        downvotes++;
-                    }
-                }
-
-                cmd.CommandText = $"SELECT * FROM notes WHERE studentId = {studentList[i].studentId}";
-                using SQLiteDataReader rdrNotes = cmd.ExecuteReader();
-
-                List<NoteInfo> notesList = new List<NoteInfo>();
-
-                while (rdrNotes.Read())
-                {
-                    NoteInfo noteInfo = new NoteInfo
-                    {
-                        noteId = rdrNotes.GetInt32(0),
-                        creationDate = rdrNotes.GetInt32(2),
-                        content = rdrNotes.GetString(3)
-                    };
-                    notesList.Add(noteInfo);
-                }
-
-                NoteInfo lastNote = GetLastNote(notesList);
-
-                string name = studentList[i].surname + " " + studentList[i].lastname;
-
-                StudentsShared.AddStudentToUI(this, studentList[i].studentId, name, classroomName, lastNote.content ?? "Note par défaut", upvotes, downvotes);
-            }
         }
     }
 }

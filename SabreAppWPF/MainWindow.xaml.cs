@@ -38,6 +38,9 @@ namespace SabreAppWPF
                                 students(studentId INTEGER PRIMARY KEY, classroomId INTEGER, lastname TEXT, surname TEXT, gender BOOLEAN, board INTEGER, interrogation BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
+                                homeworks(homeworkId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT);
+
+                                CREATE TABLE IF NOT EXISTS
                                 punishments(punishmentId INTEGER PRIMARY KEY, studentId INTEGER,
                                 creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT);
 
@@ -102,6 +105,12 @@ namespace SabreAppWPF
             }
 
             cmd.CommandText = "INSERT INTO notes(studentId, creationDate, content) VALUES(1, 1596385214, 'Bon élève mais bruyant')";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385214, 1597000000, 0, 'Test 1')";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385214, 1595000000, 0, 'Test 2')";
             cmd.ExecuteNonQuery();
             connection.Close();
         }

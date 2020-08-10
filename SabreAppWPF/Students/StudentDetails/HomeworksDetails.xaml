@@ -1,0 +1,40 @@
+﻿<Page x:Class="SabreAppWPF.Students.StudentDetails.HomeworksDetails"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SabreAppWPF.Students.StudentDetails"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="HomeworksDetails"
+      Loaded="HomeworksDetails_Load">
+
+    <Page.Resources>
+        <Style TargetType="{x:Type DataGridRow}">
+            <Style.Setters>
+                <Setter Property="Background" Value="{Binding StatusColor}"/>
+                <Setter Property="Foreground" Value="{Binding ForegroundColor}"/>
+            </Style.Setters>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="IsEnabled" Value="{Binding ButtonEnabled}"/>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <DataGrid x:Name="homeworkDataGrid" AutoGenerateColumns="False" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Binding="{Binding CreationDate}"/>
+                <DataGridTextColumn Header="Echéance" Binding="{Binding EndDate}"/>
+                <DataGridTextColumn Header="Rendu" Binding="{Binding RetrieveDate}"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="2*"/>
+                <DataGridTemplateColumn Header="Récupérer">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Récupérer" Click="RetrieveButton_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

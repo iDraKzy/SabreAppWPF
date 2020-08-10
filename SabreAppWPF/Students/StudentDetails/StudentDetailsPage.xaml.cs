@@ -59,5 +59,10 @@ namespace SabreAppWPF.Students.StudentDetails
             _detailsFrame.Navigate(new NotesDetails(studentId));
             window._addFrame.Navigate(new AddTemplate("note", studentId));
         }
+
+        private void HomeworkButton_Click(object sender, RoutedEventArgs e)
+        {
+            _detailsFrame.Navigate(new HomeworksDetails(studentId));
+        }
     }
 }

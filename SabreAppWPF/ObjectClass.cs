@@ -19,4 +19,10 @@
         public int noteId, studentId, creationDate;
         public string content;
     }
+
+    public class HomeworkInfo
+    {
+        public int homeworkId, studentId, creationDate, endDate, retrieveDate;
+        public string description;
+    }
 }

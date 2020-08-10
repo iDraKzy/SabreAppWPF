@@ -5,11 +5,43 @@ using System.Data.SQLite;
 using System.Windows;
 using System.Windows.Controls;
 using SabreAppWPF.Students.StudentDetails;
+using System.Windows.Media;
 
 namespace SabreAppWPF.Students
 {
     public static class StudentsShared
     {
+        private static HomeworkInfo GetLastHomework(List<HomeworkInfo> homeworksList)
+        {
+            HomeworkInfo lastHomework = new HomeworkInfo();
+            foreach (HomeworkInfo homework in homeworksList)
+            {
+                if (lastHomework.creationDate < homework.creationDate)
+                {
+                    lastHomework = homework;
+                }
+            }
+            return lastHomework;
+        }
+
+        private static void SwitchHomeworkStatus(student newStudent, HomeworkInfo lastHomework, string wantedStatus)
+        {
+            switch(wantedStatus)
+            {
+                case "✓":
+                    newStudent.lastHomeworkStatus.Content = "✓";
+                    newStudent.lastHomeworkStatus.Foreground = new SolidColorBrush(Colors.Green);
+                    newStudent.lastHomeworkStatus.Margin = new Thickness(5, 0, 0, 0);
+                    newStudent.lastHomeworkStatus.FontWeight = FontWeights.Bold;
+                    break;
+                case "❌":
+                    newStudent.lastHomeworkStatus.Content = "❌";
+                    newStudent.lastHomeworkStatus.Foreground = new SolidColorBrush(Colors.Red);
+                    newStudent.lastHomeworkStatus.Margin = new Thickness(0);
+                    newStudent.lastHomeworkStatus.FontWeight = FontWeights.Normal;
+                    break;
+            }
+        }
         private static void AddVotesToDb(int studentId, bool vote, string description)
         {
             using SQLiteConnection connection = new SQLiteConnection("Data Source=" + GlobalVariable.path);
@@ -28,6 +60,28 @@ namespace SabreAppWPF.Students
 
         public static void AddStudentToUI(studentsPage page, int studentId, string name, string classroom, string lastNote, int upvotes, int downvotes)
         {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = $"SELECT * FROM homeworks WHERE studentId = {studentId}";
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+            List<HomeworkInfo> homeworksList = new List<HomeworkInfo>();
+
+            while (rdr.Read())
+            {
+                HomeworkInfo homeworkInfo = new HomeworkInfo()
+                {
+                    homeworkId = rdr.GetInt32(0),
+                    studentId = rdr.GetInt32(1),
+                    creationDate = rdr.GetInt32(2),
+                    endDate = rdr.GetInt32(3),
+                    retrieveDate = rdr.GetInt32(4),
+                    description = rdr.GetString(5)
+                };
+                homeworksList.Add(homeworkInfo);
+            }
+
+            HomeworkInfo lastHomework = GetLastHomework(homeworksList);
+
             //Create newStudent
             student newStudent = new student();
 
@@ -35,6 +89,16 @@ namespace SabreAppWPF.Students
             newStudent.studentName.Content = name;
             newStudent.studentClassroom.Content = classroom ?? "Classe";
             newStudent.studentNote.Text = lastNote ?? "Note par défaut";
+
+            //Handle lasthomework
+            if (lastHomework.retrieveDate != 0 || lastHomework.homeworkId == 0)
+            {
+                SwitchHomeworkStatus(newStudent, lastHomework, "✓");
+                newStudent.lastHomeworkButton.IsEnabled = false;
+            } else
+            {
+                SwitchHomeworkStatus(newStudent, lastHomework, "❌");
+            }
 
             //Handle votesText
             newStudent.studentUpvote.Content = upvotes.ToString();
@@ -77,6 +141,17 @@ namespace SabreAppWPF.Students
                 int studentId = (int)((Button)s).Tag;
                 MainWindow window = GlobalFunction.GetMainWindow();
                 window._mainFrame.Navigate(new StudentDetailsPage(studentId));
+            };
+
+            newStudent.lastHomeworkButton.Tag = lastHomework.homeworkId;
+            newStudent.lastHomeworkButton.Click += (s, e) =>
+            {
+                using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+                int currentTimestamp = (int)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+                int lastHomeworkId = (int)((Button)s).Tag;
+                cmd.CommandText = $"UPDATE homeworks SET retrieveDate = {currentTimestamp} WHERE homeworkId = {lastHomeworkId}";
+                cmd.ExecuteNonQuery();
+                //SwitchHomeworkStatus(newStudent, lastHomework, "✓");
             };
 
             page.studentListPanel.Children.Add(newStudent);

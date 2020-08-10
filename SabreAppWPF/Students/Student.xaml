@@ -10,6 +10,7 @@
         <Grid Background="White" Height="80">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition/>
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="0.5*"/>
             <ColumnDefinition Width="0.9*"/>
@@ -30,13 +31,18 @@
                 <Label x:FieldModifier="public" x:Name="studentName" Content="John Doe" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="3,0,0,0" FontFamily="Segoe UI Semibold" FontSize="16"/>
                 <Label x:FieldModifier="public" x:Name="studentClassroom" Content="103" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="3,0,0,0" FontStyle="Oblique" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
             </Grid>
-        <TextBox BorderBrush="Transparent" x:FieldModifier="public" x:Name="studentNote" Grid.Row="0" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="60" TextWrapping="WrapWithOverflow" IsReadOnly="True" MaxLines="4" FontFamily="Segoe UI Semibold" FontSize="14">
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Label x:FieldModifier="public" x:Name="lastHomeworkStatus" Content="❌" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="20" Foreground="Red" FontWeight="Bold"/>
+                <Button x:FieldModifier="public" x:Name="lastHomeworkButton" Grid.Column="1" Content="Récup Devoir" Margin="0,27,0,27"/>
+                
+            </StackPanel>
+            <TextBox BorderBrush="Transparent" x:FieldModifier="public" x:Name="studentNote" Grid.Row="0" Grid.Column="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="60" TextWrapping="WrapWithOverflow" IsReadOnly="True" MaxLines="4" FontFamily="Segoe UI Semibold" FontSize="14">
             Note par défautNote par défautNote par défautNote par défautNote par défautNote par défautNote par défautNote par défautNote par défaut
         </TextBox>
-        <Label x:FieldModifier="public" x:Name="studentAverage" Content="17.5/20" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"/>
-        <Button x:FieldModifier="public" x:Name="punishButton" Content="Punir" Grid.Row="0" Grid.Column="3" Margin="20,27,20,27"/>
-        <Button x:FieldModifier="public" x:Name="detailButton" Content="Détails" Grid.Row="0" Grid.Column="4" Margin="20,27,20,27"/>
-        <Grid Grid.Row="0" Grid.Column="5">
+        <Label x:FieldModifier="public" x:Name="studentAverage" Content="17.5/20" Grid.Row="0" Grid.Column="3" VerticalAlignment="Center"/>
+        <Button x:FieldModifier="public" x:Name="punishButton" Content="Punir" Grid.Row="0" Grid.Column="4" Margin="20,27,20,27"/>
+        <Button x:FieldModifier="public" x:Name="detailButton" Content="Détails" Grid.Row="0" Grid.Column="5" Margin="20,27,20,27"/>
+        <Grid Grid.Row="0" Grid.Column="6">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="1.3*"/>

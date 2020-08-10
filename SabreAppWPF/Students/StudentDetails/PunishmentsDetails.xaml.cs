@@ -40,13 +40,13 @@ namespace SabreAppWPF.Students.StudentDetails
                 DateTime returnedDateTime = DateTimeOffset.FromUnixTimeSeconds(rdr.GetInt32(4)).LocalDateTime;
 
                 //All DateTime to timestamp for later automation
-                int currentTimestamp = Convert.ToInt32(new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds());
-                int endTimestamp = Convert.ToInt32(new DateTimeOffset(endDate).ToUnixTimeSeconds());
-                int returnedTimestamp = Convert.ToInt32(new DateTimeOffset(returnedDateTime).ToUnixTimeSeconds());
+                int currentTimestamp = (int)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+                int endTimestamp = (int)new DateTimeOffset(endDate).ToUnixTimeSeconds();
+                int returnedTimestamp = (int)new DateTimeOffset(returnedDateTime).ToUnixTimeSeconds();
 
                 //Tempenddate for checking if the date is past
                 DateTime tempEndDate = endDate.AddDays(1);
-                int tempEndTimestamp = Convert.ToInt32(new DateTimeOffset(tempEndDate).ToUnixTimeSeconds());
+                int tempEndTimestamp = (int)new DateTimeOffset(tempEndDate).ToUnixTimeSeconds();
 
                 //background and foreground color string for row color
                 string backgroundColor = "Transparent";
@@ -114,10 +114,6 @@ namespace SabreAppWPF.Students.StudentDetails
             tempEndDate = tempEndDate.AddDays(1);
             int endTimestamp = Convert.ToInt32(new DateTimeOffset(tempEndDate).ToUnixTimeSeconds());
             int retrieveTimestamp = Convert.ToInt32(new DateTimeOffset(DateTime.Parse(rowDetails.Returned)).ToUnixTimeSeconds());
-            if (retrieveTimestamp > endTimestamp)
-            {
-                rowDetails.StatusColor = "DarkRed";
-            }
 
             punishmentDataGrid.ItemsSource = null;
             punishmentDataGrid.ItemsSource = punishmentsList;
