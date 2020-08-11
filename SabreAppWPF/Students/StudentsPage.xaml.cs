@@ -14,6 +14,10 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using SabreAppWPF.Students;
+using System.Collections.ObjectModel;
+using SabreAppWPF.Students.StudentDetails;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace SabreAppWPF
 {
@@ -22,75 +26,62 @@ namespace SabreAppWPF
     /// </summary>
     public partial class studentsPage : Page
     {
+        public static ObservableCollection<StudentDisplay> studentsCollection = new ObservableCollection<StudentDisplay>();
         //private readonly int int32id; 
         public studentsPage()
         {
             InitializeComponent();
-            //this.int32id = int.Parse(id);
-            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + GlobalVariable.path);
-            connection.Open();
-            using SQLiteCommand cmd = new SQLiteCommand(connection);
-            List<StudentInfo> studentList = ReadStudents(cmd);
-
-
-
-            for (int i = 0; i < studentList.Count; i++)
-            {
-                //Get classroom name
-                cmd.CommandText = $"SELECT name FROM classrooms WHERE classroomId = {studentList[i].classroomId}";
-                string classroomName = (string)cmd.ExecuteScalar();
-
-                //Get all votes from the student
-                cmd.CommandText = $"SELECT * FROM votes WHERE studentId = {studentList[i].studentId}";
-                using SQLiteDataReader rdrVotes = cmd.ExecuteReader();
-
-                List<bool> votesList = new List<bool>();
-
-                while (rdrVotes.Read())
-                {
-                    votesList.Add(rdrVotes.GetBoolean(2));
-                }
-                rdrVotes.Close();
-
-                //Count the downvotes and upvotes
-                int upvotes = 0;
-                int downvotes = 0;
-
-                foreach (bool vote in votesList)
-                {
-                    if (vote)
-                    {
-                        upvotes++;
-                    }
-                    else
-                    {
-                        downvotes++;
-                    }
-                }
-
-                cmd.CommandText = $"SELECT * FROM notes WHERE studentId = {studentList[i].studentId}";
-                using SQLiteDataReader rdrNotes = cmd.ExecuteReader();
-
-                List<NoteInfo> notesList = new List<NoteInfo>();
-
-                while (rdrNotes.Read())
-                {
-                    NoteInfo noteInfo = new NoteInfo
-                    {
-                        noteId = rdrNotes.GetInt32(0),
-                        creationDate = rdrNotes.GetInt32(2),
-                        content = rdrNotes.GetString(3)
-                    };
-                    notesList.Add(noteInfo);
-                }
-
-                NoteInfo lastNote = GetLastNote(notesList);
-
-                string name = studentList[i].surname + " " + studentList[i].lastname;
-
-                StudentsShared.AddStudentToUI(this, studentList[i].studentId, name, classroomName, lastNote.content ?? "Note par défaut", upvotes, downvotes);
-            }
+            studentsCollection = new ObservableCollection<StudentDisplay>();
         }
+        /// <summary>
+        /// Get all votes of the specified student of the given type (upvote = true, downvote = false)
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <param name="type">type of votes (upvote = true, downvote = false)</param>
+        /// <returns></returns>
+        public static List<VotesInfo> GetAllVotes(int studentId, bool type)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = $"SELECT * FROM votes WHERE studentId = {studentId} AND upvotes = {type}";
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            List<VotesInfo> votesList = new List<VotesInfo>();
+
+            while (rdr.Read())
+            {
+                VotesInfo voteInfo = new VotesInfo()
+                {
+                    voteId = rdr.GetInt32(0),
+                    upvotes = rdr.GetBoolean(2),
+                    description = rdr.GetString(3),
+                    creationData = rdr.GetInt32(4)
+                };
+                votesList.Add(voteInfo);
+            }
+            rdr.Close();
+            return votesList;
+        }
+
+        public static List<NoteInfo> GetAllNotes(int studentId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = $"SELECT * FROM notes WHERE studentId = {studentId}";
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            List<NoteInfo> notesList = new List<NoteInfo>();
+
+            while (rdr.Read())
+            {
+                NoteInfo noteInfo = new NoteInfo()
+                {
+                    noteId = rdr.GetInt32(0),
+                    creationDate = rdr.GetInt32(2),
+                    content = rdr.GetString(3)
+                };
+                notesList.Add(noteInfo);
+            }
+            rdr.Close();
+            return notesList;
+        }
+
 
         public static NoteInfo GetLastNote(List<NoteInfo> notesList)
         {
@@ -105,34 +96,253 @@ namespace SabreAppWPF
             return lastNote;
         }
 
-        private List<StudentInfo> ReadStudents(SQLiteCommand cmd)
+        private static List<HomeworkInfo> GetAllHomeworks(int studentId)
         {
-            cmd.CommandText = "SELECT * FROM students";
-            List<StudentInfo> studentList = new List<StudentInfo>();
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = $"SELECT * FROM homeworks WHERE studentId = {studentId}";
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            List<HomeworkInfo> homeworksList = new List<HomeworkInfo>();
 
+            while (rdr.Read())
+            {
+                HomeworkInfo homeworkInfo = new HomeworkInfo()
+                {
+                    homeworkId = rdr.GetInt32(0),
+                    creationDate = rdr.GetInt32(2),
+                    endDate = rdr.GetInt32(3),
+                    retrieveDate = rdr.GetInt32(4),
+                    description = rdr.GetString(5)
+                };
+                homeworksList.Add(homeworkInfo);
+            }
+            rdr.Close();
+            return homeworksList;
+        }
+        private static HomeworkInfo GetLastHomework(List<HomeworkInfo> homeworksList)
+        {
+            HomeworkInfo lastHomework = new HomeworkInfo();
+            foreach (HomeworkInfo homework in homeworksList)
+            {
+                if (lastHomework.creationDate < homework.creationDate)
+                {
+                    lastHomework = homework;
+                }
+            }
+            return lastHomework;
+        }
+
+        private StudentDisplay GetCurrentStudent(object s)
+        {
+            return (StudentDisplay)((FrameworkElement)s).DataContext;
+        }
+
+        //TODO: Rework all students presentation to be used with an itemscontrol alongside a collection
+        private void Students_Load(object sender, RoutedEventArgs e)
+        {
+            studentList.ItemsSource = studentsCollection;
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT * FROM students";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
 
             while (rdr.Read())
             {
-                StudentInfo studentInfo = new StudentInfo()
-                {
-                    studentId = rdr.GetInt32(0),
-                    classroomId = rdr.GetInt32(1),
-                    lastname = rdr.GetString(2),
-                    surname = rdr.GetString(3),
-                    gender = rdr.GetBoolean(4),
-                    board = rdr.GetInt32(5),
-                    interrogation = rdr.GetBoolean(6)
-                };
-                studentList.Add(studentInfo);
-            }
+                using SQLiteCommand cmdLoop = GlobalFunction.OpenDbConnection();
+                int studentId = rdr.GetInt32(1);
+                //Handle classroom name
+                cmdLoop.CommandText = $"SELECT name FROM classrooms WHERE classroomId = {studentId}";
+                string classroomName = (string)cmdLoop.ExecuteScalar();
 
-            rdr.Close();
-            return studentList;
+                //Handle homework
+                List<HomeworkInfo> homeworkList = GetAllHomeworks(studentId);
+                HomeworkInfo lastHomework = GetLastHomework(homeworkList);
+
+                bool lastHomeworkButtonEnabled = false;
+                string lastHomeworkStatus = GlobalVariable.specialCharacter["CheckMark"];
+                string lastHomeworkColor = "Green";
+                if (lastHomework.retrieveDate == 0)
+                {
+                    lastHomeworkButtonEnabled = true;
+                    lastHomeworkStatus = GlobalVariable.specialCharacter["Cross"];
+                    lastHomeworkColor = "Red";
+                }
+
+                //Handle note
+                List<NoteInfo> notesList = GetAllNotes(studentId);
+                NoteInfo lastNotes = GetLastNote(notesList);
+
+                //Handle votes
+                List<VotesInfo> upvotesList = GetAllVotes(studentId, true);
+                List<VotesInfo> downvotesList = GetAllVotes(studentId, false);
+
+                
+
+                StudentDisplay studentDisplay = new StudentDisplay()
+                {
+                    ID = studentId,
+                    Name = rdr.GetString(3) + " " + rdr.GetString(2),
+                    ClassroomName = classroomName,
+                    HomeworkButtonEnabled = lastHomeworkButtonEnabled,
+                    LastHomeworkStatusText = lastHomeworkStatus,
+                    LastHomeworkStatusColor = lastHomeworkColor,
+                    LastHomeWorkId = lastHomework.homeworkId,
+                    Note = lastNotes.content,
+                    Average = "17.5/20",
+                    UpvotesCount = upvotesList.Count.ToString(),
+                    DownvotesCount = downvotesList.Count.ToString()
+                };
+                studentsCollection.Add(studentDisplay);
+            }
         }
-        //TODO: Rework all students presentation to be used with an itemscontrol alongside a collection
-        private void Students_Load(object sender, RoutedEventArgs e)
+
+        private void RetrieveLastHomeworkButton_Click(object sender, RoutedEventArgs e)
         {
+            StudentDisplay currentStudent = (StudentDisplay)((FrameworkElement)sender).DataContext;
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "UPDATE homeworks SET retrieveDate = @retrieveDate WHERE homeworkId = @id";
+            cmd.Parameters.AddWithValue("id", currentStudent.LastHomeWorkId);
+
+            int currentTimestamp = (int)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+            cmd.Parameters.AddWithValue("retrieveDate", currentTimestamp);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+
+            currentStudent.LastHomeworkStatusColor = "Green";
+            currentStudent.LastHomeworkStatusText = GlobalVariable.specialCharacter["CheckMark"];
+            currentStudent.HomeworkButtonEnabled = false;
+        }
+
+        private void PunishButton_Click(object sender, RoutedEventArgs e)
+        {
+            StudentDisplay currentStudent = GetCurrentStudent(sender);
+            MainWindow window = GlobalFunction.GetMainWindow();
+            window._addFrame.Navigate(new AddTemplate("punishment", currentStudent.ID));
+        }
+        private void DetailsButton_Click(object sender, RoutedEventArgs e)
+        {
+            StudentDisplay currentStudent = GetCurrentStudent(sender);
+            MainWindow window = GlobalFunction.GetMainWindow();
+            window._mainFrame.Navigate(new StudentDetailsPage(currentStudent.ID));
+
+        }
+
+        private void UpvotesButton_Click(object sender, RoutedEventArgs e)
+        {
+            StudentDisplay currentStudent = GetCurrentStudent(sender);
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "INSERT INTO votes(studentId, upvotes, description, creationDate) VALUES(@studentId, true, 'Upvote rapide', @creationDate)";
+            cmd.Parameters.AddWithValue("studentId", currentStudent.ID);
+
+            int currentTimestamp = (int)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+            cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+
+            int currentUpvoteCount = int.Parse(currentStudent.UpvotesCount);
+            currentUpvoteCount++;
+            currentStudent.UpvotesCount = currentUpvoteCount.ToString();
+        }
+
+        private void DownvotesButton_Click(object sender, RoutedEventArgs e)
+        {
+            StudentDisplay currentStudent = GetCurrentStudent(sender);
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "INSERT INTO votes(studentId, upvotes, description, creationDate) VALUES(@studentId, false, 'Downvote rapide', @creationDate)";
+            cmd.Parameters.AddWithValue("studentId", currentStudent.ID);
+
+            int currentTimestamp = (int)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+            cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+
+            int currentDownvoteCount = int.Parse(currentStudent.DownvotesCount);
+            currentDownvoteCount++;
+            currentStudent.DownvotesCount = currentDownvoteCount.ToString();
+        }
+    }
+
+    public class StudentDisplay : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private bool homeWorkButtonEnabled;
+        private string lastHomeWorkStatusText;
+        private string lastHomeworkStatusColor;
+        private string note;
+        private string average;
+        private string upvotesCount;
+        private string downvotesCount;
+
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string ClassroomName { get; set; }
+        public bool HomeworkButtonEnabled
+        {
+            get { return homeWorkButtonEnabled; }
+            set 
+            {
+                homeWorkButtonEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+        public string LastHomeworkStatusText 
+        { 
+            get { return lastHomeWorkStatusText; }
+            set 
+            {
+                lastHomeWorkStatusText = value;
+                OnPropertyChanged();
+            }
+        }
+        public string LastHomeworkStatusColor 
+        {
+            get { return lastHomeworkStatusColor; } 
+            set
+            {
+                lastHomeworkStatusColor = value;
+                OnPropertyChanged();
+            }
+        }
+        public int LastHomeWorkId { get; set; }
+        public string Note
+        { 
+            get { return note; } 
+            set
+            {
+                note = value;
+                OnPropertyChanged();
+            }
+        }
+        public string Average
+        { 
+            get { return average; }
+            set
+            {
+                average = value;
+                OnPropertyChanged();
+            }
+        }
+        public string UpvotesCount 
+        {
+            get { return upvotesCount; }
+            set
+            {
+                upvotesCount = value;
+                OnPropertyChanged();
+            } 
+        }
+        public string DownvotesCount
+        {
+            get { return downvotesCount; } 
+            set
+            {
+                downvotesCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

@@ -17,6 +17,12 @@ namespace SabreAppWPF
         public static readonly string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Sabre.db");
 
         public static readonly CultureInfo culture = new CultureInfo("fr-FR");
+
+        public static readonly Dictionary<string, string> specialCharacter = new Dictionary<string, string>()
+        {
+            {"CheckMark", "✓"},
+            {"Cross", "❌" }
+        };
     }
     /// <summary>
     /// Interaction logic for App.xaml
