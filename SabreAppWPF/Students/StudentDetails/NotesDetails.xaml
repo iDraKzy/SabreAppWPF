@@ -10,7 +10,7 @@
       Loaded="NotesDetails_Load">
 
     <Grid>
-        <DataGrid x:Name="noteDataGrid" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataGrid x:Name="noteDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date" Binding="{Binding CreationDate}" Width="1*"/>
                 <DataGridTextColumn Header="Contenu" Binding="{Binding Content}" Width="5*"/>

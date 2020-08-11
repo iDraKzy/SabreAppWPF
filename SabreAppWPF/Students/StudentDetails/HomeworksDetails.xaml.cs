@@ -13,6 +13,8 @@ using System.Windows.Shapes;
 using System.Data.SQLite;
 using System.Net.NetworkInformation;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace SabreAppWPF.Students.StudentDetails
 {
@@ -110,19 +112,60 @@ namespace SabreAppWPF.Students.StudentDetails
             cmd.ExecuteNonQuery();
 
             rowDetails.RetrieveDate = currentDateTime.ToString("g", GlobalVariable.culture);
-            homeworkDataGrid.ItemsSource = null;
-            homeworkDataGrid.ItemsSource = homeworkDetailsCollection;
         }
     }
-    public class HomeworkDetails
+    public class HomeworkDetails : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private string retrieveDate;
+        private string statusColor;
+        private string foregroundColor;
+        private bool buttonEnabled;
         public int ID { get; set; }
         public string CreationDate { get; set; }
         public string EndDate { get; set; }
-        public string RetrieveDate { get; set; }
+        public string RetrieveDate 
+        { 
+            get { return retrieveDate; }
+            set
+            {
+                retrieveDate = value;
+                OnPropertyChanged();
+            }
+        }
         public string Description { get; set; }
-        public string StatusColor { get; set; }
-        public string ForegroundColor { get; set; }
-        public bool ButtonEnabled { get; set; }
+        public string StatusColor 
+        {
+            get { return statusColor; }
+            set
+            {
+                statusColor = value;
+                OnPropertyChanged();
+            }
+        }
+        public string ForegroundColor
+        { 
+            get { return foregroundColor; } 
+            set
+            {
+                foregroundColor = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool ButtonEnabled 
+        { 
+            get { return buttonEnabled; }
+            set
+            {
+                buttonEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
 }

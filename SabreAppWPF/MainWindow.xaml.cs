@@ -107,12 +107,14 @@ namespace SabreAppWPF
             cmd.CommandText = "INSERT INTO notes(studentId, creationDate, content) VALUES(1, 1596385214, 'Bon élève mais bruyant')";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385214, 1597000000, 0, 'Test 1')";
+            cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385213, 1597000000, 0, 'Test 2')";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385214, 1595000000, 0, 'Test 2')";
+            cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385216, 1595000000, 0, 'Test 1')";
             cmd.ExecuteNonQuery();
             connection.Close();
+
+            //cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385214, ";
         }
 
         private void Students_Button_Click(object sender, RoutedEventArgs e)

@@ -20,7 +20,7 @@
         </Style>
     </Page.Resources>
     <Grid ShowGridLines="True">
-        <DataGrid x:Name="punishmentDataGrid" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataGrid x:Name="punishmentDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="1*"/>
                 <DataGridTextColumn Header="Echéance" Binding="{Binding EndDate}" Width="1*"/>

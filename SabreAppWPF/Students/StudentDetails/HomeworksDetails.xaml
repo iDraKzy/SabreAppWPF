@@ -21,7 +21,7 @@
         </Style>
     </Page.Resources>
     <Grid>
-        <DataGrid x:Name="homeworkDataGrid" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataGrid x:Name="homeworkDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date" Binding="{Binding CreationDate}"/>
                 <DataGridTextColumn Header="Echéance" Binding="{Binding EndDate}"/>

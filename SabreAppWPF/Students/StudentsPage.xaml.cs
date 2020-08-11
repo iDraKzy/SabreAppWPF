@@ -60,7 +60,11 @@ namespace SabreAppWPF
             rdr.Close();
             return votesList;
         }
-
+        /// <summary>
+        /// Get all the notes from a given student
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <returns></returns>
         public static List<NoteInfo> GetAllNotes(int studentId)
         {
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
@@ -82,7 +86,11 @@ namespace SabreAppWPF
             return notesList;
         }
 
-
+        /// <summary>
+        /// Get the latest created note from a given list
+        /// </summary>
+        /// <param name="notesList"></param>
+        /// <returns></returns>
         public static NoteInfo GetLastNote(List<NoteInfo> notesList)
         {
             NoteInfo lastNote = new NoteInfo();
@@ -95,14 +103,17 @@ namespace SabreAppWPF
             }
             return lastNote;
         }
-
+        /// <summary>
+        /// Get all homeworks from a specific studentId
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <returns></returns>
         private static List<HomeworkInfo> GetAllHomeworks(int studentId)
         {
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = $"SELECT * FROM homeworks WHERE studentId = {studentId}";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
             List<HomeworkInfo> homeworksList = new List<HomeworkInfo>();
-
             while (rdr.Read())
             {
                 HomeworkInfo homeworkInfo = new HomeworkInfo()
@@ -118,6 +129,11 @@ namespace SabreAppWPF
             rdr.Close();
             return homeworksList;
         }
+        /// <summary>
+        /// Get the last created homework from a given list
+        /// </summary>
+        /// <param name="homeworksList"></param>
+        /// <returns></returns>
         private static HomeworkInfo GetLastHomework(List<HomeworkInfo> homeworksList)
         {
             HomeworkInfo lastHomework = new HomeworkInfo();
@@ -131,12 +147,20 @@ namespace SabreAppWPF
             return lastHomework;
         }
 
+        /// <summary>
+        /// Get the current datacontext of a button (effectively returning the StudentDisplay of this student)
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
         private StudentDisplay GetCurrentStudent(object s)
         {
             return (StudentDisplay)((FrameworkElement)s).DataContext;
         }
-
-        //TODO: Rework all students presentation to be used with an itemscontrol alongside a collection
+        /// <summary>
+        /// On load function adding recursively all students to the studentCollection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Students_Load(object sender, RoutedEventArgs e)
         {
             studentList.ItemsSource = studentsCollection;
@@ -147,7 +171,7 @@ namespace SabreAppWPF
             while (rdr.Read())
             {
                 using SQLiteCommand cmdLoop = GlobalFunction.OpenDbConnection();
-                int studentId = rdr.GetInt32(1);
+                int studentId = rdr.GetInt32(0);
                 //Handle classroom name
                 cmdLoop.CommandText = $"SELECT name FROM classrooms WHERE classroomId = {studentId}";
                 string classroomName = (string)cmdLoop.ExecuteScalar();
@@ -185,7 +209,7 @@ namespace SabreAppWPF
                     LastHomeworkStatusText = lastHomeworkStatus,
                     LastHomeworkStatusColor = lastHomeworkColor,
                     LastHomeWorkId = lastHomework.homeworkId,
-                    Note = lastNotes.content,
+                    Note = lastNotes.content ?? "Aucune note",
                     Average = "17.5/20",
                     UpvotesCount = upvotesList.Count.ToString(),
                     DownvotesCount = downvotesList.Count.ToString()
@@ -228,15 +252,7 @@ namespace SabreAppWPF
         private void UpvotesButton_Click(object sender, RoutedEventArgs e)
         {
             StudentDisplay currentStudent = GetCurrentStudent(sender);
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO votes(studentId, upvotes, description, creationDate) VALUES(@studentId, true, 'Upvote rapide', @creationDate)";
-            cmd.Parameters.AddWithValue("studentId", currentStudent.ID);
-
-            int currentTimestamp = (int)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
-            cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
-
+            StudentsShared.AddVotesToDb(currentStudent.ID, true, "Upvote rapide");
             int currentUpvoteCount = int.Parse(currentStudent.UpvotesCount);
             currentUpvoteCount++;
             currentStudent.UpvotesCount = currentUpvoteCount.ToString();
@@ -245,15 +261,7 @@ namespace SabreAppWPF
         private void DownvotesButton_Click(object sender, RoutedEventArgs e)
         {
             StudentDisplay currentStudent = GetCurrentStudent(sender);
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO votes(studentId, upvotes, description, creationDate) VALUES(@studentId, false, 'Downvote rapide', @creationDate)";
-            cmd.Parameters.AddWithValue("studentId", currentStudent.ID);
-
-            int currentTimestamp = (int)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
-            cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
-
+            StudentsShared.AddVotesToDb(currentStudent.ID, false, "Downvote rapide");
             int currentDownvoteCount = int.Parse(currentStudent.DownvotesCount);
             currentDownvoteCount++;
             currentStudent.DownvotesCount = currentDownvoteCount.ToString();
