@@ -22,7 +22,7 @@ using System.Runtime.CompilerServices;
 namespace SabreAppWPF
 {
     /// <summary>
-    /// Logique d'interaction pour studentsPage.xaml
+    /// Logique d'interaction pour studentsPage.xaml some more comment
     /// </summary>
     public partial class studentsPage : Page
     {
