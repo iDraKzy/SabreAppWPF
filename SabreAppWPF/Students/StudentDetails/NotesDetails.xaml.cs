@@ -17,7 +17,7 @@ using System.Linq;
 namespace SabreAppWPF.Students.StudentDetails
 {
     /// <summary>
-    /// Logique d'interaction pour NotesDetails.xaml some more comment
+    /// Logique d'interaction pour NotesDetails.xaml some more comment test
     /// </summary>
     public partial class NotesDetails : Page
     {
