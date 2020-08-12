@@ -56,7 +56,7 @@
                         <RotateTransform Angle="+90"/>
                     </Button.LayoutTransform>
                 </Button>
-                <Button Content="Notes" Grid.Row="4" FontFamily="Segoe UI Semibold">
+                <Button Content="Notes" Click="GradesButton_Click" Grid.Row="4" FontFamily="Segoe UI Semibold">
                     <Button.LayoutTransform>
                         <RotateTransform Angle="+90"/>
                     </Button.LayoutTransform>

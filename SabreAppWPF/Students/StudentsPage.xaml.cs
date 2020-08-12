@@ -31,7 +31,60 @@ namespace SabreAppWPF
         public studentsPage()
         {
             InitializeComponent();
-            studentsCollection = new ObservableCollection<StudentDisplay>();
+            //studentsCollection = new ObservableCollection<StudentDisplay>();
+            studentList.ItemsSource = studentsCollection;
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT * FROM students";
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                using SQLiteCommand cmdLoop = GlobalFunction.OpenDbConnection();
+                int studentId = rdr.GetInt32(0);
+                //Handle classroom name
+                cmdLoop.CommandText = $"SELECT name FROM classrooms WHERE classroomId = {studentId}";
+                string classroomName = (string)cmdLoop.ExecuteScalar();
+
+                //Handle homework
+                List<HomeworkInfo> homeworkList = GetAllHomeworks(studentId);
+                HomeworkInfo lastHomework = GetLastHomework(homeworkList);
+
+                bool lastHomeworkButtonEnabled = false;
+                string lastHomeworkStatus = GlobalVariable.specialCharacter["CheckMark"];
+                string lastHomeworkColor = "Green";
+                if (lastHomework.retrieveDate == 0)
+                {
+                    lastHomeworkButtonEnabled = true;
+                    lastHomeworkStatus = GlobalVariable.specialCharacter["Cross"];
+                    lastHomeworkColor = "Red";
+                }
+
+                //Handle note
+                List<NoteInfo> notesList = GetAllNotes(studentId);
+                NoteInfo lastNotes = GetLastNote(notesList);
+
+                //Handle votes
+                List<VotesInfo> upvotesList = GetAllVotes(studentId, true);
+                List<VotesInfo> downvotesList = GetAllVotes(studentId, false);
+
+
+
+                StudentDisplay studentDisplay = new StudentDisplay()
+                {
+                    ID = studentId,
+                    Name = rdr.GetString(3) + " " + rdr.GetString(2),
+                    ClassroomName = classroomName,
+                    HomeworkButtonEnabled = lastHomeworkButtonEnabled,
+                    LastHomeworkStatusText = lastHomeworkStatus,
+                    LastHomeworkStatusColor = lastHomeworkColor,
+                    LastHomeWorkId = lastHomework.homeworkId,
+                    Note = lastNotes.content ?? "Aucune note",
+                    Average = "17.5/20",
+                    UpvotesCount = upvotesList.Count.ToString(),
+                    DownvotesCount = downvotesList.Count.ToString()
+                };
+                studentsCollection.Add(studentDisplay);
+            }
         }
         /// <summary>
         /// Get all votes of the specified student of the given type (upvote = true, downvote = false)
@@ -163,59 +216,6 @@ namespace SabreAppWPF
         /// <param name="e"></param>
         private void Students_Load(object sender, RoutedEventArgs e)
         {
-            studentList.ItemsSource = studentsCollection;
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "SELECT * FROM students";
-            using SQLiteDataReader rdr = cmd.ExecuteReader();
-
-            while (rdr.Read())
-            {
-                using SQLiteCommand cmdLoop = GlobalFunction.OpenDbConnection();
-                int studentId = rdr.GetInt32(0);
-                //Handle classroom name
-                cmdLoop.CommandText = $"SELECT name FROM classrooms WHERE classroomId = {studentId}";
-                string classroomName = (string)cmdLoop.ExecuteScalar();
-
-                //Handle homework
-                List<HomeworkInfo> homeworkList = GetAllHomeworks(studentId);
-                HomeworkInfo lastHomework = GetLastHomework(homeworkList);
-
-                bool lastHomeworkButtonEnabled = false;
-                string lastHomeworkStatus = GlobalVariable.specialCharacter["CheckMark"];
-                string lastHomeworkColor = "Green";
-                if (lastHomework.retrieveDate == 0)
-                {
-                    lastHomeworkButtonEnabled = true;
-                    lastHomeworkStatus = GlobalVariable.specialCharacter["Cross"];
-                    lastHomeworkColor = "Red";
-                }
-
-                //Handle note
-                List<NoteInfo> notesList = GetAllNotes(studentId);
-                NoteInfo lastNotes = GetLastNote(notesList);
-
-                //Handle votes
-                List<VotesInfo> upvotesList = GetAllVotes(studentId, true);
-                List<VotesInfo> downvotesList = GetAllVotes(studentId, false);
-
-                
-
-                StudentDisplay studentDisplay = new StudentDisplay()
-                {
-                    ID = studentId,
-                    Name = rdr.GetString(3) + " " + rdr.GetString(2),
-                    ClassroomName = classroomName,
-                    HomeworkButtonEnabled = lastHomeworkButtonEnabled,
-                    LastHomeworkStatusText = lastHomeworkStatus,
-                    LastHomeworkStatusColor = lastHomeworkColor,
-                    LastHomeWorkId = lastHomework.homeworkId,
-                    Note = lastNotes.content ?? "Aucune note",
-                    Average = "17.5/20",
-                    UpvotesCount = upvotesList.Count.ToString(),
-                    DownvotesCount = downvotesList.Count.ToString()
-                };
-                studentsCollection.Add(studentDisplay);
-            }
         }
 
         private void RetrieveLastHomeworkButton_Click(object sender, RoutedEventArgs e)

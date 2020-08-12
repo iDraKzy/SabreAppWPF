@@ -24,8 +24,7 @@ namespace SabreAppWPF
         public MainWindow()
         {
             InitializeComponent();
-            studentsPage students1 = new studentsPage();
-            Application.Current.Properties["studentsPage"] = students1;
+            Application.Current.Properties["studentsPage"] = new studentsPage();
         }
 
         private void Main_Load(object sender, RoutedEventArgs e)

@@ -26,6 +26,8 @@ namespace SabreAppWPF
     {
         private string type;
         private int studentId;
+
+        //TODO: Refactor this shit
         public AddTemplate(string type, int studentId = 0)
         {
             InitializeComponent();
@@ -221,7 +223,10 @@ namespace SabreAppWPF
                 cmd.Parameters.AddWithValue("surname", surname);
                 cmd.Parameters.AddWithValue("gender", trueGender);
                 cmd.Prepare();
-                int studentId = cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "SELECT last_insert_rowid()";
+                long studentId = (long)cmd.ExecuteScalar();
                 error.Foreground = new SolidColorBrush(Colors.Green);
                 if (trueGender)
                 {
@@ -230,9 +235,22 @@ namespace SabreAppWPF
                 {
                     error.Content = "Etudiante ajoutée avec succès";
                 }
-                studentsPage studentsPage = (studentsPage)Application.Current.Properties["studentsPage"];
 
-                StudentsShared.AddStudentToUI(studentsPage, studentId, name, classroomName, "Note par défaut", 0, 0);
+                StudentDisplay studentDisplay = new StudentDisplay()
+                {
+                    ID = (int)studentId,
+                    Name = name,
+                    ClassroomName = classroomName,
+                    LastHomeworkStatusColor = "Green",
+                    LastHomeworkStatusText = GlobalVariable.specialCharacter["CheckMark"],
+                    DownvotesCount = "0",
+                    UpvotesCount = "0",
+                    Average = "17.5/20",
+                    HomeworkButtonEnabled = false,
+                    LastHomeWorkId = 0,
+                    Note = "Aucune note"
+                };
+                studentsPage.studentsCollection.Add(studentDisplay);
             };
         }
         /// <summary>
