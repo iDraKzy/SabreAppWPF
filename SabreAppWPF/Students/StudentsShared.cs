@@ -11,6 +11,12 @@ namespace SabreAppWPF.Students
 {
     public static class StudentsShared
     {
+        /// <summary>
+        /// Add a vote to the db
+        /// </summary>
+        /// <param name="studentId">Id of the student</param>
+        /// <param name="vote">true = upvote, false = downvote</param>
+        /// <param name="description">Description of the vote</param>
         public static void AddVotesToDb(int studentId, bool vote, string description)
         {
             using SQLiteConnection connection = new SQLiteConnection("Data Source=" + GlobalVariable.path);
@@ -27,24 +33,5 @@ namespace SabreAppWPF.Students
             cmd.ExecuteNonQuery();
         }
 
-        /// <summary>
-        /// Returns the name and lastname of a student based on his id
-        /// </summary>
-        /// <param name="studentId"></param>
-        /// <returns>string[lastname, surname]</returns>
-        public static string[] GetStudentNameFromID(int studentId)
-        {
-            string[] nameArray = new string[2];
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = $"SELECT lastname, surname FROM students WHERE studentId = {studentId}";
-            using SQLiteDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
-            {
-                nameArray[0] = rdr.GetString(0);
-                nameArray[1] = rdr.GetString(1);
-            }
-
-            return nameArray;
-        }
     }
 }

@@ -12,18 +12,24 @@ namespace SabreAppWPF
             if (lastname == null) return "Le champ nom est obligatoire";
             return "valid";
         }
-        static public string Punishment(string surname, string lastname, DateTime? endDate)
+        static public string[] Punishment(string surname, string lastname, DateTime? endDate)
         {
+            int studentId = 0;
             int currentTimeStamp = Convert.ToInt32(new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds());
-            if (surname == null) return "Le champ prénom est obligatoire";
-            if (lastname == null) return "Le champ nom est obligatoire";
-            if (endDate == null) { return "Le champ Echéance est obligatoire"; }
+            if (surname == null) return new string[] { "Le champ prénom est obligatoire" };
+            if (lastname == null) { return new string[] { "Le champ nom est obligatoire" }; }
+            else
+            {
+                studentId = Getter.GetStudentIdFromName(lastname, surname);
+                if (studentId == 0) return new string[] { "Etudiant(e) introuvable" };
+            }
+            if (endDate == null) { return new string[] { "Le champ Echéance est obligatoire" }; }
             else
             {
                 int endDateTimestamp = Convert.ToInt32(new DateTimeOffset((DateTime)endDate).ToUnixTimeSeconds());
-                if (endDateTimestamp < currentTimeStamp) return "L'échéance ne peut pas être déjà passé";
+                if (endDateTimestamp < currentTimeStamp) return new string[] { "L'échéance ne peut pas être déjà passé" };
             }
-            return "valid";
+            return new string[] { "valid", studentId.ToString()};
         }
 
         static public string Room(string name, string rows, string columns)
@@ -38,12 +44,18 @@ namespace SabreAppWPF
             return "valid";
         }
 
-        static public string Note(string lastname, string surname, string content)
+        static public string[] Note(string lastname, string surname, string content)
         {
-            if (lastname == null) return "Le champ nom est obligatoire";
-            if (surname == null) return "Le champ prénom est obligatoire";
-            if (content == null) return "Le champ contenu est obligatoire";
-            return "valid";
+            int studentId = 0;
+            if (lastname == null) return new string[] { "Le champ nom est obligatoire" };
+            if (surname == null) { return new string[] { "Le champ prénom est obligatoire" }; }
+            else
+            {
+                studentId = Getter.GetStudentIdFromName(lastname, surname);
+                if (studentId == 0) return new string[] { "Etudiant(e) introuvable" };
+            }
+            if (content == null) return new string[] { "Le champ contenu est obligatoire" };
+            return new string[] { "valid", studentId.ToString() };
         }
     }
 }

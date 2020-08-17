@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data.SQLite;
+using SabreAppWPF.AddPages;
 
 namespace SabreAppWPF.Students.StudentDetails
 {
@@ -45,19 +46,19 @@ namespace SabreAppWPF.Students.StudentDetails
             name.Content = studentName;
             classroom.Content = classroomName ?? "Classe N/A";
             _detailsFrame.Navigate(new NotesDetails(studentId));
-            window._addFrame.Navigate(new AddTemplate("note", studentId));
+            window._addFrame.Navigate(new AddNote(studentId));
         }
 
         private void PunishmentButton_Click(object sender, RoutedEventArgs e)
         {
             _detailsFrame.Navigate(new PunishmentsDetails(studentId));
-            window._addFrame.Navigate(new AddTemplate("punishment", studentId));
+            window._addFrame.Navigate(new AddPunishment(studentId));
         }
 
         private void NotesButton_Click(object sender, RoutedEventArgs e)
         {
             _detailsFrame.Navigate(new NotesDetails(studentId));
-            window._addFrame.Navigate(new AddTemplate("note", studentId));
+            window._addFrame.Navigate(new AddNote(studentId));
         }
 
         private void HomeworkButton_Click(object sender, RoutedEventArgs e)

@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
+using SabreAppWPF.AddPages;
 
 namespace SabreAppWPF
 {
@@ -119,7 +120,7 @@ namespace SabreAppWPF
         private void Students_Button_Click(object sender, RoutedEventArgs e)
         {
             _mainFrame.Navigate(Application.Current.Properties["studentsPage"]);
-            _addFrame.Navigate(new AddTemplate("student"));
+            _addFrame.Navigate(new AddStudent());
         }
 
         private void Main_Button_Click(object sender, RoutedEventArgs e)

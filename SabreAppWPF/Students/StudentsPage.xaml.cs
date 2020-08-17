@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using SabreAppWPF.Students.StudentDetails;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using SabreAppWPF.AddPages;
 
 namespace SabreAppWPF
 {
@@ -239,7 +240,7 @@ namespace SabreAppWPF
         {
             StudentDisplay currentStudent = GetCurrentStudent(sender);
             MainWindow window = GlobalFunction.GetMainWindow();
-            window._addFrame.Navigate(new AddTemplate("punishment", currentStudent.ID));
+            window._addFrame.Navigate(new AddPunishment(currentStudent.ID));
         }
         private void DetailsButton_Click(object sender, RoutedEventArgs e)
         {
