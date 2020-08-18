@@ -23,6 +23,7 @@ namespace SabreAppWPF
             {"CheckMark", "✓"},
             {"Cross", "❌" }
         };
+        public static bool isLightMode = true;
     }
     /// <summary>
     /// Interaction logic for App.xaml

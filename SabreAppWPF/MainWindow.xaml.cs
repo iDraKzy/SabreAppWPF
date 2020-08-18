@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
 using SabreAppWPF.AddPages;
+using SabreAppWPF.LightDark;
 
 namespace SabreAppWPF
 {
@@ -26,6 +27,31 @@ namespace SabreAppWPF
         {
             InitializeComponent();
             Application.Current.Properties["studentsPage"] = new studentsPage();
+            _addFrame.Navigate(new AddClassroom());
+
+            try
+            {
+                var v = Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme", "1");
+                if (v != null && v.ToString() == "0")
+                    GlobalVariable.isLightMode = false;
+            }
+            catch {}
+
+            GlobalVariable.isLightMode = true;
+            if (!GlobalVariable.isLightMode)
+            {
+                AppTheme.BackgroundColor = "#202020";
+                //AppTheme.TextColor = Colors.White;
+                AppTheme.TextColor = "#FFFFFF";
+                AppTheme.ButtonHoverColor = "#141414";
+                AppTheme.ButtonClickColor = "#007acc";
+            } else
+            {
+                AppTheme.BackgroundColor = "#FFFFFF";
+                AppTheme.TextColor = "#000000";
+                AppTheme.ButtonHoverColor = "#DCDCDC";
+                AppTheme.ButtonClickColor = "#c9c9c9";
+            }
         }
 
         private void Main_Load(object sender, RoutedEventArgs e)

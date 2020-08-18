@@ -6,8 +6,7 @@
       xmlns:local="clr-namespace:SabreAppWPF.AddPages"
       mc:Ignorable="d" 
       Height="378" Width="250"
-      Title="AddPunishment"
-      Loaded="AddPunishment_Load">
+      Title="AddPunishment">
 
     <Grid Background="White">
         <Grid.RowDefinitions>
