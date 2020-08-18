@@ -27,6 +27,7 @@ namespace SabreAppWPF.AddPages
 
         public AddNote(int studentId)
         {
+            InitializeComponent();
             string[] nameArray = Getter.GetStudentNameFromID(studentId);
             _lastnameTextBox.Text = nameArray[0];
             _surnameTextBox.Text = nameArray[1];

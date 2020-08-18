@@ -37,13 +37,13 @@ namespace SabreAppWPF
             }
             catch {}
 
-            GlobalVariable.isLightMode = true;
+            //GlobalVariable.isLightMode = true;
             if (!GlobalVariable.isLightMode)
             {
                 AppTheme.BackgroundColor = "#202020";
                 //AppTheme.TextColor = Colors.White;
                 AppTheme.TextColor = "#FFFFFF";
-                AppTheme.ButtonHoverColor = "#141414";
+                AppTheme.ButtonHoverColor = "#404040";
                 AppTheme.ButtonClickColor = "#007acc";
             } else
             {

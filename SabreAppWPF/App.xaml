@@ -5,12 +5,13 @@
              xmlns:external="clr-namespace:SabreAppWPF.LightDark"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <Style TargetType="{x:Type Label}">
+        <Style x:Key="LabelStyle1" TargetType="{x:Type Label}">
             <Style.Setters>
                 <Setter Property="Foreground" Value="{Binding Path=(external:AppTheme.TextColor)}"/>
             </Style.Setters>
         </Style>
-        <Style TargetType="{x:Type Button}">
+        
+        <Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
             <Style.Setters>
                 <Setter Property="Foreground" Value="{Binding Path=(external:AppTheme.TextColor)}"/>
                 <Setter Property="Background" Value="{Binding Path=(external:AppTheme.BackgroundColor)}"/>
@@ -31,6 +32,19 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+            </Style.Setters>
+        </Style>
+
+        <Style x:Key="BorderStyle1" TargetType="{x:Type Border}">
+            <Style.Setters>
+                <Setter Property="Background" Value="{Binding Path=(external:AppTheme.BackgroundColor)}"/>
+            </Style.Setters>
+        </Style>
+
+        <Style x:Key="TextBoxStyle1" TargetType="TextBox">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="{Binding Path=(external:AppTheme.TextColor)}"/>
+                <Setter Property="Background" Value="{Binding Path=(external:AppTheme.BackgroundColor)}"/>
             </Style.Setters>
         </Style>
     </Application.Resources>

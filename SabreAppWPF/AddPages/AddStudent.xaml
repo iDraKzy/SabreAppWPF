@@ -4,12 +4,13 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SabreAppWPF.AddPages"
+      xmlns:external="clr-namespace:SabreAppWPF.LightDark"
       mc:Ignorable="d"
       Height="378" Width="250"
       Title="AddStudent"
       Loaded="AddStudent_Load">
 
-    <Grid Background="White">
+    <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="40"/>
@@ -22,16 +23,16 @@
             <ColumnDefinition Width="0.8*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label Content="Prénom" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Prénom" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
         <TextBox x:Name="_surnameTextBox" Grid.Row="1" Grid.Column="1" Margin="10"/>
-        <Label Content="Nom" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Nom" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
         <TextBox x:Name="_lastnameTextBox" Grid.Row="2" Grid.Column="1" Margin="10"/>
-        <Label Content="Sexe" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Sexe" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
         <ComboBox x:Name="_genderComboBox" Grid.Row="3" Grid.Column="1" Margin="10"/>
-        <Label Content="Classe" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Classe" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
         <ComboBox x:Name="_classroomComboBox" Grid.Row="4" Grid.Column="1" Margin="10"/>
-        <Label Content="Ajouter un(e) étudiant(e)" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="15"/>
-        <Button Click="ConfirmButton_Click" Content="Ajouter" FontFamily="Segoe UI Semibold" Grid.Row="7" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,7,7" Width="60"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Ajouter un(e) étudiant(e)" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="15"/>
+        <Button Style="{StaticResource ButtonStyle1}" Click="ConfirmButton_Click" Content="Ajouter" FontFamily="Segoe UI Semibold" Grid.Row="7" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,7,7" Width="60"/>
         <Label x:Name="error" Content="" Grid.Row="6" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,20,0,55" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
     </Grid>
 </Page>
