@@ -41,10 +41,18 @@
             </Style.Setters>
         </Style>
 
-        <Style x:Key="TextBoxStyle1" TargetType="TextBox">
+        <Style x:Key="TextBoxStyleReadOnly" TargetType="TextBox">
             <Style.Setters>
                 <Setter Property="Foreground" Value="{Binding Path=(external:AppTheme.TextColor)}"/>
                 <Setter Property="Background" Value="{Binding Path=(external:AppTheme.BackgroundColor)}"/>
+            </Style.Setters>
+        </Style>
+
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="{Binding Path=(external:AppTheme.TextColor)}"/>
+                <Setter Property="Background" Value="{Binding Path=(external:AppTheme.BackgroundColor)}"/>
+                <Setter Property="BorderBrush" Value="{Binding Path=(external:AppTheme.BorderColor}"/>
             </Style.Setters>
         </Style>
     </Application.Resources>

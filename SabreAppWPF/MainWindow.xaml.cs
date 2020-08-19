@@ -45,12 +45,14 @@ namespace SabreAppWPF
                 AppTheme.TextColor = "#FFFFFF";
                 AppTheme.ButtonHoverColor = "#404040";
                 AppTheme.ButtonClickColor = "#007acc";
+                AppTheme.BorderColor = "#404040";
             } else
             {
                 AppTheme.BackgroundColor = "#FFFFFF";
                 AppTheme.TextColor = "#000000";
                 AppTheme.ButtonHoverColor = "#DCDCDC";
                 AppTheme.ButtonClickColor = "#c9c9c9";
+                AppTheme.BorderColor = "#000000";
             }
         }
 

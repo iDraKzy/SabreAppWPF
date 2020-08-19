@@ -4,11 +4,31 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SabreAppWPF.AddPages"
+      xmlns:external="clr-namespace:SabreAppWPF.LightDark"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      Height="378" Width="250"
       Title="AddRoom">
 
-    <Grid>
-        
+    <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="0.7*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.8*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Style="{StaticResource LabelStyle1}" Content="Nom" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_nameTextBox" Grid.Row="1" Grid.Column="1" Margin="10"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Lignes" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_rowTextBox" Grid.Row="2" Grid.Column="1" Margin="10"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Colonnes" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_columnTextBox" Grid.Row="3" Grid.Column="1" Margin="10"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Ajouter une salle" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="15"/>
+        <Button Style="{StaticResource ButtonStyle1}" Click="ConfirmButton_Click" Content="Ajouter" FontFamily="Segoe UI Semibold" Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,7,7" Width="60"/>
+        <Label x:Name="error" Content="" Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,20,0,55" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
     </Grid>
 </Page>

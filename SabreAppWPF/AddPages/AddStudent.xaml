@@ -24,9 +24,9 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Label Style="{StaticResource LabelStyle1}" Content="Prénom" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
-        <TextBox x:Name="_surnameTextBox" Grid.Row="1" Grid.Column="1" Margin="10"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_surnameTextBox" Grid.Row="1" Grid.Column="1" Margin="10"/>
         <Label Style="{StaticResource LabelStyle1}" Content="Nom" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
-        <TextBox x:Name="_lastnameTextBox" Grid.Row="2" Grid.Column="1" Margin="10"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_lastnameTextBox" Grid.Row="2" Grid.Column="1" Margin="10"/>
         <Label Style="{StaticResource LabelStyle1}" Content="Sexe" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
         <ComboBox x:Name="_genderComboBox" Grid.Row="3" Grid.Column="1" Margin="10"/>
         <Label Style="{StaticResource LabelStyle1}" Content="Classe" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>

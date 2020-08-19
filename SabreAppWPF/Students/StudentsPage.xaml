@@ -46,7 +46,7 @@
                                         <Button Style="{StaticResource ButtonStyle1}" Width="Auto" Click="RetrieveLastHomeworkButton_Click" IsEnabled="{Binding HomeworkButtonEnabled}" Grid.Column="1" Content="Récup Devoir" Margin="0,27,0,27"/>
 
                                     </Grid>
-                                    <TextBox Style="{StaticResource TextBoxStyle1}" BorderBrush="Transparent" Text="{Binding Note}" x:Name="studentNote" Grid.Row="0" Grid.Column="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="60" TextWrapping="WrapWithOverflow" IsReadOnly="True" MaxLines="4" FontFamily="Segoe UI Semibold" FontSize="14"/>
+                                    <TextBox Style="{StaticResource TextBoxStyleReadOnly}" BorderBrush="Transparent" Text="{Binding Note}" x:Name="studentNote" Grid.Row="0" Grid.Column="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="60" TextWrapping="WrapWithOverflow" IsReadOnly="True" MaxLines="4" FontFamily="Segoe UI Semibold" FontSize="14"/>
 
                                     <Label Style="{StaticResource LabelStyle1}" Content="{Binding Average}" Grid.Row="0" Grid.Column="3" VerticalAlignment="Center"/>
                                     <Button Style="{StaticResource ButtonStyle1}" Click="PunishButton_Click" Content="Punir" Grid.Row="0" Grid.Column="4" Margin="20,27,20,27"/>
