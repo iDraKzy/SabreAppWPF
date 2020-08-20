@@ -26,7 +26,7 @@ namespace SabreAppWPF.Classrooms
         public ClassroomsPage()
         {
             InitializeComponent();
-            ClassroomsShared.GetNextSessionTimestamp(0, 0, 0);
+            classroomList.ItemsSource = classroomCollection;
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = "SELECT * FROM classrooms";
 
@@ -34,24 +34,57 @@ namespace SabreAppWPF.Classrooms
             while (rdr.Read())
             {
                 int classroomId = rdr.GetInt32(0);
+                List<ScheduleInfo> scheduleClassroomList = ClassroomsShared.GetSchedulesFromClassroomId(classroomId);
+                string scheduleTime;
+
+                int dayToSessionTemp = 14;
+                ScheduleInfo selectedSchedule = new ScheduleInfo();
+                if (scheduleClassroomList.Count != 0)
+                {
+                    for (int i = 0; i < scheduleClassroomList.Count; i++)
+                    {
+                        int daysToNextSession = ClassroomsShared.GetNumberOfDaysToNextSession((int)scheduleClassroomList[i].weekDay);
+                        if (daysToNextSession < dayToSessionTemp)
+                        {
+                            selectedSchedule = scheduleClassroomList[i];
+                            dayToSessionTemp = daysToNextSession;
+                        }
+                    }
+                    int nextSessionTimestamp = (int)ClassroomsShared.GetNextSessionTimestamp(selectedSchedule);
+                    DateTime nextSessionDateTime = DateTimeOffset.FromUnixTimeSeconds(nextSessionTimestamp).LocalDateTime;
+                    scheduleTime = nextSessionDateTime.ToString("g", GlobalVariable.culture);
+                } 
+                else
+                {
+                    scheduleTime = "Aucun horraire défini";
+                }
+
+
                 int studentNumber = GetStudentNumber(classroomId);
-                string studentNumberString = studentNumber.ToString() + "Etudiant(e)s";
+                string studentNumberString = studentNumber.ToString() + " Etudiants";
                 ClassroomDisplay classroomDisplay = new ClassroomDisplay()
                 {
                     ID = classroomId,
                     ClassroomName = rdr.GetString(2),
                     StudentsNumber = studentNumberString,
-                    NextSession = "",
+                    NextSession = scheduleTime,
                 };
                 classroomCollection.Add(classroomDisplay);
             }
+        }
+
+        private void StudentsListButton_Click(object sender, RoutedEventArgs e)
+        {
+            ClassroomDisplay classroomDisplay = (ClassroomDisplay)((FrameworkElement)sender).DataContext;
+            MainWindow window = GlobalFunction.GetMainWindow();
+            window._mainFrame.Navigate(new studentsPage(classroomDisplay.ID));
         }
 
         private int GetStudentNumber(int classroomId)
         {
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = "SELECT * FROM students WHERE classroomId = @classroomId";
-            cmd.Parameters.AddWithValue("classroomId", classroomList);
+            cmd.Parameters.AddWithValue("classroomId", classroomId);
             cmd.Prepare();
             using SQLiteDataReader rdr = cmd.ExecuteReader();
             int studentNumber = 0;
@@ -92,7 +125,7 @@ namespace SabreAppWPF.Classrooms
         }
         public string StudentsNumber
         {
-            get { return StudentsNumber; }
+            get { return _studentsNumber; }
             set
             {
                 _studentsNumber = value;

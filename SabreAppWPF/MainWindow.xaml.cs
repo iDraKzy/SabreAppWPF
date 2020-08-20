@@ -58,7 +58,7 @@ namespace SabreAppWPF
                                 classrooms(classroomId INTEGER PRIMARY KEY, planId INTEGER, name TEXT);
 
                                 CREATE TABLE IF NOT EXISTS
-                                schedules(schedulesId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, weekDay INTEGER, hour INTEGER, minute INTEGER);
+                                schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, weekDay INTEGER, hour INTEGER, minute INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
                                 plans(planId INTEGER PRIMARY KEY, scheduleId INTEGER);
@@ -133,12 +133,14 @@ namespace SabreAppWPF
                 AppTheme.ButtonHoverColor = "#404040";
                 AppTheme.ButtonClickColor = "#007acc";
                 AppTheme.BorderColor = "#404040";
+                AppTheme.ButtonTextDisabledColor = "#878787";
             } else
             {
                 AppTheme.BackgroundColor = "#FFFFFF";
                 AppTheme.TextColor = "#000000";
                 AppTheme.ButtonHoverColor = "#DCDCDC";
                 AppTheme.ButtonClickColor = "#c9c9c9";
+                AppTheme.ButtonTextDisabledColor = "#878787";
                 AppTheme.BorderColor = "#000000";
             }
         }
@@ -149,7 +151,7 @@ namespace SabreAppWPF
 
         private void Students_Button_Click(object sender, RoutedEventArgs e)
         {
-            _mainFrame.Navigate(Application.Current.Properties["studentsPage"]);
+            _mainFrame.Navigate(new studentsPage());
             _addFrame.Navigate(new AddStudent());
         }
 

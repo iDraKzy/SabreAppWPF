@@ -25,4 +25,9 @@
         public int homeworkId, studentId, creationDate, endDate, retrieveDate;
         public string description;
     }
+
+    public class ScheduleInfo
+    {
+        public int? scheduleId, classroomId, roomId, weekDay, hour, minute;
+    }
 }

@@ -17,6 +17,16 @@ namespace SabreAppWPF
             return classroomName;
         }
 
+        public static int GetClassroomIDFromStudentID(int studentId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT classroomId FROM students WHERE studentId = @studentId";
+            cmd.Parameters.AddWithValue("studentId", studentId);
+            cmd.Prepare();
+            int classroomId = (int)cmd.ExecuteScalar();
+            return classroomId;
+        }
+
         public static string[] GetStudentNameFromID(int studentId)
         {
             string[] nameArray = new string[2];

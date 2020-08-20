@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:SabreAppWPF.AddPages"
       xmlns:external="clr-namespace:SabreAppWPF.LightDark"
       mc:Ignorable="d" 
-      Height="378" Width="250"
+      Height="350" Width="250"
       Title="AddRoom">
 
     <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">

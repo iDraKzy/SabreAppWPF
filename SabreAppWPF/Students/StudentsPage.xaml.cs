@@ -19,6 +19,7 @@ using SabreAppWPF.Students.StudentDetails;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using SabreAppWPF.AddPages;
+using Windows.UI.Xaml.Automation.Peers;
 
 namespace SabreAppWPF
 {
@@ -32,19 +33,35 @@ namespace SabreAppWPF
         public studentsPage()
         {
             InitializeComponent();
-            //studentsCollection = new ObservableCollection<StudentDisplay>();
+            studentsCollection = new ObservableCollection<StudentDisplay>();
             studentList.ItemsSource = studentsCollection;
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = "SELECT * FROM students";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
+            ReadStudentsData(rdr);
+        }
 
+        public studentsPage(int classroomId)
+        {
+            InitializeComponent();
+            studentsCollection = new ObservableCollection<StudentDisplay>();
+            studentList.ItemsSource = studentsCollection;
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT * FROM students WHERE classroomId = @classroomId";
+            cmd.Parameters.AddWithValue("classroomId", classroomId);
+            cmd.Prepare();
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            ReadStudentsData(rdr);
+        }
+
+        private void ReadStudentsData(SQLiteDataReader rdr)
+        {
             while (rdr.Read())
             {
                 using SQLiteCommand cmdLoop = GlobalFunction.OpenDbConnection();
                 int studentId = rdr.GetInt32(0);
                 //Handle classroom name
-                cmdLoop.CommandText = $"SELECT name FROM classrooms WHERE classroomId = {studentId}";
-                string classroomName = (string)cmdLoop.ExecuteScalar();
+                string classroomName = Getter.GetClassrommNameFromID(rdr.GetInt32(1));
 
                 //Handle homework
                 List<HomeworkInfo> homeworkList = GetAllHomeworks(studentId);
@@ -87,6 +104,7 @@ namespace SabreAppWPF
                 studentsCollection.Add(studentDisplay);
             }
         }
+
         /// <summary>
         /// Get all votes of the specified student of the given type (upvote = true, downvote = false)
         /// </summary>
