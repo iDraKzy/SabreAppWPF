@@ -27,17 +27,8 @@ namespace SabreAppWPF
         public MainWindow()
         {
             InitializeComponent();
-<<<<<<< HEAD
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = @"CREATE TABLE IF NOT EXISTS
-=======
-
-            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + GlobalVariable.path);
-            connection.Open();
-            using SQLiteCommand cmd = new SQLiteCommand(connection)
-            {
-                CommandText = @"CREATE TABLE IF NOT EXISTS
->>>>>>> 2254fa5f8531b6d1af03d0b16e89f9a37d2c9d45
                                 students(studentId INTEGER PRIMARY KEY, classroomId INTEGER, lastname TEXT, surname TEXT, gender BOOLEAN, board INTEGER, interrogation BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
@@ -112,16 +103,10 @@ namespace SabreAppWPF
 
             cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385216, 1595000000, 0, 'Test 1')";
             cmd.ExecuteNonQuery();
-            connection.Close();
 
             //cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385214, ";
 
-<<<<<<< HEAD
         Application.Current.Properties["studentsPage"] = new studentsPage();
-=======
-
-            Application.Current.Properties["studentsPage"] = new studentsPage();
->>>>>>> 2254fa5f8531b6d1af03d0b16e89f9a37d2c9d45
             _addFrame.Navigate(new AddClassroom());
 
             try
@@ -140,22 +125,16 @@ namespace SabreAppWPF
                 AppTheme.TextColor = "#FFFFFF";
                 AppTheme.ButtonHoverColor = "#404040";
                 AppTheme.ButtonClickColor = "#007acc";
-<<<<<<< HEAD
-=======
                 AppTheme.BorderColor = "#404040";
                 AppTheme.ButtonTextDisabledColor = "#878787";
->>>>>>> 2254fa5f8531b6d1af03d0b16e89f9a37d2c9d45
             } else
             {
                 AppTheme.BackgroundColor = "#FFFFFF";
                 AppTheme.TextColor = "#000000";
                 AppTheme.ButtonHoverColor = "#DCDCDC";
                 AppTheme.ButtonClickColor = "#c9c9c9";
-<<<<<<< HEAD
-=======
                 AppTheme.ButtonTextDisabledColor = "#878787";
                 AppTheme.BorderColor = "#000000";
->>>>>>> 2254fa5f8531b6d1af03d0b16e89f9a37d2c9d45
             }
         }
 

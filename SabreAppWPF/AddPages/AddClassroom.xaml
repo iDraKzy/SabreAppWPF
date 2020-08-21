@@ -8,7 +8,7 @@
       xmlns:xamlhost="clr-namespace:Microsoft.Toolkit.Wpf.UI.XamlHost;assembly=Microsoft.Toolkit.Wpf.UI.XamlHost"
       xmlns:local="clr-namespace:SabreAppWPF.AddPages"
       mc:Ignorable="d" 
-      Height="378" Width="250"
+      Height="378" Width="250">
 
     <Grid Background="White">
         <Grid.RowDefinitions>
