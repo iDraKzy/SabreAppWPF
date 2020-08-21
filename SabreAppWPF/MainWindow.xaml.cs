@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Data.SQLite;
 using SabreAppWPF.AddPages;
 using SabreAppWPF.LightDark;
+using SabreAppWPF.Classrooms;
 
 namespace SabreAppWPF
 {
@@ -26,8 +27,17 @@ namespace SabreAppWPF
         public MainWindow()
         {
             InitializeComponent();
+<<<<<<< HEAD
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = @"CREATE TABLE IF NOT EXISTS
+=======
+
+            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + GlobalVariable.path);
+            connection.Open();
+            using SQLiteCommand cmd = new SQLiteCommand(connection)
+            {
+                CommandText = @"CREATE TABLE IF NOT EXISTS
+>>>>>>> 2254fa5f8531b6d1af03d0b16e89f9a37d2c9d45
                                 students(studentId INTEGER PRIMARY KEY, classroomId INTEGER, lastname TEXT, surname TEXT, gender BOOLEAN, board INTEGER, interrogation BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
@@ -53,10 +63,7 @@ namespace SabreAppWPF
                                 classrooms(classroomId INTEGER PRIMARY KEY, planId INTEGER, name TEXT);
 
                                 CREATE TABLE IF NOT EXISTS
-                                schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER);
-
-                                CREATE TABLE IF NOT EXISTS
-                                classTimes(classTimeId INTEGER PRIMARY KEY, scheduleId INTEGER, weekDay INTEGER, timeOfDay INTEGER);
+                                schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, weekDay INTEGER, hour INTEGER, minute INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
                                 plans(planId INTEGER PRIMARY KEY, scheduleId INTEGER);
@@ -109,7 +116,12 @@ namespace SabreAppWPF
 
             //cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385214, ";
 
+<<<<<<< HEAD
         Application.Current.Properties["studentsPage"] = new studentsPage();
+=======
+
+            Application.Current.Properties["studentsPage"] = new studentsPage();
+>>>>>>> 2254fa5f8531b6d1af03d0b16e89f9a37d2c9d45
             _addFrame.Navigate(new AddClassroom());
 
             try
@@ -128,12 +140,22 @@ namespace SabreAppWPF
                 AppTheme.TextColor = "#FFFFFF";
                 AppTheme.ButtonHoverColor = "#404040";
                 AppTheme.ButtonClickColor = "#007acc";
+<<<<<<< HEAD
+=======
+                AppTheme.BorderColor = "#404040";
+                AppTheme.ButtonTextDisabledColor = "#878787";
+>>>>>>> 2254fa5f8531b6d1af03d0b16e89f9a37d2c9d45
             } else
             {
                 AppTheme.BackgroundColor = "#FFFFFF";
                 AppTheme.TextColor = "#000000";
                 AppTheme.ButtonHoverColor = "#DCDCDC";
                 AppTheme.ButtonClickColor = "#c9c9c9";
+<<<<<<< HEAD
+=======
+                AppTheme.ButtonTextDisabledColor = "#878787";
+                AppTheme.BorderColor = "#000000";
+>>>>>>> 2254fa5f8531b6d1af03d0b16e89f9a37d2c9d45
             }
         }
 
@@ -144,7 +166,7 @@ namespace SabreAppWPF
 
         private void Students_Button_Click(object sender, RoutedEventArgs e)
         {
-            _mainFrame.Navigate(Application.Current.Properties["studentsPage"]);
+            _mainFrame.Navigate(new studentsPage());
             _addFrame.Navigate(new AddStudent());
         }
 
@@ -152,5 +174,11 @@ namespace SabreAppWPF
         {
             //_mainFrame.Navigate(new studentsPage());
         }
+
+        private void Classrooms_Button_Click(object sender, RoutedEventArgs e)
+        {
+            _mainFrame.Navigate(new ClassroomsPage());
+        }
+
     }
 }

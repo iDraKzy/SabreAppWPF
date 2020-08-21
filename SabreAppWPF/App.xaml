@@ -19,7 +19,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">
                             <Border BorderThickness="1" x:Name="border" BorderBrush="{TemplateBinding Foreground}" Background="{TemplateBinding Background}">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Label FontSize="13" Content="{TemplateBinding Content}" x:Name="content" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{TemplateBinding Foreground}"/>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
@@ -27,6 +27,9 @@
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
                                     <Setter Property="Background" Value="{Binding Path=(external:AppTheme.ButtonClickColor)}" TargetName="border"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Foreground" Value="{Binding Path=(external:AppTheme.ButtonTextDisabledColor)}" TargetName="content"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -41,10 +44,18 @@
             </Style.Setters>
         </Style>
 
-        <Style x:Key="TextBoxStyle1" TargetType="TextBox">
+        <Style x:Key="TextBoxStyleReadOnly" TargetType="TextBox">
             <Style.Setters>
                 <Setter Property="Foreground" Value="{Binding Path=(external:AppTheme.TextColor)}"/>
                 <Setter Property="Background" Value="{Binding Path=(external:AppTheme.BackgroundColor)}"/>
+            </Style.Setters>
+        </Style>
+
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="{Binding Path=(external:AppTheme.TextColor)}"/>
+                <Setter Property="Background" Value="{Binding Path=(external:AppTheme.BackgroundColor)}"/>
+                <Setter Property="BorderBrush" Value="{Binding Path=(external:AppTheme.BorderColor)}"/>
             </Style.Setters>
         </Style>
     </Application.Resources>
