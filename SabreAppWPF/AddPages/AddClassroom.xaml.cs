@@ -25,12 +25,11 @@ namespace SabreAppWPF.AddPages
             InitializeComponent();
         }
 
-        private void Test_Click(object sender, RoutedEventArgs e)
+        private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            WindowsXamlHost windowsHost = (WindowsXamlHost)_datePickerTest;
-            TimePicker timePicker = (TimePicker)windowsHost.Child;
-            TimeSpan? timeSelected = timePicker.SelectedTime;
-
+            //WindowsXamlHost windowsHost = (WindowsXamlHost)_datePickerTest;
+            //TimePicker timePicker = (TimePicker)windowsHost.Child;
+            //TimeSpan? timeSelected = timePicker.SelectedTime;
         }
     }
 }
