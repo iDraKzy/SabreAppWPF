@@ -26,41 +26,8 @@ namespace SabreAppWPF
         public MainWindow()
         {
             InitializeComponent();
-            Application.Current.Properties["studentsPage"] = new studentsPage();
-            _addFrame.Navigate(new AddClassroom());
-
-            try
-            {
-                var v = Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme", "1");
-                if (v != null && v.ToString() == "0")
-                    GlobalVariable.isLightMode = false;
-            }
-            catch {}
-
-            //GlobalVariable.isLightMode = true;
-            if (!GlobalVariable.isLightMode)
-            {
-                AppTheme.BackgroundColor = "#202020";
-                //AppTheme.TextColor = Colors.White;
-                AppTheme.TextColor = "#FFFFFF";
-                AppTheme.ButtonHoverColor = "#404040";
-                AppTheme.ButtonClickColor = "#007acc";
-            } else
-            {
-                AppTheme.BackgroundColor = "#FFFFFF";
-                AppTheme.TextColor = "#000000";
-                AppTheme.ButtonHoverColor = "#DCDCDC";
-                AppTheme.ButtonClickColor = "#c9c9c9";
-            }
-        }
-
-        private void Main_Load(object sender, RoutedEventArgs e)
-        {
-            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + GlobalVariable.path);
-            connection.Open();
-            using SQLiteCommand cmd = new SQLiteCommand(connection)
-            {
-                CommandText = @"CREATE TABLE IF NOT EXISTS
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = @"CREATE TABLE IF NOT EXISTS
                                 students(studentId INTEGER PRIMARY KEY, classroomId INTEGER, lastname TEXT, surname TEXT, gender BOOLEAN, board INTEGER, interrogation BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
@@ -98,8 +65,7 @@ namespace SabreAppWPF
                                 places(placeId INTEGER PRIMARY KEY, planId INTEGER, studentId INTEGER, row INTEGER, column INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
-                                reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT);"
-            };
+                                reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT);";
             cmd.ExecuteNonQuery();
             cmd.CommandText = "INSERT INTO classrooms(planId, name) VALUES(@planId, @name)";
             cmd.Parameters.AddWithValue("planId", 1);
@@ -118,7 +84,8 @@ namespace SabreAppWPF
                     cmd.Parameters.AddWithValue("lastname", "Clas");
                     cmd.Parameters.AddWithValue("surname", "Emeric");
 
-                } else
+                }
+                else
                 {
                     cmd.Parameters.AddWithValue("lastname", "Collard");
                     cmd.Parameters.AddWithValue("surname", "Youlan");
@@ -141,7 +108,39 @@ namespace SabreAppWPF
             connection.Close();
 
             //cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385214, ";
+
+        Application.Current.Properties["studentsPage"] = new studentsPage();
+            _addFrame.Navigate(new AddClassroom());
+
+            try
+            {
+                var v = Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme", "1");
+                if (v != null && v.ToString() == "0")
+                    GlobalVariable.isLightMode = false;
+            }
+            catch {}
+
+            //GlobalVariable.isLightMode = true;
+            if (!GlobalVariable.isLightMode)
+            {
+                AppTheme.BackgroundColor = "#202020";
+                //AppTheme.TextColor = Colors.White;
+                AppTheme.TextColor = "#FFFFFF";
+                AppTheme.ButtonHoverColor = "#404040";
+                AppTheme.ButtonClickColor = "#007acc";
+            } else
+            {
+                AppTheme.BackgroundColor = "#FFFFFF";
+                AppTheme.TextColor = "#000000";
+                AppTheme.ButtonHoverColor = "#DCDCDC";
+                AppTheme.ButtonClickColor = "#c9c9c9";
+            }
         }
+
+        private void Main_Load(object sender, RoutedEventArgs e)
+        {
+        }
+            
 
         private void Students_Button_Click(object sender, RoutedEventArgs e)
         {
