@@ -30,4 +30,10 @@
     {
         public int? scheduleId, classroomId, roomId, weekDay, hour, minute;
     }
+
+    public class GradeInfo
+    {
+        public int gradeId, studentId, coeff, creationDate;
+        public float grade;
+    }
 }

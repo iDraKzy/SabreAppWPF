@@ -85,7 +85,35 @@ namespace SabreAppWPF
                 List<VotesInfo> upvotesList = GetAllVotes(studentId, true);
                 List<VotesInfo> downvotesList = GetAllVotes(studentId, false);
 
+                string average = "";
 
+                List<GradeInfo> gradesList = GetAllGrades(studentId);
+                if (gradesList.Count == 0)
+                {
+                    average = "20/20";
+                } 
+                else
+                {
+                    float[] gradesArray = new float[gradesList.Count];
+                    int[] coeffArray = new int[gradesList.Count];
+                    for (int i = 0; i < gradesList.Count; i++)
+                    {
+                        gradesArray[i] = gradesList[i].grade;
+                        coeffArray[i] = gradesList[i].coeff;
+                    }
+
+                    int coeffSum = coeffArray.Sum();
+                    float[] gradesCoeffMultiply = new float[gradesList.Count];
+
+                    for (int i = 0; i < gradesList.Count; i++)
+                    {
+                        gradesCoeffMultiply[i] = gradesArray[i] * coeffArray[i];
+                    }
+
+                    float gradesCoefMultiplySum = gradesCoeffMultiply.Sum();
+                    float averageFloat = gradesCoefMultiplySum / coeffSum;
+                    average = averageFloat.ToString() + "/20";
+                }
 
                 StudentDisplay studentDisplay = new StudentDisplay()
                 {
@@ -97,12 +125,37 @@ namespace SabreAppWPF
                     LastHomeworkStatusColor = lastHomeworkColor,
                     LastHomeWorkId = lastHomework.homeworkId,
                     Note = lastNotes.content ?? "Aucune note",
-                    Average = "17.5/20",
+                    Average = average,
                     UpvotesCount = upvotesList.Count.ToString(),
                     DownvotesCount = downvotesList.Count.ToString()
                 };
                 studentsCollection.Add(studentDisplay);
             }
+        }
+
+        public static List<GradeInfo> GetAllGrades(int studentId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT * FROM grades WHERE studentId = @studentId";
+            cmd.Parameters.AddWithValue("studentId", studentId);
+            cmd.Prepare();
+
+            List<GradeInfo> gradesList = new List<GradeInfo>();
+
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                GradeInfo gradeInfo = new GradeInfo()
+                {
+                    gradeId = rdr.GetInt32(0),
+                    studentId = rdr.GetInt32(1),
+                    grade = rdr.GetFloat(2),
+                    coeff = rdr.GetInt32(3),
+                    creationDate = rdr.GetInt32(4)
+                };
+                gradesList.Add(gradeInfo);
+            }
+            return gradesList;
         }
 
         /// <summary>
