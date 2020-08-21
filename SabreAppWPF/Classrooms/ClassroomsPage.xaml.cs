@@ -80,6 +80,13 @@ namespace SabreAppWPF.Classrooms
             window._mainFrame.Navigate(new studentsPage(classroomDisplay.ID));
         }
 
+        private void ClassroomOptionsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ClassroomDisplay classroomDisplay = (ClassroomDisplay)((FrameworkElement)sender).DataContext;
+            MainWindow window = GlobalFunction.GetMainWindow();
+            window._mainFrame.Navigate(new ClassroomsOptionsxaml(classroomDisplay.ID));
+        }
+
         private int GetStudentNumber(int classroomId)
         {
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
