@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SabreAppWPF"
              xmlns:external="clr-namespace:SabreAppWPF.LightDark"
+             xmlns:Controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls"
+             xmlns:xamlhost="clr-namespace:Microsoft.Toolkit.Wpf.UI.XamlHost;assembly=Microsoft.Toolkit.Wpf.UI.XamlHost"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <Style x:Key="LabelStyle1" TargetType="{x:Type Label}">
@@ -10,7 +12,7 @@
                 <Setter Property="Foreground" Value="{Binding Path=(external:AppTheme.TextColor)}"/>
             </Style.Setters>
         </Style>
-        
+
         <Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
             <Style.Setters>
                 <Setter Property="Foreground" Value="{Binding Path=(external:AppTheme.TextColor)}"/>

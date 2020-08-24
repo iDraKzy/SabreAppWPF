@@ -84,7 +84,7 @@ namespace SabreAppWPF.Classrooms
         {
             ClassroomDisplay classroomDisplay = (ClassroomDisplay)((FrameworkElement)sender).DataContext;
             MainWindow window = GlobalFunction.GetMainWindow();
-            window._mainFrame.Navigate(new ClassroomsOptionsxaml(classroomDisplay.ID));
+            window._mainFrame.Navigate(new ClassroomsOptions(classroomDisplay.ID));
         }
 
         private int GetStudentNumber(int classroomId)

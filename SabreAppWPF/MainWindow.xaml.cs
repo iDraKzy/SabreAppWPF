@@ -54,7 +54,7 @@ namespace SabreAppWPF
                                 classrooms(classroomId INTEGER PRIMARY KEY, name TEXT);
 
                                 CREATE TABLE IF NOT EXISTS
-                                schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, planId INTEGER, weekDay INTEGER, hour INTEGER, minute INTEGER);
+                                schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, weekDay INTEGER, hour INTEGER, minute INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
                                 plans(planId INTEGER PRIMARY KEY, scheduleId INTEGER);
@@ -140,6 +140,7 @@ namespace SabreAppWPF
 
         private void Main_Load(object sender, RoutedEventArgs e)
         {
+            _addFrame.Navigate(new AddSchedules());
         }
             
 
