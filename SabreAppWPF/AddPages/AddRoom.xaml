@@ -5,13 +5,15 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SabreAppWPF.AddPages"
       xmlns:external="clr-namespace:SabreAppWPF.LightDark"
+      xmlns:uc="clr-namespace:SabreAppWPF.AddPages.Navbar_Control"
       mc:Ignorable="d" 
       Height="350" Width="250"
       Title="AddRoom">
 
     <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
@@ -21,14 +23,15 @@
             <ColumnDefinition Width="0.8*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label Style="{StaticResource LabelStyle1}" Content="Nom" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
-        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_nameTextBox" Grid.Row="1" Grid.Column="1" Margin="10"/>
-        <Label Style="{StaticResource LabelStyle1}" Content="Lignes" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
-        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_rowTextBox" Grid.Row="2" Grid.Column="1" Margin="10"/>
-        <Label Style="{StaticResource LabelStyle1}" Content="Colonnes" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
-        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_columnTextBox" Grid.Row="3" Grid.Column="1" Margin="10"/>
-        <Label Style="{StaticResource LabelStyle1}" Content="Ajouter une salle" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="15"/>
-        <Button Style="{StaticResource ButtonStyle1}" Click="ConfirmButton_Click" Content="Ajouter" FontFamily="Segoe UI Semibold" Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,7,7" Width="60"/>
-        <Label x:Name="error" Content="" Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,0,0,40" VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+        <uc:Navbar Grid.ColumnSpan="2"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Nom" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_nameTextBox" Grid.Row="2" Grid.Column="1" Margin="10"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Lignes" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_rowTextBox" Grid.Row="3" Grid.Column="1" Margin="10"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Colonnes" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_columnTextBox" Grid.Row="4" Grid.Column="1" Margin="10"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Ajouter une salle" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="15"/>
+        <Button Style="{StaticResource ButtonStyle1}" Click="ConfirmButton_Click" Content="Ajouter" FontFamily="Segoe UI Semibold" Grid.Row="5" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,7,7" Width="60"/>
+        <Label x:Name="error" Content="" Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,0,0,40" VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
     </Grid>
 </Page>

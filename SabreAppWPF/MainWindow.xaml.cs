@@ -65,8 +65,7 @@ namespace SabreAppWPF
                                 CREATE TABLE IF NOT EXISTS
                                 reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT);";
             cmd.ExecuteNonQuery();
-            cmd.CommandText = "INSERT INTO classrooms(planId, name) VALUES(@planId, @name)";
-            cmd.Parameters.AddWithValue("planId", 1);
+            cmd.CommandText = "INSERT INTO classrooms(name) VALUES(@name)";
             cmd.Parameters.AddWithValue("name", "103");
             cmd.Prepare();
             cmd.ExecuteNonQuery();

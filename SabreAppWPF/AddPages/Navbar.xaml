@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="SabreAppWPF.AddPages.Navbar_Control.Navbar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SabreAppWPF.AddPages"
+             xmlns:external="clr-namespace:SabreAppWPF.LightDark"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" d:DesignWidth="250">
+    <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Button Style="{StaticResource ButtonStyle1}" Click="StudentButton_Click" Content="Etudiant" Grid.Column="0"/>
+        <Button Style="{StaticResource ButtonStyle1}" Click="RoomButton_Click" Content="Classe" Grid.Column="1"/>
+        <Button Style="{StaticResource ButtonStyle1}" Click="ScheduleButton_Click" Content="Horriare" Grid.Column="2"/>
+        <Button Style="{StaticResource ButtonStyle1}" Click="RoomButton_Click" Content="Salle" Grid.Column="3"/>
+    </Grid>
+</UserControl>

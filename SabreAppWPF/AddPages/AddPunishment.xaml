@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SabreAppWPF.AddPages"
+      xmlns:uc="clr-namespace:SabreAppWPF.AddPages.Navbar_Control"
       xmlns:external="clr-namespace:SabreAppWPF.LightDark"
       mc:Ignorable="d" 
       Height="350" Width="250"
@@ -11,7 +12,8 @@
 
     <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
@@ -22,15 +24,16 @@
             <ColumnDefinition Width="0.8*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label Style="{StaticResource LabelStyle1}" Content="Prénom" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
-        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_surnameTextBox" Grid.Row="1" Grid.Column="1" Margin="10"/>
-        <Label Style="{StaticResource LabelStyle1}" Content="Nom" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
-        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_lastnameTextBox" Grid.Row="2" Grid.Column="1" Margin="10"/>
-        <Label Style="{StaticResource LabelStyle1}" Content="Echéance" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
-        <DatePicker x:Name="_endDatePicker" Grid.Row="3" Grid.Column="1" Margin="10"/>
-        <Label Style="{StaticResource LabelStyle1}" Content="Description" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
-        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_descriptionTextBox" Grid.Row="4" Grid.Column="1" Margin="10"/>
-        <Label Style="{StaticResource LabelStyle1}" Content="Ajouter une punition" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="15"/>
+        <uc:Navbar Grid.ColumnSpan="2"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Prénom" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_surnameTextBox" Grid.Row="2" Grid.Column="1" Margin="10"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Nom" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_lastnameTextBox" Grid.Row="3" Grid.Column="1" Margin="10"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Echéance" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <DatePicker x:Name="_endDatePicker" Grid.Row="4" Grid.Column="1" Margin="10"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Description" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_descriptionTextBox" Grid.Row="5" Grid.Column="1" Margin="10"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Ajouter une punition" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="15"/>
         <Button Style="{StaticResource ButtonStyle1}" Click="ConfirmButton_Click" Content="Ajouter" FontFamily="Segoe UI Semibold" Grid.Row="7" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,7,7" Width="60"/>
         <Label x:Name="error" Content="" Grid.Row="6" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,0,0,40" VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
     </Grid>

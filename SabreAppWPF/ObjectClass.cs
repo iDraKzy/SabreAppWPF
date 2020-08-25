@@ -1,4 +1,6 @@
-﻿namespace SabreAppWPF
+﻿using Windows.Phone.Management.Deployment;
+
+namespace SabreAppWPF
 {
     public class StudentInfo
     {
@@ -33,7 +35,24 @@
 
     public class GradeInfo
     {
-        public int gradeId, studentId, coeff, creationDate;
-        public float grade;
+        public int GradeId { get; set; }
+        public int StudentId { get; set; }
+        public int Coeff { get; set; }
+        public int CreationDate { get; set; }
+        public float Grade { get; set; }
+    }
+
+    public class ClassroomInfo
+    {
+        public int ClassroomId { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class RoomInfo
+    {
+        public int RoomId { get; set; }
+        public string Name { get; set; }
+        public int Rows { get; set; }
+        public int Columns { get; set; }
     }
 }

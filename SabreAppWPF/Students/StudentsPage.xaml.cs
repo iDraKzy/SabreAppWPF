@@ -98,8 +98,8 @@ namespace SabreAppWPF
                     int[] coeffArray = new int[gradesList.Count];
                     for (int i = 0; i < gradesList.Count; i++)
                     {
-                        gradesArray[i] = gradesList[i].grade;
-                        coeffArray[i] = gradesList[i].coeff;
+                        gradesArray[i] = gradesList[i].Grade;
+                        coeffArray[i] = gradesList[i].Coeff;
                     }
 
                     int coeffSum = coeffArray.Sum();
@@ -147,11 +147,11 @@ namespace SabreAppWPF
             {
                 GradeInfo gradeInfo = new GradeInfo()
                 {
-                    gradeId = rdr.GetInt32(0),
-                    studentId = rdr.GetInt32(1),
-                    grade = rdr.GetFloat(2),
-                    coeff = rdr.GetInt32(3),
-                    creationDate = rdr.GetInt32(4)
+                    GradeId = rdr.GetInt32(0),
+                    StudentId = rdr.GetInt32(1),
+                    Grade = rdr.GetFloat(2),
+                    Coeff = rdr.GetInt32(3),
+                    CreationDate = rdr.GetInt32(4)
                 };
                 gradesList.Add(gradeInfo);
             }
