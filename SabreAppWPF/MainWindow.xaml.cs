@@ -106,7 +106,6 @@ namespace SabreAppWPF
             //cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385214, ";
 
         Application.Current.Properties["studentsPage"] = new studentsPage();
-            _addFrame.Navigate(new AddClassroom());
 
             try
             {
@@ -139,7 +138,7 @@ namespace SabreAppWPF
 
         private void Main_Load(object sender, RoutedEventArgs e)
         {
-            _addFrame.Navigate(new AddSchedules());
+            //_addFrame.Navigate(new AddVote());
         }
             
 

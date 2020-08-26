@@ -57,5 +57,19 @@ namespace SabreAppWPF
             if (content == null) return new string[] { "Le champ contenu est obligatoire" };
             return new string[] { "valid", studentId.ToString() };
         }
+
+        static public string Vote(string lastname, string surname, string content)
+        {
+            int studentId = 0;
+            if (lastname == null) return "Le champ nom est obligatoire";
+            if (surname == null) { return "Le champ prénom est obligatoire"; }
+            else
+            {
+                studentId = Getter.GetStudentIdFromName(lastname, surname);
+                if (studentId == 0) return "Etudiant(e) introuvable";
+            }
+            if (content == null) return "Le champ déscription est obligatoire";
+            return "valid";
+        }
     }
 }

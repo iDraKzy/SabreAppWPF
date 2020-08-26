@@ -20,6 +20,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using SabreAppWPF.AddPages;
 using Windows.UI.Xaml.Automation.Peers;
+using System.Security.Policy;
 
 namespace SabreAppWPF
 {
@@ -324,19 +325,23 @@ namespace SabreAppWPF
         private void UpvotesButton_Click(object sender, RoutedEventArgs e)
         {
             StudentDisplay currentStudent = GetCurrentStudent(sender);
-            StudentsShared.AddVotesToDb(currentStudent.ID, true, "Upvote rapide");
-            int currentUpvoteCount = int.Parse(currentStudent.UpvotesCount);
-            currentUpvoteCount++;
-            currentStudent.UpvotesCount = currentUpvoteCount.ToString();
+            MainWindow window = GlobalFunction.GetMainWindow();
+            window._addFrame.Navigate(new AddVote(true, currentStudent));
+            //StudentsShared.AddVotesToDb(currentStudent.ID, true, "Upvote rapide");
+            //int currentUpvoteCount = int.Parse(currentStudent.UpvotesCount);
+            //currentUpvoteCount++;
+            //currentStudent.UpvotesCount = currentUpvoteCount.ToString();
         }
 
         private void DownvotesButton_Click(object sender, RoutedEventArgs e)
         {
             StudentDisplay currentStudent = GetCurrentStudent(sender);
-            StudentsShared.AddVotesToDb(currentStudent.ID, false, "Downvote rapide");
-            int currentDownvoteCount = int.Parse(currentStudent.DownvotesCount);
-            currentDownvoteCount++;
-            currentStudent.DownvotesCount = currentDownvoteCount.ToString();
+            MainWindow window = GlobalFunction.GetMainWindow();
+            window._addFrame.Navigate(new AddVote(false, currentStudent));
+            //StudentsShared.AddVotesToDb(currentStudent.ID, false, "Downvote rapide");
+            //int currentDownvoteCount = int.Parse(currentStudent.DownvotesCount);
+            //currentDownvoteCount++;
+            //currentStudent.DownvotesCount = currentDownvoteCount.ToString();
         }
     }
 
