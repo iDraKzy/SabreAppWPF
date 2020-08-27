@@ -139,6 +139,7 @@ namespace SabreAppWPF
         private void Main_Load(object sender, RoutedEventArgs e)
         {
             //_addFrame.Navigate(new AddVote());
+            _mainFrame.Navigate(new Test());
         }
             
 
