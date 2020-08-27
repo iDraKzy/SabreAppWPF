@@ -15,18 +15,18 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Windows.UI.Xaml.Automation.Peers;
 
-namespace SabreAppWPF
+namespace SabreAppWPF.Plans
 {
     /// <summary>
     /// Logique d'interaction pour Test.xaml
     /// </summary>
-    public partial class Test : Page
+    public partial class PlanEditPage : Page
     {
         private ObservableCollection<ObservableCollection<PlaceDisplay>> studentPlanList;
         private int rowNumber = 3;
         private int columnNumber = 6;
         private int columnSkipSize = 40;
-        public Test()
+        public PlanEditPage()
         {
             studentPlanList = new ObservableCollection<ObservableCollection<PlaceDisplay>>();
 

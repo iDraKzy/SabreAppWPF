@@ -65,7 +65,7 @@ namespace SabreAppWPF.Classrooms
                 ClassroomDisplay classroomDisplay = new ClassroomDisplay()
                 {
                     ID = classroomId,
-                    ClassroomName = rdr.GetString(2),
+                    ClassroomName = rdr.GetString(1),
                     StudentsNumber = studentNumberString,
                     NextSession = scheduleTime,
                 };

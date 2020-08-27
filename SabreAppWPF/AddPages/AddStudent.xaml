@@ -13,7 +13,7 @@
 
     <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="0.17*"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
