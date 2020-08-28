@@ -24,7 +24,6 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
-                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -32,7 +31,6 @@
                     <Button Style="{StaticResource ButtonStyle1}" Content="Menu Principal" Grid.Column="0" Grid.Row="0" Click="Main_Button_Click" FontFamily="Segoe UI Semibold"/>
                     <Button Style="{StaticResource ButtonStyle1}" Content="Etudiants" Grid.Column="1" Grid.Row="0" Click="Students_Button_Click" FontFamily="Segoe UI Semibold"/>
                     <Button Style="{StaticResource ButtonStyle1}" Content="Classes" Grid.Column="2" Grid.Row="0" Click="Classrooms_Button_Click" FontFamily="Segoe UI Semibold"/>
-                    <Button Style="{StaticResource ButtonStyle1}" Content="Plans" Grid.Column="3" Grid.Row="0" FontFamily="Segoe UI Semibold"/>
                 </Grid>
             </Border>
             <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,2,0">

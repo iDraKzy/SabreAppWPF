@@ -11,7 +11,7 @@ namespace SabreAppWPF
 
     public class VotesInfo
     {
-        public int voteId, studentId, creationData;
+        public int voteId, studentId, creationDate;
         public bool upvotes;
         public string description;
     }

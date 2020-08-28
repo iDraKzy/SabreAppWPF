@@ -7,7 +7,7 @@
       xmlns:external="clr-namespace:SabreAppWPF.LightDark"
       xmlns:uc="clr-namespace:SabreAppWPF.AddPages.Navbar_Control"
       mc:Ignorable="d" 
-      d:DesignHeight="350" d:DesignWidth="250"
+      Height="350" Width="250"
       Title="AddVote">
 
     <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">

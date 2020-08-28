@@ -7,7 +7,68 @@ namespace SabreAppWPF
 {
     public static class Getter
     {
+        /// <summary>
+        /// Returns all grades of a student
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <returns>List of GradeInfo</returns>
+        public static List<GradeInfo> GetAllGrades(int studentId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT * FROM grades WHERE studentId = @studentId";
+            cmd.Parameters.AddWithValue("studentId", studentId);
+            cmd.Prepare();
 
+            List<GradeInfo> gradesList = new List<GradeInfo>();
+
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                GradeInfo gradeInfo = new GradeInfo()
+                {
+                    GradeId = rdr.GetInt32(0),
+                    StudentId = rdr.GetInt32(1),
+                    Grade = rdr.GetFloat(2),
+                    Coeff = rdr.GetInt32(3),
+                    CreationDate = rdr.GetInt32(4)
+                };
+                gradesList.Add(gradeInfo);
+            }
+            return gradesList;
+        }
+
+        /// <summary>
+        /// Get all votes of the specified student of the given type (upvote = true, downvote = false)
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <param name="type">type of votes (upvote = true, downvote = false)</param>
+        /// <returns></returns>
+        public static List<VotesInfo> GetAllVotes(int studentId, bool type)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = $"SELECT * FROM votes WHERE studentId = {studentId} AND upvotes = {type}";
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            List<VotesInfo> votesList = new List<VotesInfo>();
+
+            while (rdr.Read())
+            {
+                VotesInfo voteInfo = new VotesInfo()
+                {
+                    voteId = rdr.GetInt32(0),
+                    studentId = rdr.GetInt32(1),
+                    upvotes = rdr.GetBoolean(2),
+                    description = rdr.GetString(3),
+                    creationDate = rdr.GetInt32(4)
+                };
+                votesList.Add(voteInfo);
+            }
+            rdr.Close();
+            return votesList;
+        }
+        /// <summary>
+        /// Returns all rooms from the database
+        /// </summary>
+        /// <returns>List of RoomInfo</returns>
         public static List<RoomInfo> GetAllRooms()
         {
             List<RoomInfo> roomsList = new List<RoomInfo>();

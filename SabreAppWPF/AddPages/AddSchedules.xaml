@@ -8,7 +8,7 @@
       xmlns:external="clr-namespace:SabreAppWPF.LightDark"
       xmlns:xamlhost="clr-namespace:Microsoft.Toolkit.Wpf.UI.XamlHost;assembly=Microsoft.Toolkit.Wpf.UI.XamlHost"
       mc:Ignorable="d" 
-      d:DesignHeight="378" d:DesignWidth="250"
+      Height="350" Width="250"
       Title="AddSchedules">
 
     <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">

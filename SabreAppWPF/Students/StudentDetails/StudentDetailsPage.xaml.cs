@@ -70,5 +70,10 @@ namespace SabreAppWPF.Students.StudentDetails
         {
             _detailsFrame.Navigate(new GradesDetails(studentId));
         }
+
+        private void VotesButton_Click(object sender, RoutedEventArgs e)
+        {
+            _detailsFrame.Navigate(new VotesDetails(studentId));
+        }
     }
 }

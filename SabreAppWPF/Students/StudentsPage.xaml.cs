@@ -83,12 +83,12 @@ namespace SabreAppWPF
                 NoteInfo lastNotes = GetLastNote(notesList);
 
                 //Handle votes
-                List<VotesInfo> upvotesList = GetAllVotes(studentId, true);
-                List<VotesInfo> downvotesList = GetAllVotes(studentId, false);
+                List<VotesInfo> upvotesList = Getter.GetAllVotes(studentId, true);
+                List<VotesInfo> downvotesList = Getter.GetAllVotes(studentId, false);
 
                 string average = "";
 
-                List<GradeInfo> gradesList = GetAllGrades(studentId);
+                List<GradeInfo> gradesList = Getter.GetAllGrades(studentId);
                 if (gradesList.Count == 0)
                 {
                     average = "20/20";
@@ -132,59 +132,6 @@ namespace SabreAppWPF
                 };
                 studentsCollection.Add(studentDisplay);
             }
-        }
-
-        public static List<GradeInfo> GetAllGrades(int studentId)
-        {
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "SELECT * FROM grades WHERE studentId = @studentId";
-            cmd.Parameters.AddWithValue("studentId", studentId);
-            cmd.Prepare();
-
-            List<GradeInfo> gradesList = new List<GradeInfo>();
-
-            using SQLiteDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
-            {
-                GradeInfo gradeInfo = new GradeInfo()
-                {
-                    GradeId = rdr.GetInt32(0),
-                    StudentId = rdr.GetInt32(1),
-                    Grade = rdr.GetFloat(2),
-                    Coeff = rdr.GetInt32(3),
-                    CreationDate = rdr.GetInt32(4)
-                };
-                gradesList.Add(gradeInfo);
-            }
-            return gradesList;
-        }
-
-        /// <summary>
-        /// Get all votes of the specified student of the given type (upvote = true, downvote = false)
-        /// </summary>
-        /// <param name="studentId"></param>
-        /// <param name="type">type of votes (upvote = true, downvote = false)</param>
-        /// <returns></returns>
-        public static List<VotesInfo> GetAllVotes(int studentId, bool type)
-        {
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = $"SELECT * FROM votes WHERE studentId = {studentId} AND upvotes = {type}";
-            using SQLiteDataReader rdr = cmd.ExecuteReader();
-            List<VotesInfo> votesList = new List<VotesInfo>();
-
-            while (rdr.Read())
-            {
-                VotesInfo voteInfo = new VotesInfo()
-                {
-                    voteId = rdr.GetInt32(0),
-                    upvotes = rdr.GetBoolean(2),
-                    description = rdr.GetString(3),
-                    creationData = rdr.GetInt32(4)
-                };
-                votesList.Add(voteInfo);
-            }
-            rdr.Close();
-            return votesList;
         }
         /// <summary>
         /// Get all the notes from a given student
