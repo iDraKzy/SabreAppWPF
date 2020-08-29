@@ -58,6 +58,11 @@ namespace SabreAppWPF.AddPages
             _roomNameComboBox.ItemsSource = roomsList;
             _roomNameComboBox.SelectedIndex = 0;
 
+            //Handle Repetitivity
+            List<string> allRepetitivity = new List<string>() { "Une fois par semaine", "Une semaine sur deux" };
+            _regularityComboBox.ItemsSource = allRepetitivity;
+            _regularityComboBox.SelectedIndex = 0;
+
         }
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
@@ -66,6 +71,7 @@ namespace SabreAppWPF.AddPages
             ClassroomEntry selectedClassroom = (ClassroomEntry)_classroomComboBox.SelectedItem;
             RoomEntry selectedRoom = (RoomEntry)_roomNameComboBox.SelectedItem;
             int weekDay = _weekDayComboBox.SelectedIndex;
+            int repetitivity = _regularityComboBox.SelectedIndex;
 
             WindowsXamlHost windowsHost = _timePicker;
             TimePicker timePicker = (TimePicker)windowsHost.Child;
@@ -75,14 +81,26 @@ namespace SabreAppWPF.AddPages
                 error.Foreground = new SolidColorBrush(Colors.Red);
                 error.Content = "Spécifier une heure.";
             }
+            DateTime? dateSelected = _firstDatePciker.SelectedDate; 
+            if (dateSelected == null)
+            {
+                error.Foreground = new SolidColorBrush(Colors.Red);
+                error.Content = "Spécifier une date de première séance";
+            }
+
+            DateTime dateSelectedNotNull = (DateTime)dateSelected;
+            dateSelectedNotNull.AddHours((double)timeSelected?.Hours);
+            dateSelectedNotNull.AddMinutes((double)timeSelected?.Minutes);
 
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO schedules(classroomId, roomId, weekDay, hour, minute) VALUES(@classroomId, @roomId, @weekDay, @hour, @minute)";
+            cmd.CommandText = "INSERT INTO schedules(classroomId, roomId, weekDay, hour, minute, repetitivity, nextDate) VALUES(@classroomId, @roomId, @weekDay, @hour, @minute, @repetitivity, @nextDate)";
             cmd.Parameters.AddWithValue("classroomId", selectedClassroom.ID);
             cmd.Parameters.AddWithValue("roomId", selectedRoom.ID);
             cmd.Parameters.AddWithValue("weekDay", weekDay);
             cmd.Parameters.AddWithValue("hour", timeSelected?.Hours);
             cmd.Parameters.AddWithValue("minute", timeSelected?.Minutes);
+            cmd.Parameters.AddWithValue("repetitivity", repetitivity);
+            cmd.Parameters.AddWithValue("nextDate", (int)new DateTimeOffset((DateTime)dateSelectedNotNull).ToUnixTimeSeconds());
             cmd.Prepare();
             cmd.ExecuteNonQuery();
             error.Foreground = new SolidColorBrush(Colors.Green);

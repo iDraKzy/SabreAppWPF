@@ -10,9 +10,12 @@ namespace SabreAppWPF.Classrooms
     {
         public static int? GetNextSessionTimestamp(ScheduleInfo schedule)
         {
-            if (schedule.weekDay == null || schedule.hour == null || schedule.minute == null) return null;
+            if (schedule.weekDay == null || schedule.hour == null || schedule.minute == null || schedule.repetitivity == null || schedule.lastDate == null) return null;
+            int repetitivity = (int)schedule.repetitivity;
             DateTime currentDay = DateTime.Today;
-            int daysToNextSession = GetNumberOfDaysToNextSession((int)schedule.weekDay);
+            int daysToNextSession = 0;
+            DateTime nextDateTime = DateTimeOffset.FromUnixTimeSeconds((long)schedule.lastDate).LocalDateTime;
+            daysToNextSession = GetNumberOfDaysToNextSession(nextDateTime, repetitivity);
 
             currentDay.AddDays(daysToNextSession);
             currentDay.AddHours((double)schedule.hour);
@@ -21,18 +24,11 @@ namespace SabreAppWPF.Classrooms
             return nextSessionTimestamp;
         }
 
-        public static int GetNumberOfDaysToNextSession(int weekDay)
+        public static int GetNumberOfDaysToNextSession(DateTime nextDate, int repetitivity)
         {
             DateTime currentDay = DateTime.Today;
-            int currentWeekDay = (int)currentDay.DayOfWeek;
-            int daysToNextSession = 0;
-            while (currentWeekDay != weekDay)
-            {
-                currentWeekDay++;
-                if (currentWeekDay > 6) currentWeekDay = 0;
-                daysToNextSession++;
-            }
-
+            TimeSpan timeSpan = nextDate.Subtract(currentDay);
+            int daysToNextSession = (7 * (repetitivity + 1)) - timeSpan.Days;
             return daysToNextSession;
         }
 
@@ -53,7 +49,9 @@ namespace SabreAppWPF.Classrooms
                     roomId = rdr.GetInt32(2),
                     weekDay = rdr.GetInt32(3),
                     hour = rdr.GetInt32(4),
-                    minute = rdr.GetInt32(5)
+                    minute = rdr.GetInt32(5),
+                    repetitivity = rdr.GetInt32(6),
+                    lastDate = rdr.GetInt32(7)
                 };
                 scheduleList.Add(scheduleInfo);
             }

@@ -8,6 +8,35 @@ namespace SabreAppWPF
     public static class Getter
     {
         /// <summary>
+        /// Returns all schedules from the database
+        /// </summary>
+        /// <returns>List of ScheduleInfo</returns>
+        public static List<ScheduleInfo> GetAllSchedules()
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT * FROM schedules";
+
+            List<ScheduleInfo> scheduleInfoList = new List<ScheduleInfo>();
+
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                ScheduleInfo scheduleInfo = new ScheduleInfo()
+                {
+                    scheduleId = rdr.GetInt32(0),
+                    classroomId = rdr.GetInt32(1),
+                    roomId = rdr.GetInt32(2),
+                    weekDay = rdr.GetInt32(3),
+                    hour = rdr.GetInt32(4),
+                    minute = rdr.GetInt32(5),
+                    repetitivity = rdr.GetInt32(6),
+                    nextDate = rdr.GetInt32(7)
+                };
+                scheduleInfoList.Add(scheduleInfo);
+            }
+            return scheduleInfoList;
+        }
+        /// <summary>
         /// Returns all grades of a student
         /// </summary>
         /// <param name="studentId"></param>
