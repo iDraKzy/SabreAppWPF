@@ -20,6 +20,7 @@ namespace SabreAppWPF.AddPages
     /// </summary>
     public partial class AddVote : Page
     {
+        //TODO: Quick description
         private bool upvote;
         private StudentDisplay studentDisplay;
         public AddVote(bool upvote, StudentDisplay studentDisplay)

@@ -28,13 +28,13 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <Label Grid.Row="0" Content="{Binding ClassroomName}" FontFamily="Segoe UI Semibold" FontSize="18" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                                        <Label Grid.Row="1" Content="{Binding StudentsNumber}" FontFamily="Segoe UI Semibold" FontSize="16" FontStyle="Italic" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                        <Label Style="{StaticResource LabelStyle1}" Grid.Row="0" Content="{Binding ClassroomName}" FontFamily="Segoe UI Semibold" FontSize="18" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                        <Label Style="{StaticResource LabelStyle1}" Grid.Row="1" Content="{Binding StudentsNumber}" FontFamily="Segoe UI Semibold" FontSize="16" FontStyle="Italic" VerticalAlignment="Center" Margin="10,0,0,0"/>
                                     </Grid>
-                                    <Label Content="Prochaine séance :" Grid.Column="1" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" FontSize="17" HorizontalAlignment="Center"/>
-                                    <Label Content="{Binding NextSession}" Grid.Column="1" Margin="0,40,0,0" FontFamily="Segoe UI Semibold" FontSize="15" HorizontalAlignment="Center"/>
-                                    <Button Click="StudentsListButton_Click" FontSize="14" FontFamily="Segoe UI Semibold" Content="Liste" Grid.Column="2" Margin="25"/>
-                                    <Button FontSize="14" FontFamily="Segoe UI Semibold" Content="Options (WIP)" Grid.Column="3" Margin="25" IsEnabled="False"/>
+                                    <Label Style="{StaticResource LabelStyle1}" Content="Prochaine séance :" Grid.Column="1" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" FontSize="17" HorizontalAlignment="Center"/>
+                                    <Label Style="{StaticResource LabelStyle1}" Content="{Binding NextSession}" Grid.Column="1" Margin="0,40,0,0" FontFamily="Segoe UI Semibold" FontSize="15" HorizontalAlignment="Center"/>
+                                    <Button Style="{StaticResource ButtonStyle1}" Click="StudentsListButton_Click" FontSize="14" FontFamily="Segoe UI Semibold" Content="Liste" Grid.Column="2" Margin="25"/>
+                                    <Button Style="{StaticResource ButtonStyle1}" FontSize="14" FontFamily="Segoe UI Semibold" Content="Options (WIP)" Grid.Column="3" Margin="25" IsEnabled="False"/>
                                 </Grid>
                             </Border>
                         </DataTemplate>

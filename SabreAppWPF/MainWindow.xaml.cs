@@ -122,7 +122,7 @@ namespace SabreAppWPF
             {
                 AppTheme.BackgroundColor = "#202020";
                 //AppTheme.TextColor = Colors.White;
-                AppTheme.TextColor = "#FFFFFF";
+                AppTheme.TextColor = "#f2f2f2";
                 AppTheme.ButtonHoverColor = "#404040";
                 AppTheme.ButtonClickColor = "#007acc";
                 AppTheme.BorderColor = "#404040";
