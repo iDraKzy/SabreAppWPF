@@ -16,6 +16,7 @@ using System.Data.SQLite;
 using SabreAppWPF.AddPages;
 using SabreAppWPF.LightDark;
 using SabreAppWPF.Classrooms;
+using SabreAppWPF.MainMenu;
 
 namespace SabreAppWPF
 {
@@ -54,7 +55,7 @@ namespace SabreAppWPF
                                 classrooms(classroomId INTEGER PRIMARY KEY, name TEXT);
 
                                 CREATE TABLE IF NOT EXISTS
-                                schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, weekDay INTEGER, hour INTEGER, minute INTEGER, repetitivity INTEGER, nextDate INTEGER);
+                                schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, repetitivity INTEGER, nextDate INTEGER, duration INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
                                 plans(planId INTEGER PRIMARY KEY, scheduleId INTEGER);
@@ -65,6 +66,7 @@ namespace SabreAppWPF
                                 CREATE TABLE IF NOT EXISTS
                                 reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT);";
             cmd.ExecuteNonQuery();
+#if DEBUG
             cmd.CommandText = "INSERT INTO classrooms(name) VALUES(@name)";
             cmd.Parameters.AddWithValue("name", "103");
             cmd.Prepare();
@@ -102,10 +104,10 @@ namespace SabreAppWPF
 
             cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385216, 1595000000, 0, 'Test 1')";
             cmd.ExecuteNonQuery();
-
+#endif
             //cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385214, ";
 
-        Application.Current.Properties["studentsPage"] = new studentsPage();
+            //Application.Current.Properties["studentsPage"] = new studentsPage();
 
             try
             {
@@ -139,7 +141,7 @@ namespace SabreAppWPF
         private void Main_Load(object sender, RoutedEventArgs e)
         {
             //_addFrame.Navigate(new AddVote());
-            _mainFrame.Navigate(new Plans.PlanEditPage());
+            _mainFrame.Navigate(new MainMenuPage());
         }
             
 
@@ -151,7 +153,7 @@ namespace SabreAppWPF
 
         private void Main_Button_Click(object sender, RoutedEventArgs e)
         {
-            //_mainFrame.Navigate(new studentsPage());
+            _mainFrame.Navigate(new MainMenuPage());
         }
 
         private void Classrooms_Button_Click(object sender, RoutedEventArgs e)

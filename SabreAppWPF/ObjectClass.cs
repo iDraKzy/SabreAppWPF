@@ -30,7 +30,7 @@ namespace SabreAppWPF
 
     public class ScheduleInfo
     {
-        public int? scheduleId, classroomId, roomId, weekDay, hour, minute, nextDate, repetitivity;
+        public int? scheduleId, classroomId, roomId, nextDate, repetitivity, duration;
     }
 
     public class GradeInfo

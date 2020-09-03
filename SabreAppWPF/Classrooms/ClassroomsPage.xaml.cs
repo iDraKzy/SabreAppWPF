@@ -43,14 +43,14 @@ namespace SabreAppWPF.Classrooms
                 {
                     for (int i = 0; i < scheduleClassroomList.Count; i++)
                     {
-                        int daysToNextSession = ClassroomsShared.GetNumberOfDaysToNextSession((int)scheduleClassroomList[i].weekDay);
+                        int daysToNextSession = ClassroomsShared.GetNumberOfDaysToNextSession(scheduleClassroomList[i]);
                         if (daysToNextSession < dayToSessionTemp)
                         {
                             selectedSchedule = scheduleClassroomList[i];
                             dayToSessionTemp = daysToNextSession;
                         }
                     }
-                    int nextSessionTimestamp = (int)ClassroomsShared.GetNextSessionTimestamp(selectedSchedule);
+                    int nextSessionTimestamp = (int)selectedSchedule.nextDate;
                     DateTime nextSessionDateTime = DateTimeOffset.FromUnixTimeSeconds(nextSessionTimestamp).LocalDateTime;
                     scheduleTime = nextSessionDateTime.ToString("g", GlobalVariable.culture);
                 } 

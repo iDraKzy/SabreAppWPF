@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SabreAppWPF"
         xmlns:external="clr-namespace:SabreAppWPF.LightDark"
         mc:Ignorable="d"
-        Title="Classroominator™️" Height="700" Width="1200"
+        Title="Classroominator™️" MinHeight="780" MinWidth="1300"
         Loaded="Main_Load">
     <Border Style="{StaticResource BorderStyle1}" BorderBrush="Black" BorderThickness="2,1,2,2" Margin="1">
         <Grid>

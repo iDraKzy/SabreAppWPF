@@ -26,10 +26,6 @@ namespace SabreAppWPF.AddPages
         public AddSchedules()
         {
             InitializeComponent();
-            //Handle week day
-            List<string> weekDayList = new List<string>() { "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche" };
-            _weekDayComboBox.ItemsSource = weekDayList;
-            _weekDayComboBox.SelectedIndex = 0;
             //Handle classrooms
             List<ClassroomInfo> allClassroomsList = Getter.GetAllClassrooms();
             foreach (ClassroomInfo classroom in allClassroomsList)
@@ -70,37 +66,45 @@ namespace SabreAppWPF.AddPages
             error.Content = "";
             ClassroomEntry selectedClassroom = (ClassroomEntry)_classroomComboBox.SelectedItem;
             RoomEntry selectedRoom = (RoomEntry)_roomNameComboBox.SelectedItem;
-            int weekDay = _weekDayComboBox.SelectedIndex;
             int repetitivity = _regularityComboBox.SelectedIndex;
 
             WindowsXamlHost windowsHost = _timePicker;
-            TimePicker timePicker = (TimePicker)windowsHost.Child;
-            TimeSpan? timeSelected = timePicker.SelectedTime;
-            if (timeSelected == null)
+            TimePicker timePickerHour = (TimePicker)windowsHost.Child;
+
+            WindowsXamlHost windowsHost2 = _durationTimePicker;
+            TimePicker durationTimePicker = (TimePicker)windowsHost2.Child;
+            TimeSpan? durationTimeSelected = durationTimePicker.SelectedTime;
+            if (durationTimeSelected == null)
+            {
+                error.Foreground = new SolidColorBrush(Colors.Red);
+                error.Content = "Spécifier une durée";
+                return;
+            }
+            TimeSpan? hourTimeSelected = timePickerHour.SelectedTime;
+            if (hourTimeSelected == null)
             {
                 error.Foreground = new SolidColorBrush(Colors.Red);
                 error.Content = "Spécifier une heure.";
+                return;
             }
             DateTime? dateSelected = _firstDatePciker.SelectedDate; 
             if (dateSelected == null)
             {
                 error.Foreground = new SolidColorBrush(Colors.Red);
                 error.Content = "Spécifier une date de première séance";
+                return;
             }
 
             DateTime dateSelectedNotNull = (DateTime)dateSelected;
-            dateSelectedNotNull.AddHours((double)timeSelected?.Hours);
-            dateSelectedNotNull.AddMinutes((double)timeSelected?.Minutes);
+            dateSelectedNotNull = dateSelectedNotNull.AddHours((double)hourTimeSelected?.Hours).AddMinutes((double)hourTimeSelected?.Minutes);
 
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO schedules(classroomId, roomId, weekDay, hour, minute, repetitivity, nextDate) VALUES(@classroomId, @roomId, @weekDay, @hour, @minute, @repetitivity, @nextDate)";
+            cmd.CommandText = "INSERT INTO schedules(classroomId, roomId, repetitivity, nextDate, duration) VALUES(@classroomId, @roomId, @repetitivity, @nextDate, @duration)";
             cmd.Parameters.AddWithValue("classroomId", selectedClassroom.ID);
             cmd.Parameters.AddWithValue("roomId", selectedRoom.ID);
-            cmd.Parameters.AddWithValue("weekDay", weekDay);
-            cmd.Parameters.AddWithValue("hour", timeSelected?.Hours);
-            cmd.Parameters.AddWithValue("minute", timeSelected?.Minutes);
             cmd.Parameters.AddWithValue("repetitivity", repetitivity);
-            cmd.Parameters.AddWithValue("nextDate", (int)new DateTimeOffset((DateTime)dateSelectedNotNull).ToUnixTimeSeconds());
+            cmd.Parameters.AddWithValue("nextDate", (int)new DateTimeOffset(dateSelectedNotNull).ToUnixTimeSeconds());
+            cmd.Parameters.AddWithValue("duration", (int)hourTimeSelected?.TotalSeconds);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
             error.Foreground = new SolidColorBrush(Colors.Green);

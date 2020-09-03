@@ -26,11 +26,9 @@ namespace SabreAppWPF
                     scheduleId = rdr.GetInt32(0),
                     classroomId = rdr.GetInt32(1),
                     roomId = rdr.GetInt32(2),
-                    weekDay = rdr.GetInt32(3),
-                    hour = rdr.GetInt32(4),
-                    minute = rdr.GetInt32(5),
-                    repetitivity = rdr.GetInt32(6),
-                    nextDate = rdr.GetInt32(7)
+                    repetitivity = rdr.GetInt32(3),
+                    nextDate = rdr.GetInt32(4),
+                    duration = rdr.GetInt32(5)
                 };
                 scheduleInfoList.Add(scheduleInfo);
             }
@@ -117,6 +115,16 @@ namespace SabreAppWPF
                 roomsList.Add(roomInfo);
             }
             return roomsList;
+        }
+
+        public static string GetRoomNameFromID(int roomId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT name FROM rooms WHERE roomId = @roomId";
+            cmd.Parameters.AddWithValue("roomId", roomId);
+            cmd.Prepare();
+            string roomName = (string)cmd.ExecuteScalar();
+            return roomName;
         }
         /// <summary>
         /// Gets all the classrooms from the database
