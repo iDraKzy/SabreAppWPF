@@ -2,11 +2,55 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data.SQLite;
+using Windows.Data.Text;
 
 namespace SabreAppWPF
 {
     public static class Getter
     {
+        public static PlanInfo GetPlanFromScheduleId(int scheduleId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT * FROM plans WHERE scheduleId = @scheduleId";
+            cmd.Parameters.AddWithValue("scheduleId", scheduleId);
+            cmd.Prepare();
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            PlanInfo plan = new PlanInfo();
+            while (rdr.Read())
+            {
+                plan.planId = rdr.GetInt32(0);
+                plan.scheduleId = rdr.GetInt32(1);
+                plan.roomId = rdr.GetInt32(2);
+                plan.spacing = rdr.GetString(3);
+            }
+            return plan;
+
+        }
+        /// <summary>
+        /// Get the schedule from its ID
+        /// </summary>
+        /// <param name="scheduleId">The id of the schedule</param>
+        /// <returns>ScheduleInfo object</returns>
+        public static ScheduleInfo GetScheduleFromId(int scheduleId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT * FROM schedules WHERE scheduleId = @scheduleId";
+            cmd.Parameters.AddWithValue("scheduleId", scheduleId);
+            cmd.Prepare();
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            ScheduleInfo scheduleInfo = new ScheduleInfo();
+            while (rdr.Read())
+            {
+                scheduleInfo.scheduleId = rdr.GetInt32(0);
+                scheduleInfo.classroomId = rdr.GetInt32(1);
+                scheduleInfo.roomId = rdr.GetInt32(2);
+                scheduleInfo.repetitivity = rdr.GetInt32(3);
+                scheduleInfo.nextDate = rdr.GetInt32(4);
+                scheduleInfo.duration = rdr.GetInt32(5);
+            }
+            return scheduleInfo;
+
+        }
         /// <summary>
         /// Returns all schedules from the database
         /// </summary>
@@ -116,7 +160,33 @@ namespace SabreAppWPF
             }
             return roomsList;
         }
-
+        /// <summary>
+        /// Returns a RoomInfo object from the id of the room
+        /// </summary>
+        /// <param name="roomId">Id of the room</param>
+        /// <returns>RoomInfo object</returns>
+        public static RoomInfo GetRoomFromID(int roomId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT EXISTS(SELECT * FROM rooms WHERE roomId = @roomId)";
+            cmd.Parameters.AddWithValue("roomId", roomId);
+            cmd.Prepare();
+            int exist = (int)(long)cmd.ExecuteScalar();
+            if (exist == 0) return null;
+            cmd.CommandText = "SELECT * FROM rooms WHERE roomId = @roomId";
+            cmd.Parameters.AddWithValue("roomId", roomId);
+            cmd.Prepare();
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            RoomInfo roomInfo = new RoomInfo();
+            while (rdr.Read())
+            {
+                roomInfo.RoomId = rdr.GetInt32(0);
+                roomInfo.Name = rdr.GetString(1);
+                roomInfo.Rows = rdr.GetInt32(2);
+                roomInfo.Columns = rdr.GetInt32(3);
+            }
+            return roomInfo;
+        }
         public static string GetRoomNameFromID(int roomId)
         {
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
@@ -147,6 +217,31 @@ namespace SabreAppWPF
             }
 
             return classroomsList;
+        }
+
+        public static List<StudentInfo> GetAllStudentsFromClassroomId(int classroomId)
+        {
+            List<StudentInfo> studentList = new List<StudentInfo>();
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT * FROM students WHERE classroomId = @classroomId";
+            cmd.Parameters.AddWithValue("classroomId", classroomId);
+            cmd.Prepare();
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                StudentInfo studentInfo = new StudentInfo()
+                {
+                    studentId = rdr.GetInt32(0),
+                    classroomId = rdr.GetInt32(1),
+                    lastname = rdr.GetString(2),
+                    surname = rdr.GetString(3),
+                    gender = rdr.GetBoolean(4),
+                    board = rdr.GetInt32(5),
+                    interrogation = rdr.GetBoolean(6)
+                };
+                studentList.Add(studentInfo);
+            }
+            return studentList;
         }
         /// <summary>
         /// Get the classroom name from its id

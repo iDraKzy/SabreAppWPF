@@ -33,6 +33,12 @@ namespace SabreAppWPF
         public int? scheduleId, classroomId, roomId, nextDate, repetitivity, duration;
     }
 
+    public class PlanInfo
+    {
+        public int planId, scheduleId, roomId;
+        public string spacing;
+    }
+
     public class GradeInfo
     {
         public int GradeId { get; set; }

@@ -17,6 +17,7 @@ using SabreAppWPF.AddPages;
 using SabreAppWPF.LightDark;
 using SabreAppWPF.Classrooms;
 using SabreAppWPF.MainMenu;
+using SabreAppWPF.Plans;
 
 namespace SabreAppWPF
 {
@@ -58,13 +59,13 @@ namespace SabreAppWPF
                                 schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, repetitivity INTEGER, nextDate INTEGER, duration INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
-                                plans(planId INTEGER PRIMARY KEY, scheduleId INTEGER);
+                                plans(planId INTEGER PRIMARY KEY, scheduleId INTEGER, roomId INTEGER, spacing TEXT);
 
                                 CREATE TABLE IF NOT EXISTS
                                 places(placeId INTEGER PRIMARY KEY, planId INTEGER, studentId INTEGER, row INTEGER, column INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
-                                reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT);";
+                                reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT);"; //Spacing in plans is a string of comma seperated int
             cmd.ExecuteNonQuery();
 #if DEBUG
             cmd.CommandText = "INSERT INTO classrooms(name) VALUES(@name)";
@@ -141,7 +142,8 @@ namespace SabreAppWPF
         private void Main_Load(object sender, RoutedEventArgs e)
         {
             //_addFrame.Navigate(new AddVote());
-            _mainFrame.Navigate(new MainMenuPage());
+            //_mainFrame.Navigate(new MainMenuPage());
+            _mainFrame.Navigate(new PlanEditPage(1, 1));
         }
             
 

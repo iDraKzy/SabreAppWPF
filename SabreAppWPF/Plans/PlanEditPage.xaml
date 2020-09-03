@@ -11,9 +11,10 @@
       SizeChanged="Test_SizeChanged">
 
     <Page.Resources>
+
         <DataTemplate x:Key="DataTemplate_Level2">
-            <Border BorderBrush="White" BorderThickness="{Binding Thickness}" AllowDrop="{Binding Drop}" Height="{Binding ItemHeight}" Width="{Binding ItemWidth}">
-                <Label Foreground="White" Content="{Binding Content}" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Border BorderBrush="White" BorderThickness="{Binding Thickness}" Drop="Student_Drop" AllowDrop="{Binding Drop}" Height="{Binding ItemHeight}" Width="{Binding ItemWidth}">
+                <Label Foreground="White" Content="{Binding Content}" FontSize="12" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
             </Border>
         </DataTemplate>
 
@@ -30,14 +31,27 @@
     </Page.Resources>
     <Grid x:Name="_mainGrid">
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="170"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="1" x:Name="_testGrid">
-            <ItemsControl x:Name="lst" ItemTemplate="{DynamicResource DataTemplate_Level1}"/>
+        <Grid Grid.Column="1" Grid.Row="1" x:Name="_testGrid">
+            <ItemsControl x:Name="_lst" ItemTemplate="{DynamicResource DataTemplate_Level1}"/>
         </Grid>
+        <ListBox Grid.Column="0" Grid.Row="1" x:Name="_studentList" PreviewMouseLeftButtonDown="Listbox_MouseLeftButtonDown">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" FontFamily="Segoe UI Semibold"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
     </Grid>
 </Page>
