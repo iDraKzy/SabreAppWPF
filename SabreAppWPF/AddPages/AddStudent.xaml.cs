@@ -81,7 +81,7 @@ namespace SabreAppWPF.AddPages
             {
                 ID = (int)studentId,
                 Name = surname + " " + lastname,
-                ClassroomName = Getter.GetClassrommNameFromID(classroomId),
+                ClassroomName = Database.Get.Classroom.NameFromID(classroomId),
                 LastHomeWorkId = 0,
                 LastHomeworkStatusText = GlobalVariable.specialCharacter["CheckMark"],
                 LastHomeworkStatusColor = "Green",

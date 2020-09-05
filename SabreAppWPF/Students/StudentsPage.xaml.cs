@@ -62,7 +62,7 @@ namespace SabreAppWPF
                 using SQLiteCommand cmdLoop = GlobalFunction.OpenDbConnection();
                 int studentId = rdr.GetInt32(0);
                 //Handle classroom name
-                string classroomName = Getter.GetClassrommNameFromID(rdr.GetInt32(1));
+                string classroomName = Database.Get.Classroom.NameFromID(rdr.GetInt32(1));
 
                 //Handle homework
                 List<HomeworkInfo> homeworkList = GetAllHomeworks(studentId);
@@ -83,12 +83,12 @@ namespace SabreAppWPF
                 NoteInfo lastNotes = GetLastNote(notesList);
 
                 //Handle votes
-                List<VotesInfo> upvotesList = Getter.GetAllVotes(studentId, true);
-                List<VotesInfo> downvotesList = Getter.GetAllVotes(studentId, false);
+                List<VotesInfo> upvotesList = Database.Get.Vote.AllFromStudentId(studentId, true);
+                List<VotesInfo> downvotesList = Database.Get.Vote.AllFromStudentId(studentId, false);
 
                 string average = "";
 
-                List<GradeInfo> gradesList = Getter.GetAllGrades(studentId);
+                List<GradeInfo> gradesList = Database.Get.Grade.AllFromStudentId(studentId);
                 if (gradesList.Count == 0)
                 {
                     average = "20/20";

@@ -29,7 +29,7 @@ namespace SabreAppWPF.AddPages
             this.upvote = upvote;
             this.studentDisplay = studentDisplay;
             _titleLabel.Content = upvote ? "Ajouter un upvote" : "Ajouter un downvote";
-            string[] studentName = Getter.GetStudentNameFromID(studentDisplay.ID);
+            string[] studentName = Database.Get.Student.NameFromID(studentDisplay.ID);
             _lastnameTextBox.Text = studentName[0];
             _surnameTextBox.Text = studentName[1];
         }
@@ -39,7 +39,7 @@ namespace SabreAppWPF.AddPages
             //votes(voteId INTEGER PRIMARY KEY, studentId INTEGER, upvotes BOOLEAN, description TEXT, creationDate INTEGER)
             string lastname = _lastnameTextBox.Text;
             string surname = _surnameTextBox.Text;
-            int studentId = Getter.GetStudentIdFromName(lastname, surname);
+            int studentId = Database.Get.Student.IdFromName(lastname, surname);
             string description = _descriptionTextBox.Text;
             DateTime currentDateTime = DateTime.Now;
             int currentTimestamp = (int)new DateTimeOffset(currentDateTime).ToUnixTimeSeconds();

@@ -32,29 +32,36 @@ namespace SabreAppWPF.Plans
         private int columnNumber;
         private int columnSkipSize = 40;
         private List<int> spacing = new List<int>();
+        private List<StudentPlaceDisplay> studentPlaceList = new List<StudentPlaceDisplay>();
         private int? planId = null;
-        public PlanEditPage(int scheduleId, int classroomId)
+        private int roomId;
+        private int scheduleId;
+        private ListBox dragSource = null;
+        public PlanEditPage(int scheduleId, int classroomId) //Create plan
         {
             studentPlanList = new ObservableCollection<ObservableCollection<PlaceDisplay>>();
-            ScheduleInfo schedule = Getter.GetScheduleFromId(scheduleId);
+            ScheduleInfo schedule = Database.Get.Schedule.FromId(scheduleId);
             if (schedule.scheduleId == null)
             {
                 MessageBox.Show("Un probème est surnvenu");
                 return;
             }
-            RoomInfo roomInfo = Getter.GetRoomFromID((int)schedule.roomId);
+
+            RoomInfo roomInfo = Database.Get.Room.FromID((int)schedule.roomId);
             if (roomInfo == null)
             {
                 MessageBox.Show("Salle inexistante");
                 return;
             }
+            roomId = (int)schedule.roomId;
+            this.scheduleId = scheduleId;
             rowNumber = roomInfo.Rows;
             columnNumber = roomInfo.Columns;
 
             //double itemWidth = _mainGrid.ColumnDefinitions[1].ActualWidth / columnNumber;
             //double itemHeight = _mainGrid.RowDefinitions[0].ActualHeight / rowNumber;
-            double initItemHeight = 60;
-            double initItemWidth = 60;
+            int initItemHeight = 60;
+            int initItemWidth = 60;
 
             for (int i = 0; i < rowNumber; i++)
             {
@@ -80,12 +87,13 @@ namespace SabreAppWPF.Plans
                         {
                             Row = i,
                             Column = j,
-                            ItemHeight = (int)initItemHeight,
-                            ItemWidth = (int)initItemWidth,
+                            ItemHeight = initItemHeight,
+                            ItemWidth = initItemWidth,
                             AbsoluteWidth = 0,
                             Content = $"Glisser déposer ici pour\nplacer l'élève {i} {j}",
                             Drop = true,
-                            Thickness = 1
+                            Thickness = 1,
+                            StudentId = 0
                         };
                         studentPlanList[i].Add(placeDisplay);
                     //}
@@ -98,7 +106,7 @@ namespace SabreAppWPF.Plans
             List<string> spacingList = new List<string>();
             if (planId != null)
             {
-                PlanInfo plan = Getter.GetPlanFromScheduleId(scheduleId);
+                PlanInfo plan = Database.Get.Plan.FromScheduleId(scheduleId);
                 spacingList = plan.spacing.Split(",").ToList();
                 planId = plan.planId;
 
@@ -127,7 +135,7 @@ namespace SabreAppWPF.Plans
             }
 
             ObservableCollection<NameDisplay> studentCollection = new ObservableCollection<NameDisplay>();
-            List<StudentInfo> studentList = Getter.GetAllStudentsFromClassroomId(classroomId);
+            List<StudentInfo> studentList = Database.Get.Student.AllFromClassroomId(classroomId);
             foreach (StudentInfo student in studentList)
             {
                 NameDisplay nameDisplay = new NameDisplay()
@@ -141,7 +149,40 @@ namespace SabreAppWPF.Plans
             _studentList.ItemsSource = studentCollection;
             _lst.ItemsSource = studentPlanList;
         }
+        /// <summary>
+        /// Save the plan in the database (only works for creation as of right now)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "INSERT INTO plans(scheduleId, roomId, spacing) VALUES(@scheduleId, @roomId, @spacing)";
+            cmd.Parameters.AddWithValue("scheduleId", scheduleId);
+            cmd.Parameters.AddWithValue("roomId", roomId);
+            cmd.Parameters.AddWithValue("spacing", String.Join(",", spacing));
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "SELECT last_insert_rowid()";
+            long planId = (long)cmd.ExecuteScalar();
 
+            foreach (StudentPlaceDisplay studentPlace in studentPlaceList)
+            {
+                cmd.CommandText = "INSERT INTO places(planId, studentId, row, column) VALUES(@planId, @studentId, @row, @column)";
+                cmd.Parameters.AddWithValue("planId", planId);
+                cmd.Parameters.AddWithValue("studentId", studentPlace.StudentId);
+                cmd.Parameters.AddWithValue("row", studentPlace.Row);
+                cmd.Parameters.AddWithValue("column", studentPlace.Column);
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// Adds the spacing to the temporary list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SpacingButton_Click(object sender, RoutedEventArgs e)
         {
             int index = (int)((Button)sender).Tag;
@@ -149,17 +190,33 @@ namespace SabreAppWPF.Plans
             ((Button)sender).IsEnabled = false;
         }
 
-        private ListBox dragSource = null;
+        /// <summary>
+        /// Handle the end of the dragging action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Student_Drop(object sender, DragEventArgs e)
         {
             PlaceDisplay placeDisplay = (PlaceDisplay)((FrameworkElement)sender).DataContext;
             NameDisplay data = (NameDisplay)e.Data.GetData(typeof(NameDisplay));
+            if (placeDisplay.StudentId != 0) return;
             placeDisplay.Content = data.Name;
             placeDisplay.StudentId = data.ID;
+            StudentPlaceDisplay studentPlace = new StudentPlaceDisplay()
+            {
+                StudentId = data.ID,
+                Row = placeDisplay.Row,
+                Column = placeDisplay.Column
+            };
+            studentPlaceList.Add(studentPlace);
             ((IList)dragSource.ItemsSource).Remove(data);
 
         }
-
+        /// <summary>
+        /// Handle the beginning of the drag action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Listbox_MouseLeftButtonDown(object sender, MouseEventArgs e)
         {
             ListBox listBox = (ListBox)sender;
@@ -172,7 +229,12 @@ namespace SabreAppWPF.Plans
             }
 
         }
-
+        /// <summary>
+        /// Gets the data from the selected item in the listbox for the drag action
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>
         private static object GetDataFromListBox(ListBox source, Point point)
         {
             UIElement element = source.InputHitTest(point) as UIElement;
@@ -202,17 +264,27 @@ namespace SabreAppWPF.Plans
 
             return null;
         }
-
+        /// <summary>
+        /// Handle the resize on load
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Test_Load(object sender, RoutedEventArgs e)
         {
             HandleResize();
         }
-
+        /// <summary>
+        /// Call handle resize when the window is resized
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Test_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             HandleResize();
         }
-
+        /// <summary>
+        /// Automatically handle resize of the grid when the window is resized
+        /// </summary>
         private void HandleResize()
         {
 
@@ -275,7 +347,9 @@ namespace SabreAppWPF.Plans
             //    column.Width = new GridLength(itemWidth);
             //}
         }
-
+        /// <summary>
+        /// Student name object for the list
+        /// </summary>
         public class NameDisplay : INotifyPropertyChanged
         {
             public event PropertyChangedEventHandler PropertyChanged;
@@ -306,7 +380,18 @@ namespace SabreAppWPF.Plans
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
         }
-
+        /// <summary>
+        /// Student object for the database
+        /// </summary>
+        public class StudentPlaceDisplay
+        {
+            public int StudentId { get; set; }
+            public int Row { get; set; }
+            public int Column { get; set; }
+        }
+        /// <summary>
+        /// Place object for the view
+        /// </summary>
         public class PlaceDisplay : INotifyPropertyChanged
         {
             public event PropertyChangedEventHandler PropertyChanged;

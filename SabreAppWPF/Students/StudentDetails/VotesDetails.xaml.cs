@@ -30,8 +30,8 @@ namespace SabreAppWPF.Students.StudentDetails
         {
             InitializeComponent();
 
-            List<VotesInfo> upvoteList = Getter.GetAllVotes(studentId, true);
-            List<VotesInfo> downvoteList = Getter.GetAllVotes(studentId, false);
+            List<VotesInfo> upvoteList = Database.Get.Vote.AllFromStudentId(studentId, true);
+            List<VotesInfo> downvoteList = Database.Get.Vote.AllFromStudentId(studentId, false);
 
             UpvoteList = ParseVoteList(upvoteList);
             DownvoteList = ParseVoteList(downvoteList);

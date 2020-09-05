@@ -27,7 +27,7 @@ namespace SabreAppWPF.AddPages
         {
             InitializeComponent();
             //Handle classrooms
-            List<ClassroomInfo> allClassroomsList = Getter.GetAllClassrooms();
+            List<ClassroomInfo> allClassroomsList = Database.Get.Classroom.All();
             foreach (ClassroomInfo classroom in allClassroomsList)
             {
                 ClassroomEntry classroomEntry = new ClassroomEntry()
@@ -41,7 +41,7 @@ namespace SabreAppWPF.AddPages
             _classroomComboBox.SelectedIndex = 0;
 
             //Handle Rooms
-            List<RoomInfo> allRoomsList = Getter.GetAllRooms();
+            List<RoomInfo> allRoomsList = Database.Get.Room.All();
             foreach (RoomInfo room in allRoomsList)
             {
                 RoomEntry roomEntry = new RoomEntry()

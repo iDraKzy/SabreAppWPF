@@ -61,4 +61,13 @@ namespace SabreAppWPF
         public int Rows { get; set; }
         public int Columns { get; set; }
     }
+    //places(placeId INTEGER PRIMARY KEY, planId INTEGER, studentId INTEGER, row INTEGER, column INTEGER);
+    public class PlaceInfo
+    {
+        public int PlaceId { get; set; }
+        public int PlanId { get; set; }
+        public int StudentId { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
+    }
 }

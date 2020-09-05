@@ -20,7 +20,7 @@ namespace SabreAppWPF
             if (lastname == null) { return new string[] { "Le champ nom est obligatoire" }; }
             else
             {
-                studentId = Getter.GetStudentIdFromName(lastname, surname);
+                studentId = Database.Get.Student.IdFromName(lastname, surname);
                 if (studentId == 0) return new string[] { "Etudiant(e) introuvable" };
             }
             if (endDate == null) { return new string[] { "Le champ Echéance est obligatoire" }; }
@@ -51,7 +51,7 @@ namespace SabreAppWPF
             if (surname == null) { return new string[] { "Le champ prénom est obligatoire" }; }
             else
             {
-                studentId = Getter.GetStudentIdFromName(lastname, surname);
+                studentId = Database.Get.Student.IdFromName(lastname, surname);
                 if (studentId == 0) return new string[] { "Etudiant(e) introuvable" };
             }
             if (content == null) return new string[] { "Le champ contenu est obligatoire" };
@@ -65,7 +65,7 @@ namespace SabreAppWPF
             if (surname == null) { return "Le champ prénom est obligatoire"; }
             else
             {
-                studentId = Getter.GetStudentIdFromName(lastname, surname);
+                studentId = Database.Get.Student.IdFromName(lastname, surname);
                 if (studentId == 0) return "Etudiant(e) introuvable";
             }
             if (content == null) return "Le champ déscription est obligatoire";

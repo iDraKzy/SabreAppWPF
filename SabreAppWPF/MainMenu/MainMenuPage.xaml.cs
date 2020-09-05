@@ -38,7 +38,7 @@ namespace SabreAppWPF.MainMenu
         {
             DateTime currentTime = DateTime.Now;
             int currentTimeStamp = (int)new DateTimeOffset(currentTime).ToUnixTimeSeconds();
-            List<ScheduleInfo> scheduleInfoList = Getter.GetAllSchedules();
+            List<ScheduleInfo> scheduleInfoList = Database.Get.Schedule.All();
             if (scheduleInfoList.Count == 0)
             {
                 NextSessionTime = "Aucune session prévue";
@@ -61,7 +61,7 @@ namespace SabreAppWPF.MainMenu
             DateTime nextDateTime = DateTimeOffset.FromUnixTimeSeconds(timeSelected).LocalDateTime;
             string nextScheduleString = nextDateTime.ToString("g", GlobalVariable.culture);
             NextSessionTime = nextScheduleString ?? "Aucun cours prévu";
-            NextSessionClassroom = $"Classe : {Getter.GetClassrommNameFromID((int)scheduleInfoList[scheduleIndex].classroomId)} -  Salle : {Getter.GetRoomNameFromID((int)scheduleInfoList[scheduleIndex].roomId)}";
+            NextSessionClassroom = $"Classe : {Database.Get.Classroom.NameFromID((int)scheduleInfoList[scheduleIndex].classroomId)} -  Salle : {Database.Get.Room.NameFromID((int)scheduleInfoList[scheduleIndex].roomId)}";
             ClassroomId = (int)scheduleInfoList[scheduleIndex].classroomId;
             if (currentTimeStamp > finishedTime)
             {
