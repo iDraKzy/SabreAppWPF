@@ -18,6 +18,7 @@ namespace SabreAppWPF.Classrooms
     /// </summary>
     public partial class ClassroomsOptions : Page
     {
+        //need to contazin schedule list from the classroom and allow plan creation
         private int classroomId;
         public ClassroomsOptions(int classroomId)
         {
