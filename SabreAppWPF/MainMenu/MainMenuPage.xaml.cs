@@ -16,6 +16,7 @@ using SabreAppWPF.AddPages;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.UI.Xaml.Automation.Peers;
+using System.Collections.ObjectModel;
 
 namespace SabreAppWPF.MainMenu
 {
@@ -24,6 +25,8 @@ namespace SabreAppWPF.MainMenu
     /// </summary>
     public partial class MainMenuPage : Page, INotifyPropertyChanged
     {
+        public static ObservableCollection<ReminderGridDisplay> reminderGridDisplayCollection;
+        public static ObservableCollection<ScheduleGridDisplay> scheduleGridDisplayCollection;
         private string _nextSessionTime;
         private string _nextSessionClassroom;
         private int _classroomId;
@@ -32,6 +35,11 @@ namespace SabreAppWPF.MainMenu
         {
             InitializeComponent();
             this.DataContext = this;
+            reminderGridDisplayCollection = new ObservableCollection<ReminderGridDisplay>();
+            scheduleGridDisplayCollection = new ObservableCollection<ScheduleGridDisplay>();
+
+            Populate_ScheduleDataGrid();
+            Populate_ReminderDataGrid();
         }
 
         private void MainMenuPage_Load(object sender, RoutedEventArgs e)
@@ -92,12 +100,26 @@ namespace SabreAppWPF.MainMenu
 
         private void Populate_ScheduleDataGrid()
         {
-
+            List<ScheduleInfo> scheduleList = Database.Get.Schedule.All();
+            
+            foreach (ScheduleInfo schedule in scheduleList)
+            {
+                DateTime scheduleDateTime = DateTimeOffset.FromUnixTimeSeconds((int)schedule.nextDate).LocalDateTime;
+                ScheduleGridDisplay scheduleDisplay = new ScheduleGridDisplay()
+                {
+                    ID = (int)schedule.scheduleId,
+                    Classroom = Database.Get.Classroom.NameFromID((int)schedule.classroomId),
+                    Date = scheduleDateTime.ToString("g", GlobalVariable.culture),
+                    Room = Database.Get.Room.NameFromID((int)schedule.roomId)
+                };
+                scheduleGridDisplayCollection.Add(scheduleDisplay);
+            }
         }
 
         private void Populate_ReminderDataGrid()
         {
-
+            //TODO: Implement
+            reminderGridDisplayCollection.Add(new ReminderGridDisplay() { Content = "Work in progress" });
         }
 
         private void AddSchedule_Click(object sender, RoutedEventArgs e)
@@ -113,7 +135,117 @@ namespace SabreAppWPF.MainMenu
         }
 
 
+
+
         //Binding Property
+
+        public class ReminderGridDisplay : INotifyPropertyChanged
+        {
+            public event PropertyChangedEventHandler PropertyChanged;
+            private int _id;
+            private string _date;
+            private string _classroom;
+            private string _content;
+
+            public int ID
+            {
+                get { return _id; }
+                set
+                {
+                    _id = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public string Date
+            {
+                get { return _date; }
+                set
+                {
+                    _date = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public string Classroom
+            {
+                get { return _classroom; }
+                set
+                {
+                    _classroom = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public string Content
+            {
+                get { return _content; }
+                set
+                {
+                    _content = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            protected void OnPropertyChanged([CallerMemberName] string name = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        public class ScheduleGridDisplay : INotifyPropertyChanged
+        {
+            public event PropertyChangedEventHandler PropertyChanged;
+            private int _id;
+            private string _date;
+            private string _classroom;
+            private string _room;
+
+            public int ID
+            {
+                get { return _id; }
+                set
+                {
+                    _id = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public string Date
+            {
+                get { return _date; }
+                set
+                {
+                    _date = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public string Classroom
+            {
+                get { return _classroom; }
+                set
+                {
+                    _classroom = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public string Room
+            {
+                get { return _room; }
+                set
+                {
+                    _room = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            protected void OnPropertyChanged([CallerMemberName] string name = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
 
         public string NextSessionTime
         {
