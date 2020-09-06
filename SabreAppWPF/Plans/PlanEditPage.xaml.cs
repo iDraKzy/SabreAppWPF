@@ -156,11 +156,19 @@ namespace SabreAppWPF.Plans
         /// <param name="e"></param>
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            string name = _nameTextBox.Text;
+            if (name == null)
+            {
+                MessageBox.Show("Entrer un nom pour le plan");
+                return;
+            }
+
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO plans(scheduleId, roomId, spacing) VALUES(@scheduleId, @roomId, @spacing)";
+            cmd.CommandText = "INSERT INTO plans(scheduleId, roomId, spacing, name) VALUES(@scheduleId, @roomId, @spacing, @name)";
             cmd.Parameters.AddWithValue("scheduleId", scheduleId);
             cmd.Parameters.AddWithValue("roomId", roomId);
             cmd.Parameters.AddWithValue("spacing", String.Join(",", spacing));
+            cmd.Parameters.AddWithValue("name", name);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
             cmd.CommandText = "SELECT last_insert_rowid()";

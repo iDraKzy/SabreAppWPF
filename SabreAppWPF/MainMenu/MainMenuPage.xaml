@@ -36,6 +36,7 @@
                 <Button Style="{StaticResource ButtonStyle1}" IsEnabled="{Binding ListEnabled}" Click="ClassroomList_Click" Content="Liste" Grid.Column="0" Margin="40,15"/>
                 <Button Style="{StaticResource ButtonStyle1}" Content="Plan (WIP)" Grid.Column="1" Margin="40,15" IsEnabled="False"/>
             </Grid>
+            <Button Style="{StaticResource ButtonStyle1}" Content="Plan aléatoire pour cette séance (WIP)" Grid.Column="1" Grid.Row="5" Margin="50,5,50,190" IsEnabled="False"/>
         </Grid>
         <Label Style="{StaticResource LabelStyle1}" Content="Eploi du temps" Grid.Column="0" VerticalAlignment="Top" Margin="5,0,0,0" HorizontalAlignment="Left" FontSize="15" FontFamily="Segoe UI Semibold"/>
         <DataGrid Grid.Column="0" Margin="10,35,10,40">

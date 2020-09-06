@@ -59,7 +59,7 @@ namespace SabreAppWPF
                                 schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, repetitivity INTEGER, nextDate INTEGER, duration INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
-                                plans(planId INTEGER PRIMARY KEY, scheduleId INTEGER, roomId INTEGER, spacing TEXT);
+                                plans(planId INTEGER PRIMARY KEY, scheduleId INTEGER, roomId INTEGER, spacing TEXT, name TEXT);
 
                                 CREATE TABLE IF NOT EXISTS
                                 places(placeId INTEGER PRIMARY KEY, planId INTEGER, studentId INTEGER, row INTEGER, column INTEGER);
@@ -142,8 +142,8 @@ namespace SabreAppWPF
         private void Main_Load(object sender, RoutedEventArgs e)
         {
             //_addFrame.Navigate(new AddVote());
-            //_mainFrame.Navigate(new MainMenuPage());
-            _mainFrame.Navigate(new PlanEditPage(1, 1));
+            _mainFrame.Navigate(new MainMenuPage());
+            //_mainFrame.Navigate(new PlanEditPage(1, 1));
         }
             
 

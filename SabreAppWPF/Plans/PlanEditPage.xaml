@@ -39,6 +39,8 @@
             <ColumnDefinition Width="190"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+        <Label Content="Nom du plan :" Grid.Column="1" Grid.Row="2" Foreground="White" VerticalAlignment="Center" Margin="300,0,0,0"/>
+        <TextBox x:Name="_nameTextBox" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Margin="400,0,85,0"/>
         <Button Click="SaveButton_Click" Content="Sauvegarder" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right" Margin="5,10"/>
         <Label Content="Tout changement non sauvegardé sera perdu" Grid.Row="2" Grid.Column="2" Foreground="White" FontSize="11" VerticalAlignment="Center"/>
         <Label Content="Les espacements ne sont pas visible ici" Foreground="White" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
