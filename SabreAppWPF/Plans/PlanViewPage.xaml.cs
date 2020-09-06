@@ -15,6 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
 using System.Linq;
+using SabreAppWPF.AddPages;
+using Windows.UI.Xaml.Automation.Peers;
 
 namespace SabreAppWPF.Plans
 {
@@ -27,18 +29,27 @@ namespace SabreAppWPF.Plans
         private int columnSkipSize = 40;
         private int columnNumber;
         private int rowNumber;
+        private int columnSkip;
+        private int columnCount;
+        private int classroomId;
+        private MainWindow window = GlobalFunction.GetMainWindow();
         public PlanViewPage(int planId)
         {
             PlanInfo plan = Database.Get.Plan.FromId(planId);
             RoomInfo room = Database.Get.Room.FromID(plan.roomId);
+            ScheduleInfo schedule = Database.Get.Schedule.FromId(plan.scheduleId);
+            classroomId = (int)schedule.classroomId;
 
-            string[] separationStringArray = plan.spacing.Split(",");
-            int[] seperationArray = new int[separationStringArray.Length];
-            for (int i = 0; i < separationStringArray.Length; i++)
+            List<int> seperationList = new List<int>();
+            List<string> separationStringList = new List<string>();
+            if (plan.spacing != "")
             {
-                seperationArray[i] = int.Parse(separationStringArray[i]);
+                separationStringList = plan.spacing.Split(",").ToList();
+                for (int i = 0; i < separationStringList.Count; i++)
+                {
+                    seperationList.Add(int.Parse(separationStringList[i]));
+                }
             }
-
             int initItemHeight = 40;
             int initItemWidth = 40;
 
@@ -47,17 +58,20 @@ namespace SabreAppWPF.Plans
             //placeList.Find(x => x.Row == 1 && x.Column == 2)
 
             rowNumber = room.Rows;
-            columnNumber = room.Columns;
+            columnNumber = room.Columns + seperationList.Count;
+            columnCount = room.Columns;
+            columnSkip = seperationList.Count;
 
             int currentColumn = 0;
 
             for (int i = 0; i < rowNumber; i++)
             {
                 studentPlanViewList.Add(new ObservableCollection<StudentPlanViewDisplay>());
+                currentColumn = 0;
 
-                for (int j = 0; j < columnNumber + seperationArray.Length; j++)
+                for (int j = 0; j < columnNumber; j++)
                 {
-                    if (seperationArray.Contains(i))
+                    if (seperationList.Contains(j))
                     {
                         StudentPlanViewDisplay placeDisplay = new StudentPlanViewDisplay()
                         {
@@ -68,33 +82,56 @@ namespace SabreAppWPF.Plans
                             BoardCheck = "",
                             InterrogationCheck = "",
                             ButtonVisible = false,
-                            Thickness = 0
+                            Thickness = 0,
+                            Enabled = false
                         };
                         studentPlanViewList[i].Add(placeDisplay);
                     }
                     else
                     {
                         PlaceInfo place = placeList.Find(x => x.Row == i && x.Column == currentColumn);
-                        string[] name = Database.Get.Student.NameFromID(place.StudentId);
-                        string parsedName = name[1] + " " + name[0];
-                        StudentPlanViewDisplay placeDisplay = new StudentPlanViewDisplay()
+                        if (place == null)
                         {
-                            ItemHeight = initItemHeight,
-                            ItemWidth = initItemWidth,
-                            AbsoluteWidth = 0,
-                            Name = parsedName,
-                            Thickness = 1,
-                            StudentId = 0,
-                            BoardCheck = GlobalVariable.specialCharacter["CheckMark"],
-                            InterrogationCheck = GlobalVariable.specialCharacter["CheckMark"],
-                            ButtonVisible = true
-                        };
-                        studentPlanViewList[i].Add(placeDisplay);
-                        currentColumn++;
+                            StudentPlanViewDisplay placeDisplayNull = new StudentPlanViewDisplay()
+                            {
+                                ItemHeight = initItemHeight,
+                                ItemWidth = initItemHeight,
+                                AbsoluteWidth = 0,
+                                Name = "",
+                                Thickness = 0,
+                                ButtonVisible = false,
+                                BoardCheck = "",
+                                InterrogationCheck = "",
+                                Enabled = false
+                            };
+                            studentPlanViewList[i].Add(placeDisplayNull);
+                        }
+                        else
+                        {
+                            string[] name = Database.Get.Student.NameFromID(place.StudentId);
+                            string parsedName = name[1] + " " + name[0];
+                            StudentPlanViewDisplay placeDisplay = new StudentPlanViewDisplay()
+                            {
+                                ItemHeight = initItemHeight,
+                                ItemWidth = initItemWidth,
+                                AbsoluteWidth = 0,
+                                Name = parsedName,
+                                Thickness = 1,
+                                StudentId = place.StudentId,
+                                BoardCheck = GlobalVariable.specialCharacter["CheckMark"],
+                                InterrogationCheck = GlobalVariable.specialCharacter["CheckMark"],
+                                ButtonVisible = false,
+                                Enabled = true
+                            };
+                            studentPlanViewList[i].Add(placeDisplay);
+                            currentColumn++;
+                        }
                     }
                 }
-                InitializeComponent();
             }
+            InitializeComponent();
+
+            _lst.ItemsSource = studentPlanViewList;
         }
 
         private void PlanViewPage_Load(object sender,  RoutedEventArgs e)
@@ -107,23 +144,43 @@ namespace SabreAppWPF.Plans
             HandleResize();
         }
 
+        private void Border_MouseLeave(object sender, RoutedEventArgs e)
+        {
+            StudentPlanViewDisplay student = (StudentPlanViewDisplay)((FrameworkElement)sender).DataContext;
+            if (!student.Enabled) return;
+            student.ButtonVisible = false;
+        }
+
+        private void Border_MouseEnter(object sender, RoutedEventArgs e)
+        {
+            StudentPlanViewDisplay student = (StudentPlanViewDisplay)((FrameworkElement)sender).DataContext;
+            if (!student.Enabled) return;
+            student.ButtonVisible = true;
+        }
+
+        private void AddHomework_Click(object sender, RoutedEventArgs e)
+        {
+
+            window._addFrame.Navigate(new AddHomeworkClassroom(classroomId));
+        }
+
+        private void RandomBoard_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void RandomInterro_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         private void HandleResize()
         {
 
             //int rowCount = _testGrid.RowDefinitions.Count;
             //int columnCount = _testGrid.ColumnDefinitions.Count;
-            int columnCount = 0;
-            int columnSkip = 0;
-            for (int i = 0; i < columnNumber; i++)
-            {
-                if (studentPlanViewList[0][i].AbsoluteWidth == 0)
-                {
-                    columnCount++;
-                }
-                else columnSkip++;
-            }
 
-            double columnWidth = _mainGrid.ColumnDefinitions[1].ActualWidth;
+            double columnWidth = _testGrid.ActualWidth;
             double columnCalculation = ((columnWidth - (columnSkipSize * columnSkip)) / columnCount);
 
             for (int i = 0; i < studentPlanViewList.Count; i++)
@@ -132,7 +189,7 @@ namespace SabreAppWPF.Plans
                 {
                     //double columnCalculation = columnWidth / columnCount;
                     double itemWidth = studentPlanViewList[i][j].AbsoluteWidth == 0 ? columnCalculation : studentPlanViewList[i][j].AbsoluteWidth;
-                    double itemHeight = _mainGrid.RowDefinitions[1].ActualHeight / rowNumber;
+                    double itemHeight = _testGrid.ActualHeight / rowNumber;
 
                     studentPlanViewList[i][j].ItemHeight = (int)itemHeight;
                     studentPlanViewList[i][j].ItemWidth = (int)itemWidth;
@@ -142,6 +199,18 @@ namespace SabreAppWPF.Plans
 
                 }
             }
+        }
+
+        private void UpvoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            StudentPlanViewDisplay student = (StudentPlanViewDisplay)((FrameworkElement)sender).DataContext;
+            window._addFrame.Navigate(new AddVote(true, student.StudentId));
+        }
+
+        private void DownvoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            StudentPlanViewDisplay student = (StudentPlanViewDisplay)((FrameworkElement)sender).DataContext;
+            window._addFrame.Navigate(new AddVote(false, student.StudentId));
         }
 
         public class StudentPlanViewDisplay : INotifyPropertyChanged
@@ -156,6 +225,7 @@ namespace SabreAppWPF.Plans
             private string _interrogationCheck;
             private string _boardCheck;
             private bool _buttonVisible;
+            private bool _enabled;
 
             public int StudentId
             {
@@ -243,6 +313,16 @@ namespace SabreAppWPF.Plans
                 set
                 {
                     _buttonVisible = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public bool Enabled
+            {
+                get { return _enabled; }
+                set
+                {
+                    _enabled = value;
                     OnPropertyChanged();
                 }
             }

@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
+using SabreAppWPF.AddPages;
 
 namespace SabreAppWPF.Classrooms
 {
@@ -86,6 +87,7 @@ namespace SabreAppWPF.Classrooms
             ClassroomDisplay classroomDisplay = (ClassroomDisplay)((FrameworkElement)sender).DataContext;
             MainWindow window = GlobalFunction.GetMainWindow();
             window._mainFrame.Navigate(new ClassroomsOptions(classroomDisplay.ID));
+            window._addFrame.Navigate(new AddHomeworkClassroom(classroomDisplay.ID));
         }
 
         private int GetStudentNumber(int classroomId)

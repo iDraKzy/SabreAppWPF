@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.SQLite;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace SabreAppWPF.Students.StudentDetails
 {
@@ -42,17 +44,62 @@ namespace SabreAppWPF.Students.StudentDetails
                 {
                     CreationDate = creationDateTime.ToString("g", GlobalVariable.culture),
                     Grade = rdr.GetFloat(2).ToString(),
-                    Coefficient = rdr.GetInt32(3).ToString()
+                    Coefficient = rdr.GetInt32(3).ToString(),
+                    Title = rdr.GetString(4)
                 };
                 gradeCollection.Add(gradeDetail);
             }
         }
 
-        public class GradeDetails
+        public class GradeDetails : INotifyPropertyChanged
         {
-            public string CreationDate { get; set; }
-            public string Grade { get; set; }
-            public string Coefficient { get; set; }
+            private string _creationDate;
+            private string _title;
+            private string _grade;
+            private string _coeff;
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public string Title
+            {
+                get { return _title; }
+                set
+                {
+                    _title = value;
+                    OnPropertyChanged();
+                }
+            }
+            public string CreationDate
+            {
+                get { return _creationDate; }
+                set
+                {
+                    _creationDate = value;
+                    OnPropertyChanged();
+                }
+            }
+            public string Grade
+            { 
+                get { return _grade; }
+                set
+                {
+                    _grade = value;
+                    OnPropertyChanged();
+                }
+            }
+            public string Coefficient 
+            {
+                get { return _coeff; }
+                set
+                {
+                    _coeff = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            protected void OnPropertyChanged([CallerMemberName] string name = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
     }
 }

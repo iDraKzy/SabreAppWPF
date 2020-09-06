@@ -44,7 +44,7 @@ namespace SabreAppWPF
                                 notes(noteId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, content TEXT);
                                 
                                 CREATE TABLE IF NOT EXISTS
-                                grades(gradeId INTEGER PRIMARY KEY, studentId INTEGER, grade FLOAT, coeff INTEGER, creationDate INTEGER);
+                                grades(gradeId INTEGER PRIMARY KEY, studentId INTEGER, grade FLOAT, coeff INTEGER, creationDate INTEGER, title TEXT);
 
                                 CREATE TABLE IF NOT EXISTS
                                 votes(voteId INTEGER PRIMARY KEY, studentId INTEGER, upvotes BOOLEAN, description TEXT, creationDate INTEGER);
@@ -142,7 +142,8 @@ namespace SabreAppWPF
         private void Main_Load(object sender, RoutedEventArgs e)
         {
             //_addFrame.Navigate(new AddVote());
-            _mainFrame.Navigate(new MainMenuPage());
+            //_mainFrame.Navigate(new MainMenuPage());
+            _mainFrame.Navigate(new PlanViewPage(2));
             //_mainFrame.Navigate(new PlanEditPage(1, 1));
         }
             

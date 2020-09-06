@@ -1,0 +1,40 @@
+﻿<Page x:Class="SabreAppWPF.AddPages.AddHomeworkStudent"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SabreAppWPF.AddPages"
+      xmlns:external="clr-namespace:SabreAppWPF.LightDark"
+      xmlns:uc="clr-namespace:SabreAppWPF.AddPages.Navbar_Control"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="AddHomeworkStudent">
+
+    <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="0.7*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.87*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <uc:Navbar Grid.ColumnSpan="2"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Prénom" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_surnameTextBox" Grid.Row="2" Grid.Column="1" Margin="5"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Nom" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI Semibold"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_lastnameTextBox" Grid.Row="3" Grid.Column="1" Margin="5"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Intitulé" Grid.Row="4" Grid.Column="0" Margin="5,0,0,0" VerticalAlignment="Center" FontFamily="Segoe UI Semibold"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="_titleTextBox" Grid.Row="4" Grid.Column="1" Margin="5"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Date de rendu" Grid.Row="5" Grid.Column="0" Margin="5,0,0,0" VerticalAlignment="Center" FontFamily="Segoe UI Sembold"/>
+        <DatePicker x:Name="_datePicker" Grid.Row="5" Grid.Column="1" Margin="5"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Ajouter un devoir à un(e) étudiant(e)" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="15"/>
+        <Button Style="{StaticResource ButtonStyle1}" Click="ConfirmButton_Click" Content="Ajouter" FontFamily="Segoe UI Semibold" Grid.Row="8" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,7,7" Width="60"/>
+        <Label x:Name="error" Content="" Grid.Row="8" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,0,65,15" VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+    </Grid>
+</Page>

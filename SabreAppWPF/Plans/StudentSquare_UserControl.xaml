@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="SabreAppWPF.Plans.StudentSquare_UserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SabreAppWPF.Plans"
+             xmlns:external="clr-namespace:SabreAppWPF.LightDark"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="200">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+    </UserControl.Resources>
+    <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Content="{Binding Name, RelativeSource={RelativeSource AncestorType=UserControl}}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Semibold"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="^" Margin="20,10,0,10" Visibility="{Binding ButtonVisible, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource BoolToVisConverter}}" IsEnabled="{Binding ButtonVisible, RelativeSource={RelativeSource AncestorType=Page}}"/>
+        <Button Grid.Row="2" Grid.Column="2" Content="˅" Margin="5,10,15,10" Visibility="{Binding ButtonVisible, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource BoolToVisConverter}}" IsEnabled="{Binding ButtonVisible, RelativeSource={RelativeSource AncestorType=Page}}"/>
+        <Label Content="{Binding InterrogationCheck, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <Button Content="Int." VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,0,0,0" Visibility="{Binding ButtonVisible, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource BoolToVisConverter}}" IsEnabled="{Binding ButtonVisible, RelativeSource={RelativeSource AncestorType=Page}}"/>
+        <Label Grid.Column="2" Content="{Binding BoardCheck, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="-1" IsEnabled="{Binding ButtonVisible, RelativeSource={RelativeSource TemplatedParent}}"/>
+        <Button Grid.Column="2" Content="Tab." VerticalAlignment="Center" HorizontalAlignment="Left" Visibility="{Binding ButtonVisible, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource BoolToVisConverter}}" IsEnabled="{Binding ButtonVisible, RelativeSource={RelativeSource AncestorType=Page}}"/>
+    </Grid>
+</UserControl>

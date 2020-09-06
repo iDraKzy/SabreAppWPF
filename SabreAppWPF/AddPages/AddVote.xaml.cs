@@ -37,6 +37,7 @@ namespace SabreAppWPF.AddPages
 
         public AddVote(bool upvote, int studentId)
         {
+            InitializeComponent();
             this.upvote = upvote;
             this.studentDisplay = null;
             this.studentId = studentId;

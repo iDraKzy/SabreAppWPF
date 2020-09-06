@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
+using System.Xml.Schema;
 
 namespace SabreAppWPF
 {
@@ -77,6 +79,25 @@ namespace SabreAppWPF
             if (description == null) return "Le champ déscription est obligatoire";
             if (date == null) return "Le champ date est obligatoire";
             if (time == null) return "Le champ heure est obligatoire";
+            return "valid";
+        }
+
+        //string title = _titleTextBox.Text;
+        //string lastname = _lastnameTextBox.Text;
+        //string surname = _lastnameTextBox.Text;
+        //string grade = _gradeTextBox.Text;
+        //string coeff = _coeffTextBox.Text;
+
+        static public string Grade(string title, string lastname, string surname, string grade, string coeff)
+        {
+            if (title == null) return "Le titre est obligatoire";
+            if (lastname == null) return "Le nom de famille est obligatoire";
+            if (surname == null) return "Le prénom est obligatoire";
+            int studentId = Database.Get.Student.IdFromName(lastname, surname);
+            if (studentId == 0) return "L'étudiant(e) est introuvable";
+            NumberStyles style = NumberStyles.AllowDecimalPoint;
+            if (!Double.TryParse(grade, style, GlobalVariable.culture, out _)) return "La note est obligatoire et doit être un nombre";
+            if (!int.TryParse(coeff, out _)) return "Le coeff est obligatoire et doit être un nombre";
             return "valid";
         }
     }

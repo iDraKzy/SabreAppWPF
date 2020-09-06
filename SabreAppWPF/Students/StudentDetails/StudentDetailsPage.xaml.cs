@@ -64,11 +64,13 @@ namespace SabreAppWPF.Students.StudentDetails
         private void HomeworkButton_Click(object sender, RoutedEventArgs e)
         {
             _detailsFrame.Navigate(new HomeworksDetails(studentId));
+            window._addFrame.Navigate(new AddHomeworkStudent(studentId));
         }
 
         private void GradesButton_Click(object sender, RoutedEventArgs e)
         {
             _detailsFrame.Navigate(new GradesDetails(studentId));
+            window._addFrame.Navigate(new AddGrade(studentId));
         }
 
         private void VotesButton_Click(object sender, RoutedEventArgs e)

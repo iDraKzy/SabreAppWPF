@@ -86,7 +86,7 @@ namespace SabreAppWPF.AddPages
                 LastHomeworkStatusText = GlobalVariable.specialCharacter["CheckMark"],
                 LastHomeworkStatusColor = "Green",
                 HomeworkButtonEnabled = false,
-                Average = "17.5/20",
+                Average = "20/20",
                 DownvotesCount = "0",
                 UpvotesCount = "0",
                 Note = "Aucune note"
