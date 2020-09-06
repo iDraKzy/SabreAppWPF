@@ -4,12 +4,13 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap rescap">
+  xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10"
+  IgnorableNamespaces="uap rescap iot">
 
   <Identity
     Name="0560a232-bd31-48e5-a4ca-e02a33803396"
     Publisher="CN=Youlan Collard"
-    Version="1.0.1.0" />
+    Version="1.0.4.0" />
 
   <Properties>
     <DisplayName>Classroominator</DisplayName>

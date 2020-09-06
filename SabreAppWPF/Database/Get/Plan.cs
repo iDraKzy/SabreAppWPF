@@ -22,25 +22,31 @@ namespace SabreAppWPF.Database.Get
                 plan.scheduleId = rdr.GetInt32(1);
                 plan.roomId = rdr.GetInt32(2);
                 plan.spacing = rdr.GetString(3);
+                plan.name = rdr.GetString(4);
             };
             return plan;
         }
-        public static PlanInfo FromScheduleId(int scheduleId)
+        public static List<PlanInfo> FromScheduleId(int scheduleId)
         {
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = "SELECT * FROM plans WHERE scheduleId = @scheduleId";
             cmd.Parameters.AddWithValue("scheduleId", scheduleId);
             cmd.Prepare();
             using SQLiteDataReader rdr = cmd.ExecuteReader();
-            PlanInfo plan = new PlanInfo();
+            List<PlanInfo> planInfos = new List<PlanInfo>();
             while (rdr.Read())
             {
-                plan.planId = rdr.GetInt32(0);
-                plan.scheduleId = rdr.GetInt32(1);
-                plan.roomId = rdr.GetInt32(2);
-                plan.spacing = rdr.GetString(3);
+                PlanInfo plan = new PlanInfo()
+                {
+                    planId = rdr.GetInt32(0),
+                    scheduleId = rdr.GetInt32(1),
+                    roomId = rdr.GetInt32(2),
+                    spacing = rdr.GetString(3),
+                    name = rdr.GetString(4)
+                };
+                planInfos.Add(plan);
             }
-            return plan;
+            return planInfos;
 
         }
     }

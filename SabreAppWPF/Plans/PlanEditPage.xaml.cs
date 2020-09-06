@@ -105,14 +105,14 @@ namespace SabreAppWPF.Plans
             InitializeComponent();
             buttonList = new List<Button>();
             List<string> spacingList = new List<string>();
-            if (planId != null)
-            {
-                PlanInfo plan = Database.Get.Plan.FromScheduleId(scheduleId);
-                spacingList = plan.spacing.Split(",").ToList();
-                planId = plan.planId;
+            //if (planId != null)
+            //{
+            //    List<PlanInfo> plan = Database.Get.Plan.FromScheduleId(scheduleId);
+            //    spacingList = plan.spacing.Split(",").ToList();
+            //    planId = plan.planId;
 
                 
-            }
+            //}
             for (int i = 0; i < columnNumber - 1; i++)
             {
                 Button btn = new Button();

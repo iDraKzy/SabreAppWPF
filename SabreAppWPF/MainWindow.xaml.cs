@@ -18,6 +18,7 @@ using SabreAppWPF.LightDark;
 using SabreAppWPF.Classrooms;
 using SabreAppWPF.MainMenu;
 using SabreAppWPF.Plans;
+using Windows.Storage;
 
 namespace SabreAppWPF
 {
@@ -28,45 +29,9 @@ namespace SabreAppWPF
     {
         public MainWindow()
         {
+            Task.Run(() => CreateDb());
             InitializeComponent();
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = @"CREATE TABLE IF NOT EXISTS
-                                students(studentId INTEGER PRIMARY KEY, classroomId INTEGER, lastname TEXT, surname TEXT, gender BOOLEAN, board BOOLEAN, interrogation BOOLEAN);
-
-                                CREATE TABLE IF NOT EXISTS
-                                homeworks(homeworkId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT);
-
-                                CREATE TABLE IF NOT EXISTS
-                                punishments(punishmentId INTEGER PRIMARY KEY, studentId INTEGER,
-                                creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT);
-
-                                CREATE TABLE IF NOT EXISTS
-                                notes(noteId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, content TEXT);
-                                
-                                CREATE TABLE IF NOT EXISTS
-                                grades(gradeId INTEGER PRIMARY KEY, studentId INTEGER, grade FLOAT, coeff INTEGER, creationDate INTEGER, title TEXT);
-
-                                CREATE TABLE IF NOT EXISTS
-                                votes(voteId INTEGER PRIMARY KEY, studentId INTEGER, upvotes BOOLEAN, description TEXT, creationDate INTEGER);
-
-                                CREATE TABLE IF NOT EXISTS
-                                rooms(roomId INTEGER PRIMARY KEY, name TEXT, rows INTEGER, columns INTEGER);
-
-                                CREATE TABLE IF NOT EXISTS
-                                classrooms(classroomId INTEGER PRIMARY KEY, name TEXT);
-
-                                CREATE TABLE IF NOT EXISTS
-                                schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, repetitivity INTEGER, nextDate INTEGER, duration INTEGER);
-
-                                CREATE TABLE IF NOT EXISTS
-                                plans(planId INTEGER PRIMARY KEY, scheduleId INTEGER, roomId INTEGER, spacing TEXT, name TEXT);
-
-                                CREATE TABLE IF NOT EXISTS
-                                places(placeId INTEGER PRIMARY KEY, planId INTEGER, studentId INTEGER, row INTEGER, column INTEGER);
-
-                                CREATE TABLE IF NOT EXISTS
-                                reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT);"; //Spacing in plans is a string of comma seperated int
-            cmd.ExecuteNonQuery();
+            //TODO: Eleve peuvent être dans deux groupes
 #if DEBUG
             //cmd.CommandText = "INSERT INTO classrooms(name) VALUES(@name)";
             //cmd.Parameters.AddWithValue("name", "103");
@@ -123,14 +88,17 @@ namespace SabreAppWPF
             {
                 AppTheme.BackgroundColor = "#202020";
                 //AppTheme.TextColor = Colors.White;
+                AppTheme.BackgroundGridRowColor = "#333333";
                 AppTheme.TextColor = "#f2f2f2";
                 AppTheme.ButtonHoverColor = "#404040";
                 AppTheme.ButtonClickColor = "#007acc";
                 AppTheme.BorderColor = "#404040";
                 AppTheme.ButtonTextDisabledColor = "#878787";
-            } else
+            }
+            else
             {
                 AppTheme.BackgroundColor = "#FFFFFF";
+                AppTheme.BackgroundGridRowColor = "#FFFFFF";
                 AppTheme.TextColor = "#000000";
                 AppTheme.ButtonHoverColor = "#DCDCDC";
                 AppTheme.ButtonClickColor = "#c9c9c9";
@@ -139,12 +107,56 @@ namespace SabreAppWPF
             }
         }
 
+        private async void CreateDb()
+        {
+            await ApplicationData.Current.LocalFolder.CreateFileAsync("Sabre.db", CreationCollisionOption.OpenIfExists);
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = @"CREATE TABLE IF NOT EXISTS
+                                students(studentId INTEGER PRIMARY KEY, classroomId INTEGER, lastname TEXT, surname TEXT, gender BOOLEAN, board BOOLEAN, interrogation BOOLEAN);
+
+                                CREATE TABLE IF NOT EXISTS
+                                homeworks(homeworkId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT);
+
+                                CREATE TABLE IF NOT EXISTS
+                                punishments(punishmentId INTEGER PRIMARY KEY, studentId INTEGER,
+                                creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT);
+
+                                CREATE TABLE IF NOT EXISTS
+                                notes(noteId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, content TEXT);
+                                
+                                CREATE TABLE IF NOT EXISTS
+                                grades(gradeId INTEGER PRIMARY KEY, studentId INTEGER, grade FLOAT, coeff INTEGER, creationDate INTEGER, title TEXT);
+
+                                CREATE TABLE IF NOT EXISTS
+                                votes(voteId INTEGER PRIMARY KEY, studentId INTEGER, upvotes BOOLEAN, description TEXT, creationDate INTEGER);
+
+                                CREATE TABLE IF NOT EXISTS
+                                rooms(roomId INTEGER PRIMARY KEY, name TEXT, rows INTEGER, columns INTEGER);
+
+                                CREATE TABLE IF NOT EXISTS
+                                classrooms(classroomId INTEGER PRIMARY KEY, name TEXT);
+
+                                CREATE TABLE IF NOT EXISTS
+                                schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, repetitivity INTEGER, nextDate INTEGER, duration INTEGER);
+
+                                CREATE TABLE IF NOT EXISTS
+                                plans(planId INTEGER PRIMARY KEY, scheduleId INTEGER, roomId INTEGER, spacing TEXT, name TEXT);
+
+                                CREATE TABLE IF NOT EXISTS
+                                places(placeId INTEGER PRIMARY KEY, planId INTEGER, studentId INTEGER, row INTEGER, column INTEGER);
+
+                                CREATE TABLE IF NOT EXISTS
+                                reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT);"; //Spacing in plans is a string of comma seperated int
+            cmd.ExecuteNonQuery();
+        }
+
         private void Main_Load(object sender, RoutedEventArgs e)
         {
             //_addFrame.Navigate(new AddVote());
-            //_mainFrame.Navigate(new MainMenuPage());
-            _mainFrame.Navigate(new PlanViewPage(2));
+            _mainFrame.Navigate(new MainMenuPage());
+            //_mainFrame.Navigate(new PlanViewPage(2));
             //_mainFrame.Navigate(new PlanEditPage(1, 1));
+            ClassroomsPage _ = new ClassroomsPage();
         }
             
 

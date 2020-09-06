@@ -16,6 +16,7 @@ namespace SabreAppWPF.LightDark
         private static string buttonClickColor;
         private static string borderColor;
         private static string buttonTextDisabledColor;
+        private static string backgroundGridRowColor;
 
         public static string TextColor 
         {
@@ -33,6 +34,16 @@ namespace SabreAppWPF.LightDark
             {
                 backgroundColor = value;
                 NotifyStaticPropertyChanged("BackgroundColor");
+            }
+        }
+
+        public static string BackgroundGridRowColor
+        {
+            get { return backgroundGridRowColor; }
+            set
+            {
+                backgroundGridRowColor = value;
+                NotifyStaticPropertyChanged("BackgroundGridRowColor");
             }
         }
 

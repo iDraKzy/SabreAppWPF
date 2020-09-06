@@ -29,7 +29,7 @@ namespace SabreAppWPF.AddPages
             _surnameTextBox.Text = name[1];
         }
 
-        private void ConfirmButon_Click(object sender, RoutedEventArgs e)
+        private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             DateTime currentTime = DateTime.Now;
             int currentTimestamp = (int)new DateTimeOffset(currentTime).ToUnixTimeSeconds();

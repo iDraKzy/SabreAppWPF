@@ -36,7 +36,7 @@ namespace SabreAppWPF
     public class PlanInfo
     {
         public int planId, scheduleId, roomId;
-        public string spacing;
+        public string spacing, name;
     }
 
     public class GradeInfo

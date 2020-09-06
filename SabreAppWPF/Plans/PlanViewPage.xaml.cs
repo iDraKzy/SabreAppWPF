@@ -17,6 +17,7 @@ using System.Data.SQLite;
 using System.Linq;
 using SabreAppWPF.AddPages;
 using Windows.UI.Xaml.Automation.Peers;
+using System.Globalization;
 
 namespace SabreAppWPF.Plans
 {
@@ -66,11 +67,13 @@ namespace SabreAppWPF.Plans
 
             for (int i = 0; i < rowNumber; i++)
             {
+                //MessageBox.Show("Début de la row " + i.ToString());
                 studentPlanViewList.Add(new ObservableCollection<StudentPlanViewDisplay>());
                 currentColumn = 0;
 
                 for (int j = 0; j < columnNumber; j++)
                 {
+                    //MessageBox.Show("Colonne " + j.ToString());
                     if (seperationList.Contains(j))
                     {
                         StudentPlanViewDisplay placeDisplay = new StudentPlanViewDisplay()
@@ -128,8 +131,8 @@ namespace SabreAppWPF.Plans
                                 Enabled = true
                             };
                             studentPlanViewList[i].Add(placeDisplay);
-                            currentColumn++;
                         }
+                        currentColumn++;
                     }
                 }
             }
@@ -141,6 +144,24 @@ namespace SabreAppWPF.Plans
         private void PlanViewPage_Load(object sender,  RoutedEventArgs e)
         {
             HandleResize();
+            //using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            //cmd.CommandText = "UPDATE students SET interrogation = false WHERE classroomId = @classroomId";
+            //cmd.Parameters.AddWithValue("classroomId", classroomId);
+            //cmd.Prepare();
+            //int test = cmd.ExecuteNonQuery();
+            //MessageBox.Show(test.ToString());
+
+            //foreach (ObservableCollection<StudentPlanViewDisplay> collection in studentPlanViewList)
+            //{
+            //    foreach (StudentPlanViewDisplay studentPlanView in collection)
+            //    {
+            //        if (studentPlanView.Enabled)
+            //        {
+            //            studentPlanView.InterroEnabled = true;
+            //            studentPlanView.InterrogationCheck = GlobalVariable.specialCharacter["Cross"];
+            //        }
+            //    }
+            //}
         }
 
         private void PlanViewPage_Resize(object sender, RoutedEventArgs e)
@@ -168,32 +189,152 @@ namespace SabreAppWPF.Plans
             window._addFrame.Navigate(new AddHomeworkClassroom(classroomId));
         }
 
-        private void Interrogation_Click(object sender, RoutedEventArgs e)
+        private void Interro_UpdateDB(StudentPlanViewDisplay student, int classroomId)
         {
-            StudentPlanViewDisplay student = (StudentPlanViewDisplay)((FrameworkElement)sender).DataContext;
             student.InterroEnabled = false;
             student.InterrogationCheck = GlobalVariable.specialCharacter["CheckMark"];
-
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = "UPDATE students SET interrogation = true WHERE studentId = @studentId";
             cmd.Parameters.AddWithValue("studentId", student.StudentId);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+
+            List<StudentInfo> studentList = Database.Get.Student.AllFromClassroomId(classroomId);
+            int interrogatedCount = 0;
+
+            foreach (StudentInfo studentInfo in studentList)
+            {
+                if (studentInfo.interrogation == true) interrogatedCount++;
+            }
+
+            if (interrogatedCount == studentList.Count)
+            {
+                cmd.CommandText = "UPDATE students SET interrogation = false WHERE classroomId = @classroomId";
+                cmd.Parameters.AddWithValue("classroomId", classroomId);
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+
+                foreach (ObservableCollection<StudentPlanViewDisplay> collection in studentPlanViewList)
+                {
+                    foreach (StudentPlanViewDisplay studentPlanView in collection)
+                    {
+                        if (studentPlanView.Enabled)
+                        {
+                            studentPlanView.InterroEnabled = true;
+                            studentPlanView.InterrogationCheck = GlobalVariable.specialCharacter["Cross"];
+
+                        }
+                    }
+                }
+            }
         }
 
+        private void Interrogation_Click(object sender, RoutedEventArgs e)
+        {
+            StudentPlanViewDisplay student = (StudentPlanViewDisplay)((FrameworkElement)sender).DataContext;
+            Interro_UpdateDB(student, classroomId);
+        }
+
+
+        private void Board_UpdateDB(StudentPlanViewDisplay student, int classroomId)
+        {
+            student.BoardEnabled = false;
+            student.BoardCheck = GlobalVariable.specialCharacter["CheckMark"];
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "UPDATE students SET board = true WHERE studentId = @studentId";
+            cmd.Parameters.AddWithValue("studentId", student.StudentId);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+
+            List<StudentInfo> studentList = Database.Get.Student.AllFromClassroomId(classroomId);
+            int boardCount = 0;
+
+            foreach (StudentInfo studentInfo in studentList)
+            {
+                if (studentInfo.board == true) boardCount++;
+            }
+
+            if (boardCount == studentList.Count)
+            {
+                cmd.CommandText = "UPDATE students SET board = false WHERE classroomId = @classroomId";
+                cmd.Parameters.AddWithValue("classroomId", classroomId);
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+
+                foreach (ObservableCollection<StudentPlanViewDisplay> collection in studentPlanViewList)
+                {
+                    foreach (StudentPlanViewDisplay studentPlanView in collection)
+                    {
+                        if (studentPlanView.Enabled)
+                        {
+                            studentPlanView.BoardEnabled = true;
+                            studentPlanView.BoardCheck = GlobalVariable.specialCharacter["Cross"];
+
+                        }
+                    }
+                }
+            }
+        }
         private void Board_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            StudentPlanViewDisplay student = (StudentPlanViewDisplay)((FrameworkElement)sender).DataContext;
+
+            Board_UpdateDB(student, classroomId);
         }
 
         private void RandomBoard_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            List<StudentInfo> studentList = Database.Get.Student.AllFromClassroomId(classroomId);
+            List<StudentInfo> studentBoardableList = new List<StudentInfo>();
+            foreach (StudentInfo student in studentList)
+            {
+                if (student.board == false) studentBoardableList.Add(student);
+            }
+
+            Random random = new Random();
+            int index = random.Next(studentBoardableList.Count);
+            string[] name = Database.Get.Student.NameFromID(studentBoardableList[index].studentId);
+            MessageBox.Show($"{name[1]} {name[0]}");
+
+            List<StudentPlanViewDisplay> allStudentPlanView = new List<StudentPlanViewDisplay>();
+            foreach (ObservableCollection<StudentPlanViewDisplay> collection in studentPlanViewList)
+            {
+                foreach (StudentPlanViewDisplay studentPlanView in collection)
+                {
+                    allStudentPlanView.Add(studentPlanView);
+                }
+            }
+
+            StudentPlanViewDisplay studentPlanViewSelected = allStudentPlanView.Find(x => x.StudentId == studentBoardableList[index].studentId);
+            Board_UpdateDB(studentPlanViewSelected, classroomId);
         }
 
         private void RandomInterro_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            List<StudentInfo> studentList = Database.Get.Student.AllFromClassroomId(classroomId);
+            List<StudentInfo> studentInterroableList = new List<StudentInfo>();
+            foreach (StudentInfo student in studentList)
+            {
+                if (student.interrogation == false) studentInterroableList.Add(student);
+            }
+
+            Random random = new Random();
+            int index = random.Next(studentInterroableList.Count);
+            string[] name = Database.Get.Student.NameFromID(studentInterroableList[index].studentId);
+            MessageBox.Show($"{name[1]} {name[0]}");
+
+            List<StudentPlanViewDisplay> allStudentPlanView = new List<StudentPlanViewDisplay>();
+            foreach (ObservableCollection<StudentPlanViewDisplay> collection in studentPlanViewList)
+            {
+                foreach (StudentPlanViewDisplay studentPlanView in collection)
+                {
+                    allStudentPlanView.Add(studentPlanView);
+                }
+            }
+
+            StudentPlanViewDisplay studentPlanViewSelected = allStudentPlanView.Find(x => x.StudentId == studentInterroableList[index].studentId);
+            Interro_UpdateDB(studentPlanViewSelected, classroomId);
+
         }
 
         private void HandleResize()

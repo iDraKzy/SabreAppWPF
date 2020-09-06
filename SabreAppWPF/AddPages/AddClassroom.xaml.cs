@@ -55,6 +55,9 @@ namespace SabreAppWPF.AddPages
                 StudentsNumber = "0 étudiant(e)s"
             };
             ClassroomsPage.classroomCollection.Add(classroomDisplay);
+
+            error.Foreground = new SolidColorBrush(Colors.Green);
+            error.Content = "Classe ajoutée avec succès";
         }
     }
 }

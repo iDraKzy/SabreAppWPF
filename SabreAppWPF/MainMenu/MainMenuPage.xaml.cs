@@ -74,17 +74,46 @@ namespace SabreAppWPF.MainMenu
                 }
             }
 
+            ScheduleId = (int)scheduleInfoList[scheduleIndex].scheduleId;
+
             int finishedTime = timeSelected + (int)scheduleInfoList[scheduleIndex].duration;
             DateTime nextDateTime = DateTimeOffset.FromUnixTimeSeconds(timeSelected).LocalDateTime;
             string nextScheduleString = nextDateTime.ToString("g", GlobalVariable.culture);
             NextSessionTime = nextScheduleString ?? "Aucun cours prévu";
             NextSessionClassroom = $"Classe : {Database.Get.Classroom.NameFromID((int)scheduleInfoList[scheduleIndex].classroomId)} -  Salle : {Database.Get.Room.NameFromID((int)scheduleInfoList[scheduleIndex].roomId)}";
             ClassroomId = (int)scheduleInfoList[scheduleIndex].classroomId;
+            List<PlanInfo> planInfos = Database.Get.Plan.FromScheduleId(ScheduleId);
+            if (planInfos.Count == 0)
+            {
+                PlanEnabled = false;
+            }
             if (currentTimeStamp > finishedTime)
             {
                 UpdateNextDate((int)scheduleInfoList[scheduleIndex].scheduleId, nextDateTime, (int)scheduleInfoList[scheduleIndex].repetitivity);
                 MainMenuPage_Load(sender, e);
             }
+        }
+
+        private void PlanButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow window = GlobalFunction.GetMainWindow();
+            List<PlanInfo> planInfos = Database.Get.Plan.FromScheduleId(ScheduleId);
+            List<PlanEntry> planEntries = new List<PlanEntry>();
+            foreach (PlanInfo planInfo in planInfos)
+            {
+                PlanEntry planEntry = new PlanEntry()
+                {
+                    ID = planInfo.planId,
+                    Name = planInfo.name
+                };
+                planEntries.Add(planEntry);
+            }
+            if (planEntries.Count == 1) { window._mainFrame.Navigate(new Plans.PlanViewPage(planEntries[0].ID)); }
+            else
+            {
+                window._mainFrame.Navigate(new Plans.PlanViewPage(planEntries[0].ID));
+            }
+            
         }
 
         private void UpdateNextDate(int scheduleId, DateTime nextDateTime, int repetitivity)
@@ -163,6 +192,38 @@ namespace SabreAppWPF.MainMenu
 
 
         //Binding Property
+
+        public class PlanEntry : INotifyPropertyChanged
+        {
+            public event PropertyChangedEventHandler PropertyChanged;
+            private int _id;
+            private string _name;
+
+            public int ID
+            {
+                get { return _id; }
+                set
+                {
+                    _id = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public string Name
+            {
+                get { return _name; }
+                set
+                {
+                    _name = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            protected void OnPropertyChanged([CallerMemberName] string name = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
 
         public class ReminderGridDisplay : INotifyPropertyChanged
         {
@@ -290,6 +351,16 @@ namespace SabreAppWPF.MainMenu
                 OnPropertyChanged();
             }
         }
+        private int _scheduleId;
+        public int ScheduleId
+        {
+            get { return _scheduleId; }
+            set
+            {
+                _scheduleId = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int ClassroomId
         {
@@ -307,6 +378,16 @@ namespace SabreAppWPF.MainMenu
             set
             {
                 _listEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+        private bool _planEnabled = true;
+        public bool PlanEnabled
+        {
+            get { return _planEnabled; }
+            set
+            {
+                _planEnabled = value;
                 OnPropertyChanged();
             }
         }
