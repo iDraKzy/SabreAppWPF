@@ -122,6 +122,8 @@ namespace SabreAppWPF.Plans
                                 StudentId = place.StudentId,
                                 BoardCheck = student.board ? GlobalVariable.specialCharacter["CheckMark"] : GlobalVariable.specialCharacter["Cross"],
                                 InterrogationCheck = student.interrogation ? GlobalVariable.specialCharacter["CheckMark"] : GlobalVariable.specialCharacter["Cross"],
+                                InterroEnabled = !student.interrogation,
+                                BoardEnabled = !student.board,
                                 ButtonVisible = false,
                                 Enabled = true
                             };
@@ -168,7 +170,15 @@ namespace SabreAppWPF.Plans
 
         private void Interrogation_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            StudentPlanViewDisplay student = (StudentPlanViewDisplay)((FrameworkElement)sender).DataContext;
+            student.InterroEnabled = false;
+            student.InterrogationCheck = GlobalVariable.specialCharacter["CheckMark"];
+
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "UPDATE students SET interrogation = true WHERE studentId = @studentId";
+            cmd.Parameters.AddWithValue("studentId", student.StudentId);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
 
         private void Board_Click(object sender, RoutedEventArgs e)
@@ -238,6 +248,8 @@ namespace SabreAppWPF.Plans
             private string _boardCheck;
             private bool _buttonVisible;
             private bool _enabled;
+            private bool _interroEnabled;
+            private bool _boardEnabled;
 
             public int StudentId
             {
@@ -335,6 +347,26 @@ namespace SabreAppWPF.Plans
                 set
                 {
                     _enabled = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public bool InterroEnabled
+            {
+                get { return _interroEnabled; }
+                set
+                {
+                    _interroEnabled = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public bool BoardEnabled
+            {
+                get { return _boardEnabled; }
+                set
+                {
+                    _boardEnabled = value;
                     OnPropertyChanged();
                 }
             }

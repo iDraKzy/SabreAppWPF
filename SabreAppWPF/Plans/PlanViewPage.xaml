@@ -32,9 +32,9 @@
                     <Button Style="{StaticResource ButtonStyle1}" Click="UpvoteButton_Click"  Grid.Row="2" Grid.Column="1" Content="^" Margin="5" Visibility="{Binding ButtonVisible, Converter={StaticResource BoolToVisConverter}}" IsEnabled="{Binding ButtonVisible}"/>
                     <Button Style="{StaticResource ButtonStyle1}" Click="DownvoteButton_Click"  Grid.Row="2" Grid.Column="2" Content="˅" Margin="5" Visibility="{Binding ButtonVisible, Converter={StaticResource BoolToVisConverter}}" IsEnabled="{Binding ButtonVisible}"/>
                     <Label Style="{StaticResource LabelStyle1}" Content="{Binding InterrogationCheck}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <Button Style="{StaticResource ButtonStyle1}" Click="Interrogation_Click" Content="Int." VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,0,0,0" Visibility="{Binding ButtonVisible, Converter={StaticResource BoolToVisConverter}}" IsEnabled="{Binding ButtonVisible}"/>
+                    <Button Style="{StaticResource ButtonStyle1}" Click="Interrogation_Click" Content="Int." VerticalAlignment="Center" HorizontalAlignment="Left" Margin="2,0,0,0" Visibility="{Binding ButtonVisible, Converter={StaticResource BoolToVisConverter}}" IsEnabled="{Binding InterroEnabled}"/>
                     <Label Style="{StaticResource LabelStyle1}" Grid.Column="2" Content="{Binding BoardCheck}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="-1"/>
-                    <Button Style="{StaticResource ButtonStyle1}" Click="Board_Click" Grid.Column="2" Content="Tab." VerticalAlignment="Center" HorizontalAlignment="Left" Visibility="{Binding ButtonVisible, Converter={StaticResource BoolToVisConverter}}" IsEnabled="{Binding ButtonVisible}"/>
+                    <Button Style="{StaticResource ButtonStyle1}" Click="Board_Click" Grid.Column="2" Content="Tab." VerticalAlignment="Center" HorizontalAlignment="Left" Visibility="{Binding ButtonVisible, Converter={StaticResource BoolToVisConverter}}" IsEnabled="{Binding BoardEnabled}"/>
                 </Grid>
             </Border>
         </DataTemplate>
