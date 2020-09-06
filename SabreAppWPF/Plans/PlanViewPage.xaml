@@ -6,7 +6,9 @@
       xmlns:local="clr-namespace:SabreAppWPF.Plans"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="PlanViewPage">
+      Title="PlanViewPage"
+      Loaded="PlanViewPage_Load"
+      SizeChanged="PlanViewPage_Resize">
 
     <Page.Resources>
 

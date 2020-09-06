@@ -49,7 +49,15 @@ namespace SabreAppWPF.MainMenu
             int timeSelected = int.MaxValue;
             for (int i = 0; i < scheduleInfoList.Count; i++)
             {
+                DateTime nextDateTimeTemp = DateTimeOffset.FromUnixTimeSeconds((long)scheduleInfoList[i].nextDate).LocalDateTime;
+                DateTime nextDateTimeTempWithSec = nextDateTimeTemp.AddSeconds((double)scheduleInfoList[i].duration);
+                int nextDateTimestampWithSec = (int)new DateTimeOffset(nextDateTimeTempWithSec).ToUnixTimeSeconds();
                 //TODO: IF time duration past update nextDate recursively until reach non past one IMPORTANT
+                if (nextDateTimestampWithSec < currentTimeStamp)
+                {
+                    UpdateNextDate((int)scheduleInfoList[i].scheduleId, nextDateTimeTemp, (int)scheduleInfoList[i].repetitivity);
+                    continue;
+                }
                 if (scheduleInfoList[i].nextDate < timeSelected)
                 {
                     timeSelected = (int)scheduleInfoList[i].nextDate;
@@ -65,16 +73,21 @@ namespace SabreAppWPF.MainMenu
             ClassroomId = (int)scheduleInfoList[scheduleIndex].classroomId;
             if (currentTimeStamp > finishedTime)
             {
-                int daysToNextSession = 7 * ((int)scheduleInfoList[scheduleIndex].repetitivity + 1);
-                DateTime nextSessionDateTime = nextDateTime.AddDays(daysToNextSession);
-                using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-                cmd.CommandText = "UPDATE schedules SET nextDate = @nextDate WHERE scheduleId = @scheduleId";
-                cmd.Parameters.AddWithValue("nextDate", (int)new DateTimeOffset(nextSessionDateTime).ToUnixTimeSeconds());
-                cmd.Parameters.AddWithValue("scheduleId", scheduleInfoList[scheduleIndex].scheduleId);
-                cmd.Prepare();
-                cmd.ExecuteNonQuery();
+                UpdateNextDate((int)scheduleInfoList[scheduleIndex].scheduleId, nextDateTime, (int)scheduleInfoList[scheduleIndex].repetitivity);
                 MainMenuPage_Load(sender, e);
             }
+        }
+
+        private void UpdateNextDate(int scheduleId, DateTime nextDateTime, int repetitivity)
+        {
+            int daysToNextSession = 7 * (repetitivity + 1);
+            DateTime nextSessionDateTime = nextDateTime.AddDays(daysToNextSession);
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "UPDATE schedules SET nextDate = @nextDate WHERE scheduleId = @scheduleId";
+            cmd.Parameters.AddWithValue("nextDate", (int)new DateTimeOffset(nextSessionDateTime).ToUnixTimeSeconds());
+            cmd.Parameters.AddWithValue("scheduleId", scheduleId);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
 
         private void Populate_ScheduleDataGrid()
