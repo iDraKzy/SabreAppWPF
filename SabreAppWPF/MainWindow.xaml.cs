@@ -68,43 +68,43 @@ namespace SabreAppWPF
                                 reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT);"; //Spacing in plans is a string of comma seperated int
             cmd.ExecuteNonQuery();
 #if DEBUG
-            cmd.CommandText = "INSERT INTO classrooms(name) VALUES(@name)";
-            cmd.Parameters.AddWithValue("name", "103");
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
-            cmd.CommandText = $"INSERT INTO punishments(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1000000, 10000022, 0, 'Test5')";
-            cmd.ExecuteNonQuery();
+            //cmd.CommandText = "INSERT INTO classrooms(name) VALUES(@name)";
+            //cmd.Parameters.AddWithValue("name", "103");
+            //cmd.Prepare();
+            //cmd.ExecuteNonQuery();
+            //cmd.CommandText = $"INSERT INTO punishments(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1000000, 10000022, 0, 'Test5')";
+            //cmd.ExecuteNonQuery();
 
-            for (int i = 0; i < 2; i++)
-            {
-                cmd.CommandText = "INSERT INTO students(classroomId, lastname, surname, gender, board, interrogation) VALUES(@classroomId, @lastname, @surname, @gender, @board, @interrogation)";
-                cmd.Parameters.AddWithValue("classroomId", 1);
-                if (i % 2 == 0)
-                {
-                    cmd.Parameters.AddWithValue("lastname", "Clas");
-                    cmd.Parameters.AddWithValue("surname", "Emeric");
+            //for (int i = 0; i < 2; i++)
+            //{
+            //    cmd.CommandText = "INSERT INTO students(classroomId, lastname, surname, gender, board, interrogation) VALUES(@classroomId, @lastname, @surname, @gender, @board, @interrogation)";
+            //    cmd.Parameters.AddWithValue("classroomId", 1);
+            //    if (i % 2 == 0)
+            //    {
+            //        cmd.Parameters.AddWithValue("lastname", "Clas");
+            //        cmd.Parameters.AddWithValue("surname", "Emeric");
 
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("lastname", "Collard");
-                    cmd.Parameters.AddWithValue("surname", "Youlan");
-                }
-                cmd.Parameters.AddWithValue("board", 0);
-                cmd.Parameters.AddWithValue("gender", true);
-                cmd.Parameters.AddWithValue("interrogation", false);
-                cmd.Prepare();
-                cmd.ExecuteNonQuery();
-            }
+            //    }
+            //    else
+            //    {
+            //        cmd.Parameters.AddWithValue("lastname", "Collard");
+            //        cmd.Parameters.AddWithValue("surname", "Youlan");
+            //    }
+            //    cmd.Parameters.AddWithValue("board", 0);
+            //    cmd.Parameters.AddWithValue("gender", true);
+            //    cmd.Parameters.AddWithValue("interrogation", false);
+            //    cmd.Prepare();
+            //    cmd.ExecuteNonQuery();
+            //}
 
-            cmd.CommandText = "INSERT INTO notes(studentId, creationDate, content) VALUES(1, 1596385214, 'Bon élève mais bruyant')";
-            cmd.ExecuteNonQuery();
+            //cmd.CommandText = "INSERT INTO notes(studentId, creationDate, content) VALUES(1, 1596385214, 'Bon élève mais bruyant')";
+            //cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385213, 1597000000, 0, 'Test 2')";
-            cmd.ExecuteNonQuery();
+            //cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385213, 1597000000, 0, 'Test 2')";
+            //cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385216, 1595000000, 0, 'Test 1')";
-            cmd.ExecuteNonQuery();
+            //cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385216, 1595000000, 0, 'Test 1')";
+            //cmd.ExecuteNonQuery();
 #endif
             //cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(1, 1596385214, ";
 
@@ -161,6 +161,7 @@ namespace SabreAppWPF
         private void Classrooms_Button_Click(object sender, RoutedEventArgs e)
         {
             _mainFrame.Navigate(new ClassroomsPage());
+            _addFrame.Navigate(new AddClassroom());
         }
 
     }

@@ -26,6 +26,7 @@ namespace SabreAppWPF.Plans
     /// </summary>
     public partial class PlanEditPage : Page
     {
+        private ObservableCollection<NameDisplay> studentCollection = new ObservableCollection<NameDisplay>();
         private ObservableCollection<ObservableCollection<PlaceDisplay>> studentPlanList;
         private List<Button> buttonList;
         private int rowNumber;
@@ -33,9 +34,9 @@ namespace SabreAppWPF.Plans
         private int columnSkipSize = 40;
         private List<int> spacing = new List<int>();
         private List<StudentPlaceDisplay> studentPlaceList = new List<StudentPlaceDisplay>();
-        private int? planId = null;
-        private int roomId;
-        private int scheduleId;
+        private readonly int? planId = null;
+        private readonly int roomId;
+        private readonly int scheduleId;
         private ListBox dragSource = null;
         public PlanEditPage(int scheduleId, int classroomId) //Create plan
         {
@@ -134,7 +135,6 @@ namespace SabreAppWPF.Plans
                 buttonList.Add(btn);
             }
 
-            ObservableCollection<NameDisplay> studentCollection = new ObservableCollection<NameDisplay>();
             List<StudentInfo> studentList = Database.Get.Student.AllFromClassroomId(classroomId);
             foreach (StudentInfo student in studentList)
             {
@@ -156,6 +156,12 @@ namespace SabreAppWPF.Plans
         /// <param name="e"></param>
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            if (studentCollection.Count != 0)
+            {
+                MessageBox.Show("Tous les élèves ne sont pas placés");
+                return;
+            }
+
             string name = _nameTextBox.Text;
             if (name == null)
             {

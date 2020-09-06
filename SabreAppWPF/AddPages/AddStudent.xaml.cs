@@ -60,10 +60,10 @@ namespace SabreAppWPF.AddPages
             }
 
             bool trueGender = genderIndex == 0;
-            int classroomId = classroomIndex++;
+            int classroomId = classroomIndex + 1;
 
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO students(classroomId, lastname, surname, gender, board, interrogation) VALUES(@classroomId, @lastname, @surname, @gender, 0, false";
+            cmd.CommandText = "INSERT INTO students(classroomId, lastname, surname, gender, board, interrogation) VALUES(@classroomId, @lastname, @surname, @gender, 0, false)";
             cmd.Parameters.AddWithValue("classroomId", classroomId);
             cmd.Parameters.AddWithValue("lastname", lastname);
             cmd.Parameters.AddWithValue("surname", surname);

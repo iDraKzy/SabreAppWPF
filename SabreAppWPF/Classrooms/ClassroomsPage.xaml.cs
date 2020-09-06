@@ -22,9 +22,10 @@ namespace SabreAppWPF.Classrooms
     /// </summary>
     public partial class ClassroomsPage : Page
     {
-        public static ObservableCollection<ClassroomDisplay> classroomCollection = new ObservableCollection<ClassroomDisplay>();
+        public static ObservableCollection<ClassroomDisplay> classroomCollection;
         public ClassroomsPage()
         {
+            classroomCollection = new ObservableCollection<ClassroomDisplay>();
             InitializeComponent();
             classroomList.ItemsSource = classroomCollection;
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
@@ -61,7 +62,7 @@ namespace SabreAppWPF.Classrooms
 
 
                 int studentNumber = GetStudentNumber(classroomId);
-                string studentNumberString = studentNumber.ToString() + " Etudiants";
+                string studentNumberString = studentNumber.ToString() + " étudiant(e)s";
                 ClassroomDisplay classroomDisplay = new ClassroomDisplay()
                 {
                     ID = classroomId,

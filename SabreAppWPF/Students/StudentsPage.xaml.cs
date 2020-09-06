@@ -71,7 +71,7 @@ namespace SabreAppWPF
                 bool lastHomeworkButtonEnabled = false;
                 string lastHomeworkStatus = GlobalVariable.specialCharacter["CheckMark"];
                 string lastHomeworkColor = "Green";
-                if (lastHomework.retrieveDate == 0)
+                if (lastHomework.retrieveDate == 0 && lastHomework.creationDate != 0)
                 {
                     lastHomeworkButtonEnabled = true;
                     lastHomeworkStatus = GlobalVariable.specialCharacter["Cross"];
