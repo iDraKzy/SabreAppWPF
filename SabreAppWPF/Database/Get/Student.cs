@@ -7,6 +7,32 @@ namespace SabreAppWPF.Database.Get
 {
     public static class Student
     {
+
+        /// <summary>
+        /// Return the student from its id
+        /// </summary>
+        /// <param name="studentId">Id of the student</param>
+        /// <returns>StudentInfo</returns>
+        public static StudentInfo FromId(int studentId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT * FROM students WHERE studentId = @studentId";
+            cmd.Parameters.AddWithValue("studentId", studentId);
+            cmd.Prepare();
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            StudentInfo student = new StudentInfo();
+            while (rdr.Read())
+            {
+                student.studentId = rdr.GetInt32(0);
+                student.classroomId = rdr.GetInt32(1);
+                student.lastname = rdr.GetString(2);
+                student.surname = rdr.GetString(3);
+                student.gender = rdr.GetBoolean(4);
+                student.board = rdr.GetBoolean(5);
+                student.interrogation = rdr.GetBoolean(6);
+            }
+            return student;
+        }
         /// <summary>
         /// Return the id of a student based on his name
         /// </summary>
@@ -62,7 +88,7 @@ namespace SabreAppWPF.Database.Get
                     lastname = rdr.GetString(2),
                     surname = rdr.GetString(3),
                     gender = rdr.GetBoolean(4),
-                    board = rdr.GetInt32(5),
+                    board = rdr.GetBoolean(5),
                     interrogation = rdr.GetBoolean(6)
                 };
                 studentList.Add(studentInfo);

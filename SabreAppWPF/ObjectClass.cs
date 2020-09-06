@@ -4,9 +4,9 @@ namespace SabreAppWPF
 {
     public class StudentInfo
     {
-        public int studentId, classroomId, board;
+        public int studentId, classroomId;
         public string lastname, surname;
-        public bool gender, interrogation;
+        public bool gender, interrogation, board;
     }
 
     public class VotesInfo

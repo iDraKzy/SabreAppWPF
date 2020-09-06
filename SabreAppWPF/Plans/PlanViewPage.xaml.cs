@@ -108,8 +108,10 @@ namespace SabreAppWPF.Plans
                         }
                         else
                         {
+                            StudentInfo student = Database.Get.Student.FromId(place.StudentId);
                             string[] name = Database.Get.Student.NameFromID(place.StudentId);
                             string parsedName = name[1] + " " + name[0];
+
                             StudentPlanViewDisplay placeDisplay = new StudentPlanViewDisplay()
                             {
                                 ItemHeight = initItemHeight,
@@ -118,8 +120,8 @@ namespace SabreAppWPF.Plans
                                 Name = parsedName,
                                 Thickness = 1,
                                 StudentId = place.StudentId,
-                                BoardCheck = GlobalVariable.specialCharacter["CheckMark"],
-                                InterrogationCheck = GlobalVariable.specialCharacter["CheckMark"],
+                                BoardCheck = student.board ? GlobalVariable.specialCharacter["CheckMark"] : GlobalVariable.specialCharacter["Cross"],
+                                InterrogationCheck = student.interrogation ? GlobalVariable.specialCharacter["CheckMark"] : GlobalVariable.specialCharacter["Cross"],
                                 ButtonVisible = false,
                                 Enabled = true
                             };
@@ -162,6 +164,16 @@ namespace SabreAppWPF.Plans
         {
 
             window._addFrame.Navigate(new AddHomeworkClassroom(classroomId));
+        }
+
+        private void Interrogation_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Board_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void RandomBoard_Click(object sender, RoutedEventArgs e)
