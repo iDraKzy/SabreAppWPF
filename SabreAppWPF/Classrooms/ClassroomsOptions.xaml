@@ -9,6 +9,42 @@
       Title="ClassroomsOptions">
 
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="35"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Border Grid.ColumnSpan="2" Grid.Column="0" BorderBrush="Black" BorderThickness="1">
+            <Grid ShowGridLines="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Style="{StaticResource LabelStyle1}" Content="{Binding Name}" FontSize="15" FontFamily="Segoe UI Semibold" VerticalAlignment="Bottom" Margin="40,0,0,0"/>
+                <Label Style="{StaticResource LabelStyle1}" Content="{Binding StudentNumber}" Grid.Row="1" FontSize="12" FontFamily="Segoe UI Semibold" FontStyle="Italic" VerticalAlignment="Top" Margin="40,0,0,0"/>
+            </Grid>
+        </Border>
+        <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black">
+            <Grid Margin="0,79,0,0" ShowGridLines="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button Style="{StaticResource ButtonStyle1}" Content="Emploi du temps" Click="ScheduleButton_Click" Grid.Row="0" FontFamily="Segoe UI Semibold">
+                    <Button.LayoutTransform>
+                        <RotateTransform Angle="+90"/>
+                    </Button.LayoutTransform>
+                </Button>
+                <Button Style="{StaticResource ButtonStyle1}" Content="" IsEnabled="False" Grid.Row="1" FontFamily="Segoe UI Semibold">
+                    <Button.LayoutTransform>
+                        <RotateTransform Angle="+90"/>
+                    </Button.LayoutTransform>
+                </Button>
+            </Grid>
+        </Border>
+        <Frame x:Name="_optionsFrame" Grid.Row="1" Grid.Column="1" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Page>

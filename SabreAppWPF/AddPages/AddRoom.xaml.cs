@@ -43,7 +43,7 @@ namespace SabreAppWPF.AddPages
             int columns = int.Parse(column);
 
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO rooms(name, rows, columns, spacing) VALUES(@name, @rows, @columns, '')";
+            cmd.CommandText = "INSERT INTO rooms(name, rows, columns) VALUES(@name, @rows, @columns)";
             cmd.Parameters.AddWithValue("name", name);
             cmd.Parameters.AddWithValue("rows", rows);
             cmd.Parameters.AddWithValue("columns", columns);

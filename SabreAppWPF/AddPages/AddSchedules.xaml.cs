@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Windows.UI.Xaml.Controls;
 using System.Data.SQLite;
+using SabreAppWPF.Classrooms.Options;
 
 namespace SabreAppWPF.AddPages
 {
@@ -109,6 +110,21 @@ namespace SabreAppWPF.AddPages
             cmd.ExecuteNonQuery();
             error.Foreground = new SolidColorBrush(Colors.Green);
             error.Content = "Horraire ajouté avec succès";
+
+            cmd.CommandText = "SELECT last_insert_rowid()";
+            long scheduleId = (long)cmd.ExecuteScalar();
+
+            ScheduleOption.ScheduleOptionDisplay scheduleDisplay = new ScheduleOption.ScheduleOptionDisplay()
+            {
+                ID = (int)scheduleId,
+                ClassroomId = selectedClassroom.ID,
+                NextDate = dateSelectedNotNull.ToString("g", GlobalVariable.culture),
+                Duration = hourTimeSelected?.ToString("g", GlobalVariable.culture),
+                Repetitivity = repetitivity == 0 ? "Une fois par semaine" : "Une semaine sur deux",
+                Room = Database.Get.Room.NameFromID(selectedRoom.ID)
+            };
+
+            ScheduleOption.scheduleDisplayCollection.Add(scheduleDisplay);
         }
 
         public class RoomEntry
