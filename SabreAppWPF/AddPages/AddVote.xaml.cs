@@ -23,6 +23,7 @@ namespace SabreAppWPF.AddPages
         //TODO: Quick description
         private bool upvote;
         private StudentDisplay studentDisplay;
+        private int studentId;
         public AddVote(bool upvote, StudentDisplay studentDisplay)
         {
             InitializeComponent();
@@ -30,6 +31,17 @@ namespace SabreAppWPF.AddPages
             this.studentDisplay = studentDisplay;
             _titleLabel.Content = upvote ? "Ajouter un upvote" : "Ajouter un downvote";
             string[] studentName = Database.Get.Student.NameFromID(studentDisplay.ID);
+            _lastnameTextBox.Text = studentName[0];
+            _surnameTextBox.Text = studentName[1];
+        }
+
+        public AddVote(bool upvote, int studentId)
+        {
+            this.upvote = upvote;
+            this.studentDisplay = null;
+            this.studentId = studentId;
+            _titleLabel.Content = upvote ? "Ajouter un upvote" : "Ajouter un downvote";
+            string[] studentName = Database.Get.Student.NameFromID(studentId);
             _lastnameTextBox.Text = studentName[0];
             _surnameTextBox.Text = studentName[1];
         }
@@ -64,17 +76,37 @@ namespace SabreAppWPF.AddPages
             error.Foreground = new SolidColorBrush(Colors.Green);
             string upvoteType = upvote ? "Upvote" : "Downvote";
             error.Content = $"{upvoteType} ajouté avec succès à {currentDateTime:hh:mm:ss}";
-            if (upvote)
+            if (studentDisplay != null)
             {
-                int currentUpvote = int.Parse(studentDisplay.UpvotesCount);
-                currentUpvote++;
-                studentDisplay.UpvotesCount = currentUpvote.ToString();
-            } 
+                if (upvote)
+                {
+                    int currentUpvote = int.Parse(studentDisplay.UpvotesCount);
+                    currentUpvote++;
+                    studentDisplay.UpvotesCount = currentUpvote.ToString();
+                } 
+                else
+                {
+                    int currentDownvote = int.Parse(studentDisplay.DownvotesCount);
+                    currentDownvote++;
+                    studentDisplay.DownvotesCount = currentDownvote.ToString();
+                }
+
+            }
             else
             {
-                int currentDownvote = int.Parse(studentDisplay.DownvotesCount);
-                currentDownvote++;
-                studentDisplay.DownvotesCount = currentDownvote.ToString();
+                Students.StudentDetails.VotesDetails.VoteDetails vote = new Students.StudentDetails.VotesDetails.VoteDetails()
+                {
+                    Content = description,
+                    ID = this.studentId,
+                    Date = currentDateTime.ToString("g", GlobalVariable.culture)
+                };
+                if (upvote)
+                {
+                    Students.StudentDetails.VotesDetails.UpvoteList.Add(vote);
+                } else
+                {
+                    Students.StudentDetails.VotesDetails.DownvoteList.Add(vote);
+                }
             }
         }
     }

@@ -71,5 +71,13 @@ namespace SabreAppWPF
             if (content == null) return "Le champ déscription est obligatoire";
             return "valid";
         }
+
+        static public string Reminder(string description, DateTime? date, TimeSpan? time)
+        {
+            if (description == null) return "Le champ déscription est obligatoire";
+            if (date == null) return "Le champ date est obligatoire";
+            if (time == null) return "Le champ heure est obligatoire";
+            return "valid";
+        }
     }
 }

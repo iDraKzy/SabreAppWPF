@@ -14,7 +14,13 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DataGrid Grid.Column="0" x:Name="_upvoteDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Style="{StaticResource LabelStyle1}" d:Foreground="White" Content="Upvote" Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom" FontFamily="Segoe UI Semibold" FontSize="15"/>
+        <Label Style="{StaticResource LabelStyle1}" d:Foreground="White" Content="Downvote" Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" FontFamily="Segoe UI Semibold" FontSize="15"/>
+        <DataGrid Grid.Row="1" Grid.Column="0" x:Name="_upvoteDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="3">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date" Binding="{Binding Date}"/>
                 <DataGridTextColumn Header="Description" Binding="{Binding Content}" Width="4*"/>
@@ -27,7 +33,7 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid Grid.Column="1" x:Name="_downvoteDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
+        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="_downvoteDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="3">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date" Binding="{Binding Date}"/>
                 <DataGridTextColumn Header="Description" Binding="{Binding Content}" Width="4*"/>

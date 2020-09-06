@@ -4,11 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SabreAppWPF.Students.StudentDetails"
+        xmlns:external="clr-namespace:SabreAppWPF.LightDark"
         mc:Ignorable="d"
         d:DesignHeight="661" d:DesignWidth="950"
         Title="StudentDetailsPage"
         Loaded="StudentDetailsPage_Load">
-    <Grid Background="White" ShowGridLines="True">
+    <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}" d:Background="White" ShowGridLines="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="35"/>
             <ColumnDefinition/>
@@ -23,8 +24,8 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Label x:Name="name" Content="John Doe" FontSize="15" FontFamily="Segoe UI Semibold" VerticalAlignment="Bottom" Margin="40,0,0,0"/>
-                <Label x:Name="classroom" Grid.Row="1" FontSize="12" Content="103" FontFamily="Segoe UI Semibold" FontStyle="Italic" VerticalAlignment="Top" Margin="40,0,0,0"/>
+                <Label Style="{StaticResource LabelStyle1}" x:Name="name" Content="John Doe" FontSize="15" FontFamily="Segoe UI Semibold" VerticalAlignment="Bottom" Margin="40,0,0,0"/>
+                <Label Style="{StaticResource LabelStyle1}" x:Name="classroom" Grid.Row="1" FontSize="12" Content="103" FontFamily="Segoe UI Semibold" FontStyle="Italic" VerticalAlignment="Top" Margin="40,0,0,0"/>
             </Grid>
         </Border>
         <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black">
@@ -36,27 +37,27 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button Content="Remarques" Click="NotesButton_Click" Grid.Row="0" FontFamily="Segoe UI Semibold" Margin="0">
+                <Button Style="{StaticResource ButtonStyle1}" Content="Remarques" Click="NotesButton_Click" Grid.Row="0" FontFamily="Segoe UI Semibold" Margin="0">
                     <Button.LayoutTransform>
                         <RotateTransform Angle="+90"/>
                     </Button.LayoutTransform>
                 </Button>
-                <Button Content="Punitions" Grid.Row="1" FontFamily="Segoe UI Semibold" Click="PunishmentButton_Click">
+                <Button Style="{StaticResource ButtonStyle1}" Content="Punitions" Grid.Row="1" FontFamily="Segoe UI Semibold" Click="PunishmentButton_Click">
                     <Button.LayoutTransform>
                         <RotateTransform Angle="+90"/>
                     </Button.LayoutTransform>
                 </Button>
-                <Button Content="Devoirs" Click="HomeworkButton_Click" Grid.Row="2" FontFamily="Segoe UI Semibold">
+                <Button Style="{StaticResource ButtonStyle1}" Content="Devoirs" Click="HomeworkButton_Click" Grid.Row="2" FontFamily="Segoe UI Semibold">
                     <Button.LayoutTransform>
                         <RotateTransform Angle="+90"/>
                     </Button.LayoutTransform>
                 </Button>
-                <Button Content="Votes" Click="VotesButton_Click" Grid.Row="3" FontFamily="Segoe UI Semibold">
+                <Button Style="{StaticResource ButtonStyle1}" Content="Votes" Click="VotesButton_Click" Grid.Row="3" FontFamily="Segoe UI Semibold">
                     <Button.LayoutTransform>
                         <RotateTransform Angle="+90"/>
                     </Button.LayoutTransform>
                 </Button>
-                <Button Content="Notes" Click="GradesButton_Click" Grid.Row="4" FontFamily="Segoe UI Semibold">
+                <Button Style="{StaticResource ButtonStyle1}" Content="Notes" Click="GradesButton_Click" Grid.Row="4" FontFamily="Segoe UI Semibold">
                     <Button.LayoutTransform>
                         <RotateTransform Angle="+90"/>
                     </Button.LayoutTransform>

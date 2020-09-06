@@ -61,7 +61,6 @@ namespace SabreAppWPF
         public int Rows { get; set; }
         public int Columns { get; set; }
     }
-    //places(placeId INTEGER PRIMARY KEY, planId INTEGER, studentId INTEGER, row INTEGER, column INTEGER);
     public class PlaceInfo
     {
         public int PlaceId { get; set; }
@@ -69,5 +68,12 @@ namespace SabreAppWPF
         public int StudentId { get; set; }
         public int Row { get; set; }
         public int Column { get; set; }
+    }
+    public class ReminderInfo
+    {
+        public int ReminderId { get; set; }
+        public int CreationDate { get; set; }
+        public int ReminderDate { get; set; }
+        public string Description { get; set; }
     }
 }

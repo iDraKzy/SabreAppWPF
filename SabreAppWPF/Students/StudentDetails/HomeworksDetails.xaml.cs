@@ -112,6 +112,7 @@ namespace SabreAppWPF.Students.StudentDetails
             cmd.ExecuteNonQuery();
 
             rowDetails.RetrieveDate = currentDateTime.ToString("g", GlobalVariable.culture);
+            rowDetails.ButtonEnabled = false;
         }
     }
     public class HomeworkDetails : INotifyPropertyChanged

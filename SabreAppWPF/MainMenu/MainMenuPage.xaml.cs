@@ -17,6 +17,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.UI.Xaml.Automation.Peers;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SabreAppWPF.MainMenu
 {
@@ -114,18 +115,42 @@ namespace SabreAppWPF.MainMenu
                 };
                 scheduleGridDisplayCollection.Add(scheduleDisplay);
             }
+            scheduleGridDisplayCollection.OrderBy(x => x.Date);
+            _scheduleDataGrid.ItemsSource = scheduleGridDisplayCollection;
         }
 
         private void Populate_ReminderDataGrid()
         {
-            //TODO: Implement
-            reminderGridDisplayCollection.Add(new ReminderGridDisplay() { Content = "Work in progress" });
+            //reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT); ";
+            List<ReminderInfo> reminderList = Database.Get.Reminder.All();
+
+            foreach (ReminderInfo reminder in reminderList)
+            {
+                DateTime creationDateTime = DateTimeOffset.FromUnixTimeSeconds((long)reminder.CreationDate).LocalDateTime;
+                DateTime reminderDateTime = DateTimeOffset.FromUnixTimeSeconds((long)reminder.ReminderDate).LocalDateTime;
+                ReminderGridDisplay reminderDisplay = new ReminderGridDisplay()
+                {
+                    ID = reminder.ReminderId,
+                    CreationDate = creationDateTime.ToString("g", GlobalVariable.culture),
+                    ReminderDate = reminderDateTime.ToString("g", GlobalVariable.culture),
+                    Content = reminder.Description
+                };
+                reminderGridDisplayCollection.Add(reminderDisplay);
+            }
+            reminderGridDisplayCollection.OrderBy(x => x.ReminderDate);
+            _reminderDataGrid.ItemsSource = reminderGridDisplayCollection;
         }
 
         private void AddSchedule_Click(object sender, RoutedEventArgs e)
         {
             MainWindow window = GlobalFunction.GetMainWindow();
             window._addFrame.Navigate(new AddSchedules());
+        }
+
+        private void AddReminder_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow window = GlobalFunction.GetMainWindow();
+            window._addFrame.Navigate(new AddReminder());
         }
 
         private void ClassroomList_Click(object sender, RoutedEventArgs e)
@@ -143,8 +168,8 @@ namespace SabreAppWPF.MainMenu
         {
             public event PropertyChangedEventHandler PropertyChanged;
             private int _id;
-            private string _date;
-            private string _classroom;
+            private string _creationDate;
+            private string _reminderDate;
             private string _content;
 
             public int ID
@@ -157,22 +182,22 @@ namespace SabreAppWPF.MainMenu
                 }
             }
 
-            public string Date
+            public string CreationDate
             {
-                get { return _date; }
+                get { return _creationDate; }
                 set
                 {
-                    _date = value;
+                    _creationDate = value;
                     OnPropertyChanged();
                 }
             }
 
-            public string Classroom
+            public string ReminderDate
             {
-                get { return _classroom; }
+                get { return _reminderDate; }
                 set
                 {
-                    _classroom = value;
+                    _reminderDate = value;
                     OnPropertyChanged();
                 }
             }

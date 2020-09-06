@@ -39,7 +39,7 @@
             <Button Style="{StaticResource ButtonStyle1}" Content="Plan aléatoire pour cette séance (WIP)" Grid.Column="1" Grid.Row="5" Margin="50,5,50,190" IsEnabled="False"/>
         </Grid>
         <Label Style="{StaticResource LabelStyle1}" Content="Eploi du temps" Grid.Column="0" VerticalAlignment="Top" Margin="5,0,0,0" HorizontalAlignment="Left" FontSize="15" FontFamily="Segoe UI Semibold"/>
-        <DataGrid Grid.Column="0" Margin="10,35,10,40">
+        <DataGrid x:Name="_scheduleDataGrid" Grid.Column="0" Margin="10,35,10,40" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date" Binding="{Binding Date}"/>
                 <DataGridTextColumn Header="Classe" Binding="{Binding Classroom}"/>
@@ -48,13 +48,13 @@
         </DataGrid>
         <Button Style="{StaticResource ButtonStyle1}" Click="AddSchedule_Click" Content="Ajouter" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Column="0" Margin="10,5" Padding="5"/>
         <Label Style="{StaticResource LabelStyle1}" Content="Rappel" Grid.Column="2" VerticalAlignment="Top" Margin="5,0,0,0" HorizontalAlignment="Left" FontSize="15" FontFamily="Segoe UI Semibold"/>
-        <DataGrid Grid.Column="2" Margin="10,35,10,40">
+        <DataGrid x:Name="_reminderDataGrid" Grid.Column="2" Margin="10,35,10,40" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Date" Binding="{Binding Date}"/>
-                <DataGridTextColumn Header="Classe" Binding="{Binding Classroom}"/>
+                <DataGridTextColumn Header="Date de création" Binding="{Binding CreationDate}"/>
+                <DataGridTextColumn Header="Date de rappel" Binding="{Binding ReminderDate}"/>
                 <DataGridTextColumn Header="Description" Binding="{Binding Content}" Width="1*"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Style="{StaticResource ButtonStyle1}" Content="Ajouter" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Column="2" Margin="10,5" Padding="5"/>
+        <Button Style="{StaticResource ButtonStyle1}" Click="AddReminder_Click" Content="Ajouter" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Column="2" Margin="10,5" Padding="5"/>
     </Grid>
 </Page>

@@ -4,14 +4,15 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SabreAppWPF.AddPages"
+      xmlns:external="clr-namespace:SabreAppWPF.LightDark"
       xmlns:uc="clr-namespace:SabreAppWPF.AddPages.Navbar_Control"
       mc:Ignorable="d" 
       Width="250" Height="350"
       Title="AddNote">
 
-    <Grid Background="White">
+    <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.17*"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
