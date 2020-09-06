@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using Windows.UI.Xaml.Automation.Peers;
 using System.Data.SQLite;
 using System.Linq;
+using SabreAppWPF.AddPages;
 
 namespace SabreAppWPF.Students.StudentDetails
 {
@@ -26,9 +27,11 @@ namespace SabreAppWPF.Students.StudentDetails
     {
         public static ObservableCollection<VoteDetails> UpvoteList = new ObservableCollection<VoteDetails>();
         public static ObservableCollection<VoteDetails> DownvoteList = new ObservableCollection<VoteDetails>();
+        private int studentId;
         public VotesDetails(int studentId)
         {
             InitializeComponent();
+            this.studentId = studentId;
 
             List<VotesInfo> upvoteList = Database.Get.Vote.AllFromStudentId(studentId, true);
             List<VotesInfo> downvoteList = Database.Get.Vote.AllFromStudentId(studentId, false);
@@ -80,6 +83,18 @@ namespace SabreAppWPF.Students.StudentDetails
             cmd.ExecuteNonQuery();
 
             DownvoteList.Remove(DownvoteList.Where(i => i.ID == vote.ID).Single());
+        }
+
+        private void AddUpvote_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow window = GlobalFunction.GetMainWindow();
+            window._addFrame.Navigate(new AddVote(true, studentId));
+        }
+
+        private void AddDownvote_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow window = GlobalFunction.GetMainWindow();
+            window._addFrame.Navigate(new AddVote(true, studentId));
         }
 
         public class VoteDetails : INotifyPropertyChanged

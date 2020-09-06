@@ -17,9 +17,12 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
             <RowDefinition/>
+            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
         <Label Style="{StaticResource LabelStyle1}" d:Foreground="White" Content="Upvote" Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom" FontFamily="Segoe UI Semibold" FontSize="15"/>
         <Label Style="{StaticResource LabelStyle1}" d:Foreground="White" Content="Downvote" Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" FontFamily="Segoe UI Semibold" FontSize="15"/>
+        <Button Click="AddUpvote_Click" Grid.Row="2" Grid.Column="0" Content="Ajouter" HorizontalAlignment="Right" Margin="3"/>
+        <Button Click="AddDownvote_Click" Grid.Row="2" Grid.Column="1" Content="Ajouter" HorizontalAlignment="Right" Margin="3"/>
         <DataGrid Grid.Row="1" Grid.Column="0" x:Name="_upvoteDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" Margin="3">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date" Binding="{Binding Date}"/>
