@@ -105,7 +105,7 @@ namespace SabreAppWPF.AddPages
             cmd.Parameters.AddWithValue("roomId", selectedRoom.ID);
             cmd.Parameters.AddWithValue("repetitivity", repetitivity);
             cmd.Parameters.AddWithValue("nextDate", (int)new DateTimeOffset(dateSelectedNotNull).ToUnixTimeSeconds());
-            cmd.Parameters.AddWithValue("duration", (int)hourTimeSelected?.TotalSeconds);
+            cmd.Parameters.AddWithValue("duration", (int)durationTimeSelected?.TotalSeconds);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
             error.Foreground = new SolidColorBrush(Colors.Green);
@@ -119,7 +119,7 @@ namespace SabreAppWPF.AddPages
                 ID = (int)scheduleId,
                 ClassroomId = selectedClassroom.ID,
                 NextDate = dateSelectedNotNull.ToString("g", GlobalVariable.culture),
-                Duration = hourTimeSelected?.ToString("g", GlobalVariable.culture),
+                Duration = durationTimeSelected?.ToString(@"hh\:mm"),
                 Repetitivity = repetitivity == 0 ? "Une fois par semaine" : "Une semaine sur deux",
                 Room = Database.Get.Room.NameFromID(selectedRoom.ID)
             };

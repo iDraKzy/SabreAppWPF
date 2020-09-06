@@ -30,7 +30,8 @@ namespace SabreAppWPF.Classrooms
             this.classroomId = classroomId;
             this.DataContext = this;
 
-            Name = Database.Get.Classroom.NameFromID(classroomId);
+            string classrromName = Database.Get.Classroom.NameFromID(classroomId);
+            ClassroomName = classrromName;
             List<StudentInfo> studentList = Database.Get.Student.AllFromClassroomId(classroomId);
             int studentCount = studentList.Count;
             StudentNumber = $"{studentCount} étudiant(e)s";
@@ -49,7 +50,7 @@ namespace SabreAppWPF.Classrooms
         private string _studentNumberText;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string Name
+        public string ClassroomName
         {
             get { return _name; }
             set

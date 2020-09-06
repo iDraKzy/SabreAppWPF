@@ -33,6 +33,7 @@ namespace SabreAppWPF.Classrooms.Options
             {
                 DateTime nextDateTime = DateTimeOffset.FromUnixTimeSeconds((long)schedule.nextDate).LocalDateTime;
                 TimeSpan durationTime = TimeSpan.FromSeconds((double)schedule.duration);
+
                 ScheduleOptionDisplay scheduleDisplay = new ScheduleOptionDisplay()
                 {
                     ID = (int)schedule.scheduleId,
@@ -40,7 +41,7 @@ namespace SabreAppWPF.Classrooms.Options
                     Room = Database.Get.Room.NameFromID((int)schedule.roomId),
                     Repetitivity = schedule.repetitivity == 0 ? "Une fois par semaine" : "Une semaine sur deux",
                     NextDate = nextDateTime.ToString("g", GlobalVariable.culture),
-                    Duration = durationTime.ToString("g", GlobalVariable.culture)
+                    Duration = durationTime.ToString(@"hh\:mm")
                 };
                 scheduleDisplayCollection.Add(scheduleDisplay);
             }
