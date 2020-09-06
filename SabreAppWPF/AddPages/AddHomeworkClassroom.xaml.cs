@@ -47,7 +47,7 @@ namespace SabreAppWPF.AddPages
                 _classroomComboBox.SelectedIndex = 0;
             }
         }
-        //homeworks(homeworkId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT);
+        
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
