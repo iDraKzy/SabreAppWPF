@@ -33,6 +33,7 @@ namespace SabreAppWPF.Classrooms
             cmd.CommandText = "SELECT * FROM classrooms";
 
             using SQLiteDataReader rdr = cmd.ExecuteReader();
+            //TODO: Rework this to work with nextDate
             while (rdr.Read())
             {
                 int classroomId = rdr.GetInt32(0);

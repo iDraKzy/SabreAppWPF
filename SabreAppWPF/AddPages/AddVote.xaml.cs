@@ -65,14 +65,7 @@ namespace SabreAppWPF.AddPages
                 return;
             }
 
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO votes(studentId, upvotes, description, creationDate) VALUES(@studentId, @upvotes, @description, @creationDate)";
-            cmd.Parameters.AddWithValue("studentId", studentId);
-            cmd.Parameters.AddWithValue("upvotes", upvote);
-            cmd.Parameters.AddWithValue("description", description);
-            cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
+
 
             error.Foreground = new SolidColorBrush(Colors.Green);
             string upvoteType = upvote ? "Upvote" : "Downvote";
