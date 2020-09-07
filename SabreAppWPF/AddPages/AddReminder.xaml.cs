@@ -50,20 +50,8 @@ namespace SabreAppWPF.AddPages
             TimeSpan timeSelectedVerified = (TimeSpan)timeSelected;
             dateSelectedVerified = dateSelectedVerified.Add(timeSelectedVerified);
             DateTime currentTime = DateTime.Now;
-            int currentTimestamp = (int)new DateTimeOffset(currentTime).ToUnixTimeSeconds();
-            int dateSelectedTimestamp = (int)new DateTimeOffset(dateSelectedVerified).ToUnixTimeSeconds();
 
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            //reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT); ";
-            cmd.CommandText = "INSERT INTO reminders(creationDate, reminderDate, description) VALUES(@creationDate, @reminderDate, @description)";
-            cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
-            cmd.Parameters.AddWithValue("reminderDate", dateSelectedTimestamp);
-            cmd.Parameters.AddWithValue("description", description);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "SELECT last_insert_rowid()";
-            long reminderId = (long)cmd.ExecuteScalar();
+            int reminderId = Database.Insert.Reminder.One(dateSelectedVerified, description);
 
             error.Foreground = new SolidColorBrush(Colors.Green);
             error.Content = "Rappel ajouté avec succès";
@@ -71,7 +59,7 @@ namespace SabreAppWPF.AddPages
             MainMenuPage.ReminderGridDisplay reminder = new MainMenuPage.ReminderGridDisplay()
             {
                 Content = description,
-                ID = (int)reminderId,
+                ID = reminderId,
                 CreationDate = currentTime.ToString("g", GlobalVariable.culture),
                 ReminderDate = dateSelectedVerified.ToString("g", GlobalVariable.culture)
             };

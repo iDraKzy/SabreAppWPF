@@ -38,7 +38,6 @@ namespace SabreAppWPF.AddPages
             string coeff = _coeffTextBox.Text;
 
             DateTime currentTime = DateTime.Now;
-            int currentTimestamp = (int)new DateTimeOffset(currentTime).ToUnixTimeSeconds();
 
             string valid = DataValidation.Grade(title, lastname, surname, grade, coeff);
             if (valid != "valid")
@@ -52,21 +51,7 @@ namespace SabreAppWPF.AddPages
             int coeffInt = int.Parse(coeff);
             int studentId = Database.Get.Student.IdFromName(lastname, surname);
 
-            //grades(gradeId INTEGER PRIMARY KEY, studentId INTEGER, grade FLOAT, coeff INTEGER, creationDate INTEGER);
-
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO grades(studentId, grade, coeff, creationDate) VALUES(@studentId, @grade, @coeff, @creationDate)";
-            cmd.Parameters.AddWithValue("studentId", studentId);
-            cmd.Parameters.AddWithValue("grade", gradeFloat);
-            cmd.Parameters.AddWithValue("coeff", coeffInt);
-            cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "SELECT last_insert_rowid()";
-            long gradeId = (long)cmd.ExecuteScalar();
-
-
+            int gradeId = Database.Insert.Grade.One(studentId, gradeFloat, coeffInt);
 
             GradesDetails.GradeDetails gradeDetail = new GradesDetails.GradeDetails()
             {

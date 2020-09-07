@@ -42,13 +42,7 @@ namespace SabreAppWPF.AddPages
             int rows = int.Parse(row);
             int columns = int.Parse(column);
 
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO rooms(name, rows, columns) VALUES(@name, @rows, @columns)";
-            cmd.Parameters.AddWithValue("name", name);
-            cmd.Parameters.AddWithValue("rows", rows);
-            cmd.Parameters.AddWithValue("columns", columns);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
+            Database.Insert.Room.One(name, rows, columns);
 
             error.Content = "Salle ajoutée avec succès !";
             error.Foreground = new SolidColorBrush(Colors.Green);

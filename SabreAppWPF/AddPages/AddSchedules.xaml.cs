@@ -99,24 +99,11 @@ namespace SabreAppWPF.AddPages
             DateTime dateSelectedNotNull = (DateTime)dateSelected;
             dateSelectedNotNull = dateSelectedNotNull.AddHours((double)hourTimeSelected?.Hours).AddMinutes((double)hourTimeSelected?.Minutes);
 
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO schedules(classroomId, roomId, repetitivity, nextDate, duration) VALUES(@classroomId, @roomId, @repetitivity, @nextDate, @duration)";
-            cmd.Parameters.AddWithValue("classroomId", selectedClassroom.ID);
-            cmd.Parameters.AddWithValue("roomId", selectedRoom.ID);
-            cmd.Parameters.AddWithValue("repetitivity", repetitivity);
-            cmd.Parameters.AddWithValue("nextDate", (int)new DateTimeOffset(dateSelectedNotNull).ToUnixTimeSeconds());
-            cmd.Parameters.AddWithValue("duration", (int)durationTimeSelected?.TotalSeconds);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
-            error.Foreground = new SolidColorBrush(Colors.Green);
-            error.Content = "Horraire ajouté avec succès";
-
-            cmd.CommandText = "SELECT last_insert_rowid()";
-            long scheduleId = (long)cmd.ExecuteScalar();
+            int scheduleId = Database.Insert.Schedule.One(selectedClassroom.ID, selectedRoom.ID, repetitivity, dateSelectedNotNull, (TimeSpan)hourTimeSelected);
 
             ScheduleOption.ScheduleOptionDisplay scheduleDisplay = new ScheduleOption.ScheduleOptionDisplay()
             {
-                ID = (int)scheduleId,
+                ID = scheduleId,
                 ClassroomId = selectedClassroom.ID,
                 NextDate = dateSelectedNotNull.ToString("g", GlobalVariable.culture),
                 Duration = durationTimeSelected?.ToString(@"hh\:mm"),
@@ -125,6 +112,8 @@ namespace SabreAppWPF.AddPages
             };
 
             ScheduleOption.scheduleDisplayCollection.Add(scheduleDisplay);
+            error.Foreground = new SolidColorBrush(Colors.Green);
+            error.Content = "Horraire ajouté avec succès";
         }
 
         public class RoomEntry

@@ -50,24 +50,13 @@ namespace SabreAppWPF.AddPages
             }
 
             DateTime currenteDate = DateTime.Now;
-            int currentTimestamp = (int)new DateTimeOffset(currenteDate).ToUnixTimeSeconds();
-            int endDateTimestamp = (int)new DateTimeOffset((DateTime)endDateTime).ToUnixTimeSeconds();
             int studentId = int.Parse(validation[1]);
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO punishments(studentId, creationDate, endDate, retrieveDate, description) VALUES(@studentId, @creationDate, @endDate, 0, @descritpion)";
-            cmd.Parameters.AddWithValue("studentId", studentId);
-            cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
-            cmd.Parameters.AddWithValue("endDate", endDateTimestamp);
-            cmd.Parameters.AddWithValue("description", description);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "SELECT last_insert_rowid()";
-            long punishmentId = (long)cmd.ExecuteScalar();
+            int punishmentId = Database.Insert.Punishment.One(studentId, (DateTime)endDateTime, description);
 
             PunishmentDetails punishmentDetail = new PunishmentDetails()
             {
-                ID = (int)punishmentId,
+                ID = punishmentId,
                 Date = currenteDate.ToString("g", GlobalVariable.culture),
                 EndDate = endDateTime?.ToString("d", GlobalVariable.culture),
                 Returned = "",

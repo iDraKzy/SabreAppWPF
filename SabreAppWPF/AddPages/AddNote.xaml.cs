@@ -47,23 +47,14 @@ namespace SabreAppWPF.AddPages
             }
 
             DateTime currentDateTime = DateTime.Now;
-            int currentTimestamp = (int)new DateTimeOffset(currentDateTime).ToUnixTimeSeconds();
 
             int studentId = int.Parse(validation[1]);
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO notes(studentId, creationDate, content) VALUES(@studentId, @creationDate, @content)";
-            cmd.Parameters.AddWithValue("studentId", studentId);
-            cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
-            cmd.Parameters.AddWithValue("content", content);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "SELECT last_insert_rowid()";
-            long noteId = (long)cmd.ExecuteScalar();
+            int noteId = Database.Insert.Note.One(studentId, content);
 
             NoteDetails noteDetails = new NoteDetails()
             {
-                ID = (int)noteId,
+                ID = noteId,
                 CreationDate = currentDateTime.ToString("g", GlobalVariable.culture),
                 Content = content
             };

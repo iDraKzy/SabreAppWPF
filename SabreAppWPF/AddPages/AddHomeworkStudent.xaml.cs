@@ -31,8 +31,6 @@ namespace SabreAppWPF.AddPages
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            DateTime currentTime = DateTime.Now;
-            int currentTimestamp = (int)new DateTimeOffset(currentTime).ToUnixTimeSeconds();
             string lastname = _lastnameTextBox.Text;
             //TODO: Datavalidation cleaner
             if (lastname == null)
@@ -69,14 +67,8 @@ namespace SabreAppWPF.AddPages
                 return;
             }
             DateTime endDateTime = (DateTime)_datePicker.SelectedDate;
-            int endDateTimestamp = (int)new DateTimeOffset(endDateTime).ToUnixTimeSeconds();
-            //homeworks(homeworkId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT);
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(@studentId, @creationDate, @endDate, 0, @description)";
-            cmd.Parameters.AddWithValue("studentId", studentId);
-            cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
-            cmd.Parameters.AddWithValue("endDate", endDateTimestamp);
-            cmd.Parameters.AddWithValue("description", description);
+
+            Database.Insert.Homework.One(studentId, endDateTime, description);
         }
     }
 }

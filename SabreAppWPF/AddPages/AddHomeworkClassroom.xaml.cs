@@ -71,20 +71,23 @@ namespace SabreAppWPF.AddPages
             DateTime currentDate = DateTime.Now;
             int currentTimestamp = (int)new DateTimeOffset(currentDate).ToUnixTimeSeconds();
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO homeworks(studentId, creationDate, endDate, retrieveDate, description) VALUES(@studentId, @creationDate, @endDate, 0, @description)";
+            List<HomeworkInfo> homeworkInfos = new List<HomeworkInfo>();
+            
             foreach (StudentInfo student in studentList)
             {
-                cmd.Parameters.AddWithValue("studentId", student.studentId);
-                cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
-                cmd.Parameters.AddWithValue("endDate", endDateTimestamp);
-                cmd.Parameters.AddWithValue("description", description);
-                cmd.Prepare();
-                cmd.ExecuteNonQuery();
-                cmd.Parameters.Clear();
+                HomeworkInfo homework = new HomeworkInfo()
+                {
+                    studentId = student.studentId,
+                    description = description,
+                    endDate = endDateTimestamp,
+                };
+                homeworkInfos.Add(homework);
             }
 
+            int generatedHomework = Database.Insert.Homework.Multiple(homeworkInfos);
+
             error.Foreground = new SolidColorBrush(Colors.Green);
-            error.Content = $"{studentList.Count} devoirs ajoutés avec succès";
+            error.Content = $"{generatedHomework} devoirs ajoutés avec succès";
         }
 
         public class ClassroomEntry

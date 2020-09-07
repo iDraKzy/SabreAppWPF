@@ -27,5 +27,10 @@ namespace SabreAppWPF
             }
             return null;
         }
+
+        static public int ReturnTimestamp(DateTime date)
+        {
+            return (int)new DateTimeOffset(date).ToUnixTimeSeconds();
+        }
     }
 }

@@ -106,29 +106,32 @@ namespace SabreAppWPF
                 AppTheme.BorderColor = "#000000";
             }
         }
-
+        //f
         private async void CreateDb()
         {
             await ApplicationData.Current.LocalFolder.CreateFileAsync("Sabre.db", CreationCollisionOption.OpenIfExists);
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = @"CREATE TABLE IF NOT EXISTS
-                                students(studentId INTEGER PRIMARY KEY, classroomId INTEGER, lastname TEXT, surname TEXT, gender BOOLEAN, board BOOLEAN, interrogation BOOLEAN);
+                                students(studentId INTEGER PRIMARY KEY, lastname TEXT, surname TEXT, gender BOOLEAN, board BOOLEAN, interrogation BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
-                                homeworks(homeworkId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT);
+                                linkStudentsClassroom(linkId INTERGER PRIMARY KEY, studentId INTEGER, classroomId INTEGER);
+
+                                CREATE TABLE IF NOT EXISTS
+                                homeworks(homeworkId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT, active BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
                                 punishments(punishmentId INTEGER PRIMARY KEY, studentId INTEGER,
-                                creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT);
+                                creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT, active BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
-                                notes(noteId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, content TEXT);
+                                notes(noteId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, content TEXT, active BOOLEAN);
                                 
                                 CREATE TABLE IF NOT EXISTS
-                                grades(gradeId INTEGER PRIMARY KEY, studentId INTEGER, grade FLOAT, coeff INTEGER, creationDate INTEGER, title TEXT);
+                                grades(gradeId INTEGER PRIMARY KEY, studentId INTEGER, grade FLOAT, coeff INTEGER, creationDate INTEGER, title TEXT, active BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
-                                votes(voteId INTEGER PRIMARY KEY, studentId INTEGER, upvotes BOOLEAN, description TEXT, creationDate INTEGER);
+                                votes(voteId INTEGER PRIMARY KEY, studentId INTEGER, upvotes BOOLEAN, description TEXT, creationDate INTEGER, active BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
                                 rooms(roomId INTEGER PRIMARY KEY, name TEXT, rows INTEGER, columns INTEGER);
@@ -137,16 +140,16 @@ namespace SabreAppWPF
                                 classrooms(classroomId INTEGER PRIMARY KEY, name TEXT);
 
                                 CREATE TABLE IF NOT EXISTS
-                                schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, repetitivity INTEGER, nextDate INTEGER, duration INTEGER);
+                                schedules(scheduleId INTEGER PRIMARY KEY, classroomId INTEGER, roomId INTEGER, repetitivity INTEGER, nextDate INTEGER, duration INTEGER, active BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
-                                plans(planId INTEGER PRIMARY KEY, scheduleId INTEGER, roomId INTEGER, spacing TEXT, name TEXT);
+                                plans(planId INTEGER PRIMARY KEY, scheduleId INTEGER, roomId INTEGER, spacing TEXT, name TEXT, active BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
                                 places(placeId INTEGER PRIMARY KEY, planId INTEGER, studentId INTEGER, row INTEGER, column INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
-                                reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT);"; //Spacing in plans is a string of comma seperated int
+                                reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT, active BOOLEAN);"; //Spacing in plans is a string of comma seperated int
             cmd.ExecuteNonQuery();
         }
 

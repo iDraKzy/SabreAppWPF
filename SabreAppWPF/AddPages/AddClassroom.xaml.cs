@@ -37,20 +37,12 @@ namespace SabreAppWPF.AddPages
             }
 
             string name = _nameTextBox.Text;
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO classrooms(name) VALUES(@name)";
-            cmd.Parameters.AddWithValue("name", name);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "SELECT last_insert_rowid()";
-
-            long classroomId = (long)cmd.ExecuteScalar();
+            int classroomId = Database.Insert.Classroom.One(name);
 
             ClassroomDisplay classroomDisplay = new ClassroomDisplay()
             {
                 ClassroomName = name,
-                ID = (int)classroomId,
+                ID = classroomId,
                 NextSession = "Aucun horraire défini",
                 StudentsNumber = "0 étudiant(e)s"
             };
