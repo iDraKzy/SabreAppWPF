@@ -13,7 +13,7 @@ namespace SabreAppWPF.Database.Insert
             int endDateTimestamp = GlobalFunction.ReturnTimestamp(endDate);
 
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO punishments(studentId, creationDate, endDate, retrieveDate, description, active) VALUES(@studentId, @creationDate, @endDate, 0, @descritpion, true)";
+            cmd.CommandText = "INSERT INTO punishments(studentId, creationDate, endDate, retrieveDate, description, active) VALUES(@studentId, @creationDate, @endDate, 0, @description, true)";
             cmd.Parameters.AddWithValue("studentId", studentId);
             cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
             cmd.Parameters.AddWithValue("endDate", endDateTimestamp);

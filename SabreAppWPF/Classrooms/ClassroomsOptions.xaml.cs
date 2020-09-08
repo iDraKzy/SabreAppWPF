@@ -44,6 +44,12 @@ namespace SabreAppWPF.Classrooms
             window._addFrame.Navigate(new AddSchedules());
         }
 
+        private void AddStudentToClassroom_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow window = GlobalFunction.GetMainWindow();
+            window._addFrame.Navigate(new AddStudentToClassroom(classroomId));
+        }
+
 
         //Binding of the page
         private string _name;

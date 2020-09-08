@@ -115,7 +115,7 @@ namespace SabreAppWPF
                                 students(studentId INTEGER PRIMARY KEY, lastname TEXT, surname TEXT, gender BOOLEAN, board BOOLEAN, interrogation BOOLEAN);
 
                                 CREATE TABLE IF NOT EXISTS
-                                linkStudentsClassroom(linkId INTERGER PRIMARY KEY, studentId INTEGER, classroomId INTEGER);
+                                linkStudentToClassroom(linkId INTERGER PRIMARY KEY, studentId INTEGER, classroomId INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
                                 homeworks(homeworkId INTEGER PRIMARY KEY, studentId INTEGER, creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT, active BOOLEAN);

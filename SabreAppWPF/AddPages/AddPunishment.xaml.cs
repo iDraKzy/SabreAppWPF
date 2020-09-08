@@ -37,7 +37,7 @@ namespace SabreAppWPF.AddPages
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             string lastname = _lastnameTextBox.Text;
-            string surname = _lastnameTextBox.Text;
+            string surname = _surnameTextBox.Text;
             string description = _descriptionTextBox.Text;
             DateTime? endDateTime = _endDatePicker.SelectedDate;
 
@@ -68,6 +68,11 @@ namespace SabreAppWPF.AddPages
 
             PunishmentsDetails.punishmentsList.Add(punishmentDetail);
 
+            if (punishmentId != 0)
+            {
+                error.Foreground = new SolidColorBrush(Colors.Green);
+                error.Content = "Punition ajoutée avec succès";
+            }
         }
 
     }

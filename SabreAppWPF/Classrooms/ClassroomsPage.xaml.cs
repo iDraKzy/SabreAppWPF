@@ -94,7 +94,7 @@ namespace SabreAppWPF.Classrooms
         private int GetStudentNumber(int classroomId)
         {
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "SELECT * FROM students WHERE classroomId = @classroomId";
+            cmd.CommandText = "SELECT * FROM linkStudentToClassroom WHERE classroomId = @classroomId";
             cmd.Parameters.AddWithValue("classroomId", classroomId);
             cmd.Prepare();
             using SQLiteDataReader rdr = cmd.ExecuteReader();

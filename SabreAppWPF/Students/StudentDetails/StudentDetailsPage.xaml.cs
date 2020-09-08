@@ -32,14 +32,17 @@ namespace SabreAppWPF.Students.StudentDetails
             string studentName = "";
             int classroomId = 0;
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = $"SELECT lastname, surname, classroomId FROM students WHERE studentId = {studentId}";
+            cmd.CommandText = $"SELECT lastname, surname FROM students WHERE studentId = {studentId}";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
                 studentName = rdr.GetString(1) + " " + rdr.GetString(0);
-                classroomId = rdr.GetInt32(2);
             }
             rdr.Close();
+            cmd.CommandText = "SELECT classroomId FROM linkStudentToClassroom WHERE studentId = @studentId";
+            cmd.Parameters.AddWithValue("studentId", studentId);
+            cmd.Prepare();
+            classroomId = (int)(long)cmd.ExecuteScalar();
             cmd.CommandText = $"SELECT name FROM classrooms WHERE classroomId = {classroomId}";
             string classroomName = (string)cmd.ExecuteScalar();
 

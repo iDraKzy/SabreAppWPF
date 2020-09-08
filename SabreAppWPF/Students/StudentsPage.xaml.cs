@@ -21,6 +21,7 @@ using System.Runtime.CompilerServices;
 using SabreAppWPF.AddPages;
 using Windows.UI.Xaml.Automation.Peers;
 using System.Security.Policy;
+using Windows.UI.WebUI;
 
 namespace SabreAppWPF
 {
@@ -37,9 +38,14 @@ namespace SabreAppWPF
             studentsCollection = new ObservableCollection<StudentDisplay>();
             studentList.ItemsSource = studentsCollection;
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "SELECT * FROM students";
+            cmd.CommandText = "SELECT studentId FROM students";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
-            ReadStudentsData(rdr);
+            List<int> studentIdList = new List<int>();
+            while(rdr.Read())
+            {
+                studentIdList.Add((int)rdr.GetInt64(0));
+            }
+            ReadStudentsData(studentIdList);
         }
 
         public studentsPage(int classroomId)
@@ -48,21 +54,32 @@ namespace SabreAppWPF
             studentsCollection = new ObservableCollection<StudentDisplay>();
             studentList.ItemsSource = studentsCollection;
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "SELECT * FROM students WHERE classroomId = @classroomId";
+            cmd.CommandText = "SELECT studentId FROM linkStudentToClassroom WHERE classroomId = @classroomId";
             cmd.Parameters.AddWithValue("classroomId", classroomId);
             cmd.Prepare();
-            using SQLiteDataReader rdr = cmd.ExecuteReader();
-            ReadStudentsData(rdr);
-        }
 
-        private void ReadStudentsData(SQLiteDataReader rdr)
-        {
+            List<int> studentIdList = new List<int>();
+
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                using SQLiteCommand cmdLoop = GlobalFunction.OpenDbConnection();
-                int studentId = rdr.GetInt32(0);
+                studentIdList.Add(rdr.GetInt32(0));
+            }
+
+            ReadStudentsData(studentIdList);
+        }
+
+        private void ReadStudentsData(List<int> studentIdList)
+        {
+            foreach (int studentId in studentIdList)
+            {
+
+                using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
                 //Handle classroom name
-                string classroomName = Database.Get.Classroom.NameFromID(rdr.GetInt32(1));
+                int classroomId = Database.Get.Classroom.IDFromStudentID(studentId);
+                string classroomName = Database.Get.Classroom.NameFromID(classroomId);
+
+                string[] studentName = Database.Get.Student.NameFromID(studentId);
 
                 //Handle homework
                 List<HomeworkInfo> homeworkList = GetAllHomeworks(studentId);
@@ -119,7 +136,7 @@ namespace SabreAppWPF
                 StudentDisplay studentDisplay = new StudentDisplay()
                 {
                     ID = studentId,
-                    Name = rdr.GetString(3) + " " + rdr.GetString(2),
+                    Name = studentName[1] + " " + studentName[0],
                     ClassroomName = classroomName,
                     HomeworkButtonEnabled = lastHomeworkButtonEnabled,
                     LastHomeworkStatusText = lastHomeworkStatus,

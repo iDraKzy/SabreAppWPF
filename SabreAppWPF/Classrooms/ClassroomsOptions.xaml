@@ -25,6 +25,7 @@
                 </Grid.RowDefinitions>
                 <Label Style="{StaticResource LabelStyle1}" Content="{Binding ClassroomName}" FontSize="15" FontFamily="Segoe UI Semibold" VerticalAlignment="Bottom" Margin="40,0,0,0"/>
                 <Label Style="{StaticResource LabelStyle1}" Content="{Binding StudentNumber}" Grid.Row="1" FontSize="12" FontFamily="Segoe UI Semibold" FontStyle="Italic" VerticalAlignment="Top" Margin="40,0,0,0"/>
+                <Button Style="{StaticResource ButtonStyle1}" Click="AddStudentToClassroom_Click" Content="Ajouté un étudiant" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             </Grid>
         </Border>
         <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black">

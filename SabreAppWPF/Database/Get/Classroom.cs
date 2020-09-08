@@ -15,11 +15,11 @@ namespace SabreAppWPF.Database.Get
         public static int IDFromStudentID(int studentId)
         {
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "SELECT classroomId FROM students WHERE studentId = @studentId";
+            cmd.CommandText = "SELECT classroomId FROM linkStudentToClassroom WHERE studentId = @studentId";
             cmd.Parameters.AddWithValue("studentId", studentId);
             cmd.Prepare();
-            int classroomId = (int)cmd.ExecuteScalar();
-            return classroomId;
+            long classroomId = (long)cmd.ExecuteScalar();
+            return (int)classroomId;
         }
 
         /// <summary>

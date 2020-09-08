@@ -2,11 +2,34 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data.SQLite;
+using Windows.Media.Protection.PlayReady;
 
 namespace SabreAppWPF.Database.Get
 {
     public static class Student
     {
+        public static List<StudentInfo> All()
+        {
+            List<StudentInfo> studentList = new List<StudentInfo>();
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT * FROM students";
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                StudentInfo student = new StudentInfo()
+                {
+                    studentId = rdr.GetInt32(0),
+                    lastname = rdr.GetString(1),
+                    surname = rdr.GetString(2),
+                    gender = rdr.GetBoolean(3),
+                    board = rdr.GetBoolean(4),
+                    interrogation = rdr.GetBoolean(5)
+                };
+                studentList.Add(student);
+            }
+            return studentList;
+        }
 
         /// <summary>
         /// Return the student from its id
@@ -24,12 +47,11 @@ namespace SabreAppWPF.Database.Get
             while (rdr.Read())
             {
                 student.studentId = rdr.GetInt32(0);
-                student.classroomId = rdr.GetInt32(1);
-                student.lastname = rdr.GetString(2);
-                student.surname = rdr.GetString(3);
-                student.gender = rdr.GetBoolean(4);
-                student.board = rdr.GetBoolean(5);
-                student.interrogation = rdr.GetBoolean(6);
+                student.lastname = rdr.GetString(1);
+                student.surname = rdr.GetString(2);
+                student.gender = rdr.GetBoolean(3);
+                student.board = rdr.GetBoolean(4);
+                student.interrogation = rdr.GetBoolean(5);
             }
             return student;
         }
@@ -75,24 +97,23 @@ namespace SabreAppWPF.Database.Get
         {
             List<StudentInfo> studentList = new List<StudentInfo>();
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "SELECT * FROM students WHERE classroomId = @classroomId";
+            cmd.CommandText = "SELECT * FROM linkStudentToClassroom WHERE classroomId = @classroomId";
             cmd.Parameters.AddWithValue("classroomId", classroomId);
             cmd.Prepare();
             using SQLiteDataReader rdr = cmd.ExecuteReader();
+            List<int> studentIdList = new List<int>();
+
             while (rdr.Read())
             {
-                StudentInfo studentInfo = new StudentInfo()
-                {
-                    studentId = rdr.GetInt32(0),
-                    classroomId = rdr.GetInt32(1),
-                    lastname = rdr.GetString(2),
-                    surname = rdr.GetString(3),
-                    gender = rdr.GetBoolean(4),
-                    board = rdr.GetBoolean(5),
-                    interrogation = rdr.GetBoolean(6)
-                };
-                studentList.Add(studentInfo);
+                studentIdList.Add(rdr.GetInt32(1));
             }
+
+            foreach (int studentId in studentIdList)
+            {
+                StudentInfo student = FromId(studentId);
+                studentList.Add(student);
+            }
+
             return studentList;
         }
     }
