@@ -76,8 +76,14 @@ namespace SabreAppWPF
 
                 using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
                 //Handle classroom name
-                int classroomId = Database.Get.Classroom.IDFromStudentID(studentId);
-                string classroomName = Database.Get.Classroom.NameFromID(classroomId);
+                List<int> classroomIdList = Database.Get.Classroom.AllIDFromStudentID(studentId);
+                List<string> classroomNameList = new List<string>();
+                foreach (int classroomId in classroomIdList)
+                {
+                    classroomNameList.Add(Database.Get.Classroom.NameFromID(classroomId));
+                }
+
+                string classroomName = String.Join(", ", classroomNameList.ToArray());
 
                 string[] studentName = Database.Get.Student.NameFromID(studentId);
 

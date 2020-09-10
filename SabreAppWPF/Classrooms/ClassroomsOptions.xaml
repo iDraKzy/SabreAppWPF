@@ -29,7 +29,7 @@
             </Grid>
         </Border>
         <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black">
-            <Grid Margin="0,79,0,0" ShowGridLines="True">
+            <Grid Margin="0,79,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>

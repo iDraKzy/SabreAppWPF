@@ -367,13 +367,15 @@ namespace SabreAppWPF.Plans
         private void UpvoteButton_Click(object sender, RoutedEventArgs e)
         {
             StudentPlanViewDisplay student = (StudentPlanViewDisplay)((FrameworkElement)sender).DataContext;
-            window._addFrame.Navigate(new AddVote(true, student.StudentId));
+            //window._addFrame.Navigate(new AddVote(true, student.StudentId));
+            Database.Insert.Vote.One(student.StudentId, true, "Upvote en séance");
         }
 
         private void DownvoteButton_Click(object sender, RoutedEventArgs e)
         {
             StudentPlanViewDisplay student = (StudentPlanViewDisplay)((FrameworkElement)sender).DataContext;
-            window._addFrame.Navigate(new AddVote(false, student.StudentId));
+            //window._addFrame.Navigate(new AddVote(false, student.StudentId));
+            Database.Insert.Vote.One(student.StudentId, false, "Downvote en séance");
         }
 
         public class StudentPlanViewDisplay : INotifyPropertyChanged

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data.SQLite;
+using Windows.UI.Composition;
 
 namespace SabreAppWPF.Database.Get
 {
@@ -12,14 +13,19 @@ namespace SabreAppWPF.Database.Get
         /// </summary>
         /// <param name="studentId">The id of the student</param>
         /// <returns>Id of the classroom</returns>
-        public static int IDFromStudentID(int studentId)
+        public static List<int> AllIDFromStudentID(int studentId)
         {
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = "SELECT classroomId FROM linkStudentToClassroom WHERE studentId = @studentId";
             cmd.Parameters.AddWithValue("studentId", studentId);
             cmd.Prepare();
-            long classroomId = (long)cmd.ExecuteScalar();
-            return (int)classroomId;
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            List<int> classroomIdList = new List<int>();
+            while (rdr.Read())
+            {
+                classroomIdList.Add((int)rdr.GetInt64(0));
+            }
+            return classroomIdList;
         }
 
         /// <summary>

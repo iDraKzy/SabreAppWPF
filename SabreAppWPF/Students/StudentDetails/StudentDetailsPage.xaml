@@ -9,7 +9,7 @@
         d:DesignHeight="661" d:DesignWidth="950"
         Title="StudentDetailsPage"
         Loaded="StudentDetailsPage_Load">
-    <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}" d:Background="White" ShowGridLines="True">
+    <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}" d:Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="35"/>
             <ColumnDefinition/>
@@ -19,7 +19,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Border Grid.ColumnSpan="2" Grid.Column="0" BorderBrush="Black" BorderThickness="1">
-            <Grid ShowGridLines="True">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
@@ -29,7 +29,7 @@
             </Grid>
         </Border>
         <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black">
-            <Grid Margin="0,79,0,0" ShowGridLines="True">
+            <Grid Margin="0,79,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
