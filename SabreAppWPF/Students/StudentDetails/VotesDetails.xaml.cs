@@ -94,7 +94,7 @@ namespace SabreAppWPF.Students.StudentDetails
         private void AddDownvote_Click(object sender, RoutedEventArgs e)
         {
             MainWindow window = GlobalFunction.GetMainWindow();
-            window._addFrame.Navigate(new AddVote(true, studentId));
+            window._addFrame.Navigate(new AddVote(false, studentId));
         }
 
         public class VoteDetails : INotifyPropertyChanged

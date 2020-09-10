@@ -45,6 +45,8 @@ namespace SabreAppWPF.MainMenu
 
         private void MainMenuPage_Load(object sender, RoutedEventArgs e)
         {
+            MainWindow window = GlobalFunction.GetMainWindow();
+            window._addFrame.Navigate(new AddReminder());
             DateTime currentTime = DateTime.Now;
             int currentTimeStamp = (int)new DateTimeOffset(currentTime).ToUnixTimeSeconds();
             List<ScheduleInfo> scheduleInfoList = Database.Get.Schedule.All();
@@ -52,6 +54,7 @@ namespace SabreAppWPF.MainMenu
             {
                 NextSessionTime = "Aucune session prévue";
                 ListEnabled = false;
+                PlanEnabled = false;
                 return;
             }
             int scheduleIndex = 0;

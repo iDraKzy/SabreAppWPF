@@ -38,7 +38,7 @@
             </Grid>
             <Button Style="{StaticResource ButtonStyle1}" Content="Plan aléatoire pour cette séance (WIP)" Grid.Column="1" Grid.Row="5" Margin="50,5,50,190" IsEnabled="False"/>
         </Grid>
-        <Label Style="{StaticResource LabelStyle1}" Content="Eploi du temps" Grid.Column="0" VerticalAlignment="Top" Margin="5,0,0,0" HorizontalAlignment="Left" FontSize="15" FontFamily="Segoe UI Semibold"/>
+        <Label Style="{StaticResource LabelStyle1}" Content="Emploi du temps" Grid.Column="0" VerticalAlignment="Top" Margin="5,0,0,0" HorizontalAlignment="Left" FontSize="15" FontFamily="Segoe UI Semibold"/>
         <DataGrid x:Name="_scheduleDataGrid" Grid.Column="0" Margin="10,35,10,40" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date" Binding="{Binding Date}"/>
