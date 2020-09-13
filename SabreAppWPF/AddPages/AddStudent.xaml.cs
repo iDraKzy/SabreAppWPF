@@ -13,6 +13,9 @@ using System.Windows.Shapes;
 using System.Data.SQLite;
 using System.Net.NetworkInformation;
 using SabreAppWPF.Students;
+using Windows.UI.Xaml.Automation.Peers;
+using Microsoft.Win32;
+using System.IO;
 
 namespace SabreAppWPF.AddPages
 {
@@ -21,6 +24,7 @@ namespace SabreAppWPF.AddPages
     /// </summary>
     public partial class AddStudent : Page
     {
+        private string _path;
         public AddStudent()
         {
             InitializeComponent();
@@ -44,6 +48,83 @@ namespace SabreAppWPF.AddPages
             _classroomComboBox.SelectedIndex = 0;
         }
 
+        private void CsvAddButton_Click(object sender, RoutedEventArgs e)
+        {
+            string[] csvFile;
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Fichier CSV (*.csv)|*.csv|Tous les fichiers (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                csvFile = File.ReadAllLines(openFileDialog.FileName);
+                ProcessCsvFile(csvFile);
+            }
+        }
+
+        private void ProcessCsvFile(string[] csvLines)
+        {
+            List<RowStudent> rowStudents = new List<RowStudent>();
+            for (int i = 0; i < csvLines.Length; i++)
+            {
+                if (i == 0) continue;
+                string[] properties = csvLines[i].Split(";");
+                RowStudent rowStudent = new RowStudent()
+                {
+                    Name = properties[0],
+                    Surname = properties[1],
+                    Gender = properties[2],
+                    Classrooms = properties[3]
+                };
+                rowStudents.Add(rowStudent);
+            }
+            AddAllStudentsToDbFromCSV(rowStudents);
+
+        }
+
+        private void AddAllStudentsToDbFromCSV(List<RowStudent> rowStudents)
+        {
+            foreach (RowStudent student in rowStudents)
+            {
+                student.Gender = student.Gender.ToLower();
+                student.Name = student.Name.ToLower();
+                student.Name = char.ToUpper(student.Name[0]) + student.Name.Substring(1);
+                bool trueGender = student.Gender == "h";
+                string[] classrooms = student.Classrooms.Split(",");
+                List<ClassroomEntry> classroomEntryList = new List<ClassroomEntry>();
+                foreach (string classroomName in classrooms)
+                {
+                    int? classroomId = Database.Get.Classroom.IDFromName(classroomName);
+                    ClassroomEntry classroomEntry = new ClassroomEntry()
+                    {
+                        Name = classroomName,
+                        ID = classroomId
+                    };
+                    classroomEntryList.Add(classroomEntry);
+                }
+
+                foreach (ClassroomEntry classroom in classroomEntryList)
+                {
+                    if (classroom.ID == null)
+                    {
+                        classroom.ID = Database.Insert.Classroom.One(classroom.Name);
+                    }
+                }
+
+                int studentId = Database.Insert.Student.One((int)classroomEntryList[0].ID, student.Name, student.Surname, trueGender);
+                if (classroomEntryList.Count > 1)
+                {
+                    for (int i = 0; i < classroomEntryList.Count; i++)
+                    {
+                        if (i == 0) continue;
+                        Database.Insert.LinkStudentToClassroom.One(studentId, (int)classroomEntryList[i].ID);
+                    }
+                }
+
+            }
+
+            error.Foreground = new SolidColorBrush(Colors.Green);
+            error.Content = $"{rowStudents.Count} étudiant(e)s ajouté(e)s avec succès";
+        }
+        
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             string surname = _surnameTextBox.Text;
@@ -82,6 +163,20 @@ namespace SabreAppWPF.AddPages
                 Note = "Aucune note"
             };
             studentsPage.studentsCollection.Add(studentDisplay);
+        }
+
+        public class ClassroomEntry
+        {
+            public string Name { get; set; }
+            public int? ID { get; set; }
+        }
+
+        public class RowStudent
+        {
+            public string Name { get; set; }
+            public string Surname { get; set; }
+            public string Gender { get; set; }
+            public string Classrooms { get; set; }
         }
     }
 }

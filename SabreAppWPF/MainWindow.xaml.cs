@@ -109,10 +109,10 @@ namespace SabreAppWPF
         //f
         private async void CreateDb()
         {
-            await ApplicationData.Current.LocalFolder.CreateFileAsync("Sabre.db", CreationCollisionOption.OpenIfExists);
+            await ApplicationData.Current.LocalFolder.CreateFileAsync("Sabre-1.0.6.db", CreationCollisionOption.OpenIfExists);
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = @"CREATE TABLE IF NOT EXISTS
-                                students(studentId INTEGER PRIMARY KEY, lastname TEXT, surname TEXT, gender BOOLEAN, board BOOLEAN, interrogation BOOLEAN);
+                                students(studentId INTEGER PRIMARY KEY, lastname TEXT, surname TEXT, gender BOOLEAN, board BOOLEAN, interrogation BOOLEAN, mask INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
                                 linkStudentToClassroom(linkId INTERGER PRIMARY KEY, studentId INTEGER, classroomId INTEGER);

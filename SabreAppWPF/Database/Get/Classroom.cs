@@ -43,6 +43,16 @@ namespace SabreAppWPF.Database.Get
             return classroomName;
         }
 
+        public static int? IDFromName(string name)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "SELECT classroomId FROM classrooms WHERE name = @name";
+            cmd.Parameters.AddWithValue("name", name);
+            cmd.Prepare();
+            int? classroomId = (int?)(long?)cmd.ExecuteScalar();
+            return classroomId;
+        }
+
         /// <summary>
         /// Gets all the classrooms from the database
         /// </summary>
