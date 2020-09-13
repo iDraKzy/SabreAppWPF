@@ -12,7 +12,7 @@ namespace SabreAppWPF.Database.Insert
             int currentTimestamp = GlobalFunction.ReturnTimestamp(DateTime.Now);
 
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO votes(studentId, upvotes, description, creationDate) VALUES(@studentId, @upvotes, @description, @creationDate)";
+            cmd.CommandText = "INSERT INTO votes(studentId, upvotes, description, creationDate, active) VALUES(@studentId, @upvotes, @description, @creationDate, true)";
             cmd.Parameters.AddWithValue("studentId", studentId);
             cmd.Parameters.AddWithValue("upvotes", upvote);
             cmd.Parameters.AddWithValue("description", description);
@@ -24,6 +24,21 @@ namespace SabreAppWPF.Database.Insert
             long voteId = (long)cmd.ExecuteScalar();
 
             return (int)voteId;
+        }
+
+        public static void One(int studentId, bool upvote, string description, int creationDate, bool active, int voteId)
+        {
+
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "INSERT INTO votes(voteId, studentId, upvotes, description, creationDate, active) VALUES(@voteId, @studentId, @upvotes, @description, @creationDate, @active)";
+            cmd.Parameters.AddWithValue("voteId", voteId);
+            cmd.Parameters.AddWithValue("studentId", studentId);
+            cmd.Parameters.AddWithValue("upvotes", upvote);
+            cmd.Parameters.AddWithValue("description", description);
+            cmd.Parameters.AddWithValue("creationDate", creationDate);
+            cmd.Parameters.AddWithValue("active", active);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
     }
 }

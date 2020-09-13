@@ -20,5 +20,15 @@ namespace SabreAppWPF.Database.Insert
             long classroomId = (long)cmd.ExecuteScalar();
             return (int)classroomId;
         }
+
+        static public void One(string name, int classroomId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "INSERT INTO classrooms(classroomId, name) VALUES(@classroomId, @name)";
+            cmd.Parameters.AddWithValue("classroomId", classroomId);
+            cmd.Parameters.AddWithValue("name", name);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+        }
     }
 }

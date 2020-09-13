@@ -24,7 +24,6 @@ namespace SabreAppWPF.AddPages
     /// </summary>
     public partial class AddStudent : Page
     {
-        private string _path;
         public AddStudent()
         {
             InitializeComponent();

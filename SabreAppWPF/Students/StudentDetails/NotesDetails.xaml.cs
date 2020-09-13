@@ -33,22 +33,17 @@ namespace SabreAppWPF.Students.StudentDetails
         private void NotesDetails_Load(object sender, RoutedEventArgs e)
         {
             noteDataGrid.ItemsSource = noteCollection;
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = $"SELECT * FROM notes WHERE studentId = {studentId}";
-            using SQLiteDataReader rdr = cmd.ExecuteReader();
-
-
-
-            while (rdr.Read())
+            List<NoteInfo> notes = Database.Get.Note.AllFromStudentId(studentId);
+            foreach (NoteInfo note in notes)
             {
-                int creationTimestamp = rdr.GetInt32(2);
+                int creationTimestamp = note.creationDate;
                 DateTime creationDate = DateTimeOffset.FromUnixTimeSeconds(creationTimestamp).LocalDateTime;
                 string creationDateString = creationDate.ToString("g", GlobalVariable.culture);
                 NoteDetails noteDetail = new NoteDetails()
                 {
-                    ID = rdr.GetInt32(0),
+                    ID = note.noteId,
                     CreationDate = creationDateString,
-                    Content = rdr.GetString(3)
+                    Content = note.content
                 };
                 noteCollection.Add(noteDetail);
             }

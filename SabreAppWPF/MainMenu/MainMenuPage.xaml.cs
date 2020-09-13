@@ -49,7 +49,7 @@ namespace SabreAppWPF.MainMenu
             window._addFrame.Navigate(new AddReminder());
             DateTime currentTime = DateTime.Now;
             int currentTimeStamp = (int)new DateTimeOffset(currentTime).ToUnixTimeSeconds();
-            List<ScheduleInfo> scheduleInfoList = Database.Get.Schedule.All();
+            List<ScheduleInfo> scheduleInfoList = Database.Get.Schedule.All(GlobalFunction.OpenDbConnection());
             if (scheduleInfoList.Count == 0)
             {
                 NextSessionTime = "Aucune session prévue";
@@ -133,7 +133,7 @@ namespace SabreAppWPF.MainMenu
 
         private void Populate_ScheduleDataGrid()
         {
-            List<ScheduleInfo> scheduleList = Database.Get.Schedule.All();
+            List<ScheduleInfo> scheduleList = Database.Get.Schedule.All(GlobalFunction.OpenDbConnection());
             
             foreach (ScheduleInfo schedule in scheduleList)
             {
@@ -154,7 +154,7 @@ namespace SabreAppWPF.MainMenu
         private void Populate_ReminderDataGrid()
         {
             //reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT); ";
-            List<ReminderInfo> reminderList = Database.Get.Reminder.All();
+            List<ReminderInfo> reminderList = Database.Get.Reminder.All(GlobalFunction.OpenDbConnection());
 
             foreach (ReminderInfo reminder in reminderList)
             {

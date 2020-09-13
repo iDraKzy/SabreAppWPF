@@ -26,5 +26,20 @@ namespace SabreAppWPF.Database.Insert
 
             return (int)reminderId;
         }
+
+        public static void One(int date, string description, int creationDate, bool active, int reminderId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            //reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT); ";
+            cmd.CommandText = "INSERT INTO reminders(reminderId, creationDate, reminderDate, description, active) VALUES(@reminderId, @creationDate, @reminderDate, @description, @active)";
+            cmd.Parameters.AddWithValue("reminderId", reminderId);
+            cmd.Parameters.AddWithValue("creationDate", creationDate);
+            cmd.Parameters.AddWithValue("reminderDate", date);
+            cmd.Parameters.AddWithValue("description", description);
+            cmd.Parameters.AddWithValue("active", active);
+
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+        }
     }
 }

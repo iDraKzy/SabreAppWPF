@@ -26,5 +26,19 @@ namespace SabreAppWPF.Database.Insert
 
             return (int)punishmentId;
         }
+
+        public static void One(int studentId, int creationDate, int endDate, int retrieveDate, string description, bool active, int punishmentId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+
+            cmd.CommandText = "INSERT INTO punishments(punishmentId, studentId, creationDate, endDate, retrieveDate, description, active) VALUES(@punishmentId, @studentId, @creationDate, @endDate, @retrieveDate, @description, @active)";
+            cmd.Parameters.AddWithValue("punishmentId", punishmentId);
+            cmd.Parameters.AddWithValue("studentId", studentId);
+            cmd.Parameters.AddWithValue("creationDate", creationDate);
+            cmd.Parameters.AddWithValue("endDate", endDate);
+            cmd.Parameters.AddWithValue("retrieveDate", retrieveDate);
+            cmd.Parameters.AddWithValue("description", description);
+            cmd.Parameters.AddWithValue("active", active);
+        }
     }
 }

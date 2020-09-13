@@ -19,6 +19,8 @@ using SabreAppWPF.Classrooms;
 using SabreAppWPF.MainMenu;
 using SabreAppWPF.Plans;
 using Windows.Storage;
+using System.IO;
+using Windows.UI.Xaml.Automation.Peers;
 
 namespace SabreAppWPF
 {
@@ -109,10 +111,10 @@ namespace SabreAppWPF
         //f
         private async void CreateDb()
         {
-            await ApplicationData.Current.LocalFolder.CreateFileAsync("Sabre-1.0.6.db", CreationCollisionOption.OpenIfExists);
+            await ApplicationData.Current.LocalFolder.CreateFileAsync(GlobalVariable.currentDbName, CreationCollisionOption.OpenIfExists);
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = @"CREATE TABLE IF NOT EXISTS
-                                students(studentId INTEGER PRIMARY KEY, lastname TEXT, surname TEXT, gender BOOLEAN, board BOOLEAN, interrogation BOOLEAN, mask INTEGER);
+                                students(studentId INTEGER PRIMARY KEY, lastname TEXT, surname TEXT, gender BOOLEAN, board BOOLEAN, interrogation BOOLEAN, mask INTEGER); --Mask new in 1.1.0.0
 
                                 CREATE TABLE IF NOT EXISTS
                                 linkStudentToClassroom(linkId INTERGER PRIMARY KEY, studentId INTEGER, classroomId INTEGER);
@@ -149,7 +151,10 @@ namespace SabreAppWPF
                                 places(placeId INTEGER PRIMARY KEY, planId INTEGER, studentId INTEGER, row INTEGER, column INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
-                                reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT, active BOOLEAN);"; //Spacing in plans is a string of comma seperated int
+                                reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT, active BOOLEAN);
+
+                                CREATE TABLE IF NOT EXISTS --New in 1.1.0.0
+                                currentDbVersion(versionId INTEGER PRIMARY KEY, currentVersion TEXT)"; //Spacing in plans is a string of comma seperated int
             cmd.ExecuteNonQuery();
         }
 

@@ -8,10 +8,9 @@ namespace SabreAppWPF.Database.Get
 {
     public static class Reminder
     {
-        public static List<ReminderInfo> All()
+        public static List<ReminderInfo> All(SQLiteCommand cmd)
         {
             List<ReminderInfo> reminderList = new List<ReminderInfo>();
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = "SELECT * FROM reminders";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
 

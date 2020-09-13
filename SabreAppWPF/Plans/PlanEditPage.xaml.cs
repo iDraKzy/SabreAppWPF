@@ -169,19 +169,11 @@ namespace SabreAppWPF.Plans
                 return;
             }
 
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO plans(scheduleId, roomId, spacing, name) VALUES(@scheduleId, @roomId, @spacing, @name)";
-            cmd.Parameters.AddWithValue("scheduleId", scheduleId);
-            cmd.Parameters.AddWithValue("roomId", roomId);
-            cmd.Parameters.AddWithValue("spacing", String.Join(",", spacing));
-            cmd.Parameters.AddWithValue("name", name);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
-            cmd.CommandText = "SELECT last_insert_rowid()";
-            long planId = (long)cmd.ExecuteScalar();
+            int planId = Database.Insert.Plan.One(scheduleId, roomId, String.Join(",", spacing), name);
 
             foreach (StudentPlaceDisplay studentPlace in studentPlaceList)
             {
+                Database.Insert.Place.One(planId, studentPlace.StudentId, studentPlace.Row, studentPlace.Column);
                 cmd.CommandText = "INSERT INTO places(planId, studentId, row, column) VALUES(@planId, @studentId, @row, @column)";
                 cmd.Parameters.AddWithValue("planId", planId);
                 cmd.Parameters.AddWithValue("studentId", studentPlace.StudentId);

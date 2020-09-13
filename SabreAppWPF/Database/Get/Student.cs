@@ -8,10 +8,9 @@ namespace SabreAppWPF.Database.Get
 {
     public static class Student
     {
-        public static List<StudentInfo> All()
+        public static List<StudentInfo> All(SQLiteCommand cmd)
         {
             List<StudentInfo> studentList = new List<StudentInfo>();
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = "SELECT * FROM students";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
 

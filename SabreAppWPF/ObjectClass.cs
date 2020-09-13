@@ -4,7 +4,7 @@ namespace SabreAppWPF
 {
     public class StudentInfo
     {
-        public int studentId;
+        public int studentId, mask;
         public string lastname, surname;
         public bool gender, interrogation, board;
     }
@@ -12,7 +12,7 @@ namespace SabreAppWPF
     public class VotesInfo
     {
         public int voteId, studentId, creationDate;
-        public bool upvotes;
+        public bool upvotes, active;
         public string description;
     }
 
@@ -20,12 +20,14 @@ namespace SabreAppWPF
     {
         public int noteId, studentId, creationDate;
         public string content;
+        public bool active;
     }
 
     public class HomeworkInfo
     {
         public int homeworkId, studentId, creationDate, endDate, retrieveDate;
         public string description;
+        public bool active;
     }
 
     public class ScheduleInfo
@@ -75,5 +77,24 @@ namespace SabreAppWPF
         public int CreationDate { get; set; }
         public int ReminderDate { get; set; }
         public string Description { get; set; }
+        public bool Active { get; set; }
+    }
+
+    public class LinkStudentClassroomInfo
+    {
+        public int StudentId { get; set; }
+        public int ClassroomId { get; set; }
+    }
+//    punishments(punishmentId INTEGER PRIMARY KEY, studentId INTEGER,
+//creationDate INTEGER, endDate INTEGER, retrieveDate INTEGER, description TEXT, active BOOLEAN);
+    public class PunishmentInfo
+    {
+        public int PunishmentId { get; set; }
+        public int StudentId { get; set; }
+        public int CreationDate { get; set; }
+        public int EndDate { get; set; }
+        public int RetrieveDate { get; set; }
+        public string Description { get; set; }
+        public bool Active { get; set; }
     }
 }

@@ -7,6 +7,28 @@ namespace SabreAppWPF.Database.Get
 {
     public static class Vote
     {
+        public static List<VotesInfo> All(SQLiteCommand cmd)
+        {
+            cmd.CommandText = "SELECT * FROM votes";
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+            List<VotesInfo> votes = new List<VotesInfo>();
+
+            while (rdr.Read())
+            {
+                VotesInfo vote = new VotesInfo()
+                {
+                    voteId = rdr.GetInt32(0),
+                    studentId = rdr.GetInt32(1),
+                    upvotes = rdr.GetBoolean(2),
+                    description = rdr.GetString(3),
+                    creationDate = rdr.GetInt32(4),
+                    active = rdr.GetBoolean(5)
+                };
+                votes.Add(vote);
+            }
+            return votes;
+        }
 
         /// <summary>
         /// Get all votes of the specified student of the given type (upvote = true, downvote = false)
@@ -29,7 +51,8 @@ namespace SabreAppWPF.Database.Get
                     studentId = rdr.GetInt32(1),
                     upvotes = rdr.GetBoolean(2),
                     description = rdr.GetString(3),
-                    creationDate = rdr.GetInt32(4)
+                    creationDate = rdr.GetInt32(4),
+                    active = rdr.GetBoolean(5)
                 };
                 votesList.Add(voteInfo);
             }

@@ -49,10 +49,9 @@ namespace SabreAppWPF.Database.Get
         /// Returns all rooms from the database
         /// </summary>
         /// <returns>List of RoomInfo</returns>
-        public static List<RoomInfo> All()
+        public static List<RoomInfo> All(SQLiteCommand cmd)
         {
             List<RoomInfo> roomsList = new List<RoomInfo>();
-            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = "SELECT * FROM rooms";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
 

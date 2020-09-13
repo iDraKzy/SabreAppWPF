@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data.SQLite;
+using SabreAppWPF.Students.StudentDetails;
 
 namespace SabreAppWPF.Database.Insert
 {
@@ -23,6 +24,19 @@ namespace SabreAppWPF.Database.Insert
             long noteId = (long)cmd.ExecuteScalar();
 
             return (int)noteId;
+        }
+
+        public static void One(int studentId, string content, int creationDate, bool active, int noteId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "INSERT INTO notes(noteId, studentId, creationDate, content, active) VALUES(@noteId, @studentId, @creationDate, @content, @active)";
+            cmd.Parameters.AddWithValue("noteId", noteId);
+            cmd.Parameters.AddWithValue("studentId", studentId);
+            cmd.Parameters.AddWithValue("creationDate", creationDate);
+            cmd.Parameters.AddWithValue("content", content);
+            cmd.Parameters.AddWithValue("active", active);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
     }
 }

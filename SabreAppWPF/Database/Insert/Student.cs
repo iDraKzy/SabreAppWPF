@@ -11,7 +11,7 @@ namespace SabreAppWPF.Database.Insert
         public static int One(int classroomId, string lastname, string surname, bool trueGender)
         {
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "INSERT INTO students(lastname, surname, gender, board, interrogation) VALUES(@lastname, @surname, @gender, 0, false)";
+            cmd.CommandText = "INSERT INTO students(lastname, surname, gender, board, interrogation) VALUES(@lastname, @surname, @gender, false, false)";
             cmd.Parameters.AddWithValue("lastname", lastname);
             cmd.Parameters.AddWithValue("surname", surname);
             cmd.Parameters.AddWithValue("gender", trueGender);
@@ -24,6 +24,21 @@ namespace SabreAppWPF.Database.Insert
             Insert.LinkStudentToClassroom.One((int)studentId, classroomId);
 
             return (int)studentId;
+        }
+
+        public static void One(string lastname, string surname, bool trueGender, bool board, bool interrogation, int mask, int studentId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "INSERT INTO students(studentId, lastname, surname, gender, board, interrogation, mask) VALUES(@studentId, @lastname, @surname, @gender, @board, @interrogation, @mask)";
+            cmd.Parameters.AddWithValue("studentId", studentId);
+            cmd.Parameters.AddWithValue("lastname", lastname);
+            cmd.Parameters.AddWithValue("surname", surname);
+            cmd.Parameters.AddWithValue("gender", trueGender);
+            cmd.Parameters.AddWithValue("board", board);
+            cmd.Parameters.AddWithValue("interrogation", interrogation);
+            cmd.Parameters.AddWithValue("mask", mask);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
     }
 }

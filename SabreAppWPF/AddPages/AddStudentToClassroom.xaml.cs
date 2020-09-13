@@ -27,8 +27,8 @@ namespace SabreAppWPF.AddPages
             List<Entry> studentEntries = new List<Entry>();
             List<Entry> classroomEntries = new List<Entry>();
 
-            List<StudentInfo> studentList = Database.Get.Student.All();
-            List<ClassroomInfo> classroomList = Database.Get.Classroom.All();
+            List<StudentInfo> studentList = Database.Get.Student.All(GlobalFunction.OpenDbConnection());
+            List<ClassroomInfo> classroomList = Database.Get.Classroom.All(GlobalFunction.OpenDbConnection());
 
             foreach (StudentInfo student in studentList)
             {

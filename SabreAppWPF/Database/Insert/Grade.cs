@@ -25,5 +25,18 @@ namespace SabreAppWPF.Database.Insert
 
             return (int)gradeId;
         }
+
+        public static void One(int studentId, float grade, int coeff, int creationDate, int gradeId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "INSERT INTO grades(gradeId, studentId, grade, coeff, creationDate) VALUES(@gradeId, @studentId, @grade, @coeff, @creationDate)";
+            cmd.Parameters.AddWithValue("gradeId", gradeId);
+            cmd.Parameters.AddWithValue("studentId", studentId);
+            cmd.Parameters.AddWithValue("grade", grade);
+            cmd.Parameters.AddWithValue("coeff", coeff);
+            cmd.Parameters.AddWithValue("creationDate", creationDate);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+        }
     }
 }

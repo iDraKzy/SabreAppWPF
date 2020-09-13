@@ -10,12 +10,20 @@ using System.Data.SQLite;
 using System.Windows.Controls;
 using System.Globalization;
 using Windows.Storage;
+using Windows.ApplicationModel;
 
 namespace SabreAppWPF
 {
     public static class GlobalVariable
     {
-        public static readonly string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "Sabre.db");
+        public static string GetAppVersion()
+        {
+            PackageVersion currentVersion = Package.Current.Id.Version;
+            return $"{currentVersion.Major}.{currentVersion.Minor}.{currentVersion.Build}.{currentVersion.Revision}";
+        }
+
+        public static readonly string currentDbName = $"Sabre-{GetAppVersion()}.db";
+        public static readonly string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, currentDbName);
 
         public static readonly CultureInfo culture = new CultureInfo("fr-FR");
 

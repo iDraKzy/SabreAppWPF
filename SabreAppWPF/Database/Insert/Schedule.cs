@@ -24,5 +24,19 @@ namespace SabreAppWPF.Database.Insert
 
             return (int)scheduleId;
         }
+
+        public static void One(int classroomId, int roomId, int repetitivity, int date, int duration, int scheduleId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "INSERT INTO schedules(scheduleId, classroomId, roomId, repetitivity, nextDate, duration) VALUES(@scheduleId, @classroomId, @roomId, @repetitivity, @nextDate, @duration)";
+            cmd.Parameters.AddWithValue("scheduleId", scheduleId);
+            cmd.Parameters.AddWithValue("classroomId", classroomId);
+            cmd.Parameters.AddWithValue("roomId", roomId);
+            cmd.Parameters.AddWithValue("repetitivity", repetitivity);
+            cmd.Parameters.AddWithValue("nextDate", date);
+            cmd.Parameters.AddWithValue("duration", duration);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+        }
     }
 }

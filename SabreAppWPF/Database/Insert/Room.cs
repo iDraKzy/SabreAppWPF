@@ -22,5 +22,17 @@ namespace SabreAppWPF.Database.Insert
 
             return (int)roomId;
         }
+
+        public static void One(string name, int rows, int columns, int roomId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "INSERT INTO rooms(roomId, name, rows, columns) VALUES(@roomId, @name, @rows, @columns)";
+            cmd.Parameters.AddWithValue("roomId", roomId);
+            cmd.Parameters.AddWithValue("name", name);
+            cmd.Parameters.AddWithValue("rows", rows);
+            cmd.Parameters.AddWithValue("columns", columns);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+        }
     }
 }

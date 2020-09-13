@@ -28,11 +28,27 @@ namespace SabreAppWPF.Database.Insert
             cmd.Parameters.AddWithValue("creationDate", currentTimestamp);
             cmd.Parameters.AddWithValue("endDate", endDateTimestamp);
             cmd.Parameters.AddWithValue("description", description);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
 
             cmd.CommandText = "SELECT last_insert_rowid()";
             long homeworkId = (long)cmd.ExecuteScalar();
 
             return (int)homeworkId;
+        }
+
+        public static void One(int studentId, int endDate, int creationDate, int retrieveDate, string description, int homeworkId)
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "INSERT INTO homeworks(homeworkId, studentId, creationDate, endDate, retrieveDate, description, active) VALUES(@homeworkId, @studentId, @creationDate, @endDate, @retrieveDate, @description, true)";
+            cmd.Parameters.AddWithValue("homeworkId", homeworkId);
+            cmd.Parameters.AddWithValue("studentId", studentId);
+            cmd.Parameters.AddWithValue("creationDate", creationDate);
+            cmd.Parameters.AddWithValue("endDate", endDate);
+            cmd.Parameters.AddWithValue("retrieveDate", retrieveDate);
+            cmd.Parameters.AddWithValue("description", description);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
         /// <summary>
         /// Create multiple homeworks in the database
