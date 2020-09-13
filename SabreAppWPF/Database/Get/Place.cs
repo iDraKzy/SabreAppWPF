@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data.SQLite;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace SabreAppWPF.Database.Get
 {
     public static class Place
     {
-        public static List<PlaceInfo> All(SQLiteCommand cmd)
+        public static List<PlaceInfo> All(string type)
         {
+            string source = (type == "old") ? Update.oldPath : GlobalVariable.path;
+            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + source);
+            connection.Open();
+            using SQLiteCommand cmd = new SQLiteCommand(connection);
             List<PlaceInfo> placeList = new List<PlaceInfo>();
             cmd.CommandText = "SELECT * FROM places";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
@@ -25,7 +30,6 @@ namespace SabreAppWPF.Database.Get
                 };
                 placeList.Add(place);
             }
-
             return placeList;
         }
 

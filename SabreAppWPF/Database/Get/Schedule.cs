@@ -64,8 +64,12 @@ namespace SabreAppWPF.Database.Get
         /// Returns all schedules from the database
         /// </summary>
         /// <returns>List of ScheduleInfo</returns>
-        public static List<ScheduleInfo> All(SQLiteCommand cmd)
+        public static List<ScheduleInfo> All(string type)
         {
+            string source = (type == "old") ? Update.oldPath : GlobalVariable.path;
+            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + source);
+            connection.Open();
+            using SQLiteCommand cmd = new SQLiteCommand(connection);
             cmd.CommandText = "SELECT * FROM schedules";
 
             List<ScheduleInfo> scheduleInfoList = new List<ScheduleInfo>();

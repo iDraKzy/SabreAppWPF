@@ -7,8 +7,12 @@ namespace SabreAppWPF.Database.Get
 {
     public static class Homework
     {
-        public static List<HomeworkInfo> All(SQLiteCommand cmd)
+        public static List<HomeworkInfo> All(string type)
         {
+            string source = (type == "old") ? Update.oldPath : GlobalVariable.path;
+            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + source);
+            connection.Open();
+            using SQLiteCommand cmd = new SQLiteCommand(connection);
             List<HomeworkInfo> homeworks = new List<HomeworkInfo>();
 
             cmd.CommandText = "SELECT * FROM homeworks";

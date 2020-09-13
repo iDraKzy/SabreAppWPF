@@ -57,8 +57,12 @@ namespace SabreAppWPF.Database.Get
         /// Gets all the classrooms from the database
         /// </summary>
         /// <returns>List of ClassroomInfo</returns>
-        public static List<ClassroomInfo> All(SQLiteCommand cmd)
+        public static List<ClassroomInfo> All(string type)
         {
+            string source = (type == "old") ? Update.oldPath : GlobalVariable.path;
+            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + source);
+            connection.Open();
+            using SQLiteCommand cmd = new SQLiteCommand(connection);
             List<ClassroomInfo> classroomsList = new List<ClassroomInfo>();
             cmd.CommandText = "SELECT * FROM classrooms";
             using SQLiteDataReader rdr = cmd.ExecuteReader();

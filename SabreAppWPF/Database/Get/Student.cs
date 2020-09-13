@@ -8,24 +8,48 @@ namespace SabreAppWPF.Database.Get
 {
     public static class Student
     {
-        public static List<StudentInfo> All(SQLiteCommand cmd)
+        public static List<StudentInfo> All(string type)
         {
+            string source = (type == "old") ? Update.oldPath : GlobalVariable.path;
+            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + source);
+            connection.Open();
+            using SQLiteCommand cmd = new SQLiteCommand(connection);
             List<StudentInfo> studentList = new List<StudentInfo>();
             cmd.CommandText = "SELECT * FROM students";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
 
-            while (rdr.Read())
+            if (type == "old")
             {
-                StudentInfo student = new StudentInfo()
+                while (rdr.Read())
                 {
-                    studentId = rdr.GetInt32(0),
-                    lastname = rdr.GetString(1),
-                    surname = rdr.GetString(2),
-                    gender = rdr.GetBoolean(3),
-                    board = rdr.GetBoolean(4),
-                    interrogation = rdr.GetBoolean(5)
-                };
-                studentList.Add(student);
+                    StudentInfo student = new StudentInfo()
+                    {
+                        studentId = rdr.GetInt32(0),
+                        lastname = rdr.GetString(2),
+                        surname = rdr.GetString(3),
+                        gender = rdr.GetBoolean(4),
+                        board = rdr.GetBoolean(5)
+                    };
+                    studentList.Add(student);
+                }
+            } else
+            {
+                while (rdr.Read())
+                {
+                    //students(studentId INTEGER PRIMARY KEY, lastname TEXT, surname TEXT, gender BOOLEAN, board BOOLEAN, interrogation BOOLEAN, mask INTEGER); --Mask new in 1.1.0.0
+                    StudentInfo student = new StudentInfo()
+                    {
+                        studentId = rdr.GetInt32(0),
+                        lastname = rdr.GetString(1),
+                        surname = rdr.GetString(2),
+                        gender = rdr.GetBoolean(3),
+                        board = rdr.GetBoolean(4),
+                        interrogation = rdr.GetBoolean(5),
+                        mask = rdr.GetInt32(6)
+                    };
+                    studentList.Add(student);
+                }
+
             }
             return studentList;
         }

@@ -28,7 +28,7 @@ namespace SabreAppWPF.AddPages
         {
             InitializeComponent();
             //Handle classrooms
-            List<ClassroomInfo> allClassroomsList = Database.Get.Classroom.All(GlobalFunction.OpenDbConnection());
+            List<ClassroomInfo> allClassroomsList = Database.Get.Classroom.All("new");
             foreach (ClassroomInfo classroom in allClassroomsList)
             {
                 ClassroomEntry classroomEntry = new ClassroomEntry()
@@ -42,7 +42,7 @@ namespace SabreAppWPF.AddPages
             _classroomComboBox.SelectedIndex = 0;
 
             //Handle Rooms
-            List<RoomInfo> allRoomsList = Database.Get.Room.All(GlobalFunction.OpenDbConnection());
+            List<RoomInfo> allRoomsList = Database.Get.Room.All("new");
             foreach (RoomInfo room in allRoomsList)
             {
                 RoomEntry roomEntry = new RoomEntry()

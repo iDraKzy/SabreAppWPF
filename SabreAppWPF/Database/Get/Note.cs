@@ -7,8 +7,12 @@ namespace SabreAppWPF.Database.Get
 {
     public static class Note
     {
-        public static List<NoteInfo> All(SQLiteCommand cmd)
+        public static List<NoteInfo> All(string type)
         {
+            string source = (type == "old") ? Update.oldPath : GlobalVariable.path;
+            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + source);
+            connection.Open();
+            using SQLiteCommand cmd = new SQLiteCommand(connection);
             List<NoteInfo> notes = new List<NoteInfo>();
             cmd.CommandText = "SELECT * FROM notes";
 

@@ -19,19 +19,19 @@ namespace SabreAppWPF.Database
             using SQLiteConnection connection = new SQLiteConnection("Data Source=" + oldPath);
             using SQLiteCommand cmd = new SQLiteCommand(connection);
 
-            UpdateLinkStudentClassroom(Get.LinkStudentToClassroom.All(cmd));
-            UpdateStudent(Get.Student.All(cmd));
-            UpdateHomeworks(Get.Homework.All(cmd));
-            UpdatePunishments(Get.Punishment.All(cmd));
-            UpdateNotes(Get.Note.All(cmd));
-            UpdateGrades(Get.Grade.All(cmd));
-            UpdateVotes(Get.Vote.All(cmd));
-            UpdateRooms(Get.Room.All(cmd));
-            UpdateClassrooms(Get.Classroom.All(cmd));
-            UpdateSchedules(Get.Schedule.All(cmd));
-            UpdatePlans(Get.Plan.All(cmd));
-            UpdatePlaces(Get.Place.All(cmd));
-            UpdateReminder(Get.Reminder.All(cmd));
+            UpdateLinkStudentClassroom(Get.LinkStudentToClassroom.All("old"));
+            UpdateStudent(Get.Student.All("old"));
+            UpdateHomeworks(Get.Homework.All("old"));
+            UpdatePunishments(Get.Punishment.All("old"));
+            UpdateNotes(Get.Note.All("old"));
+            UpdateGrades(Get.Grade.All("old"));
+            UpdateVotes(Get.Vote.All("old"));
+            UpdateRooms(Get.Room.All("old"));
+            UpdateClassrooms(Get.Classroom.All("old"));
+            UpdateSchedules(Get.Schedule.All("old"));
+            UpdatePlans(Get.Plan.All("old"));
+            UpdatePlaces(Get.Place.All("old"));
+            UpdateReminder(Get.Reminder.All("old"));
             File.Delete(oldPath);
         }
 
