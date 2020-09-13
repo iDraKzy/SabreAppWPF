@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.IO;
 using System.Text;
 using Windows.Storage;
 
@@ -8,18 +9,18 @@ namespace SabreAppWPF.Database
 {
     public static class Update
     {
+        public static string oldPath = System.IO.Path.Combine(ApplicationData.Current.LocalFolder.Path, "Sabre.db");
         public static void UpdateDb()
         {
             //Only for when it's Sabre.db
             //TODO: Refactor next version
 
             //Connection to old database
-            string oldPath = System.IO.Path.Combine(ApplicationData.Current.LocalFolder.Path, "Sabre.db");
             using SQLiteConnection connection = new SQLiteConnection("Data Source=" + oldPath);
             using SQLiteCommand cmd = new SQLiteCommand(connection);
 
-            List<LinkStudentClassroomInfo> links = Get.LinkStudentToClassroom.All(cmd);
-            UpdateStudent(Get.Student.All(cmd), links);
+            UpdateLinkStudentClassroom(Get.LinkStudentToClassroom.All(cmd));
+            UpdateStudent(Get.Student.All(cmd));
             UpdateHomeworks(Get.Homework.All(cmd));
             UpdatePunishments(Get.Punishment.All(cmd));
             UpdateNotes(Get.Note.All(cmd));
@@ -31,9 +32,18 @@ namespace SabreAppWPF.Database
             UpdatePlans(Get.Plan.All(cmd));
             UpdatePlaces(Get.Place.All(cmd));
             UpdateReminder(Get.Reminder.All(cmd));
+            File.Delete(oldPath);
         }
 
-        private static void UpdateStudent(List<StudentInfo> oldStudents, List<LinkStudentClassroomInfo> oldLinks)
+        private static void UpdateLinkStudentClassroom(List<LinkStudentClassroomInfo> oldLinks)
+        {
+            foreach (LinkStudentClassroomInfo link in oldLinks)
+            {
+                Insert.LinkStudentToClassroom.One(link.StudentId, link.ClassroomId);
+            }
+        }
+
+        private static void UpdateStudent(List<StudentInfo> oldStudents)
         {
             foreach (StudentInfo student in oldStudents)
             {

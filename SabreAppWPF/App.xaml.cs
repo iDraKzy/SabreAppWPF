@@ -22,7 +22,7 @@ namespace SabreAppWPF
             return $"{currentVersion.Major}.{currentVersion.Minor}.{currentVersion.Build}.{currentVersion.Revision}";
         }
 
-        public static readonly string currentDbName = $"Sabre-{GetAppVersion()}.db";
+        public static readonly string currentDbName = "Sabre-1.0.7.0.db";
         public static readonly string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, currentDbName);
 
         public static readonly CultureInfo culture = new CultureInfo("fr-FR");

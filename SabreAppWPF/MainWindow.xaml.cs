@@ -156,6 +156,11 @@ namespace SabreAppWPF
                                 CREATE TABLE IF NOT EXISTS --New in 1.1.0.0
                                 currentDbVersion(versionId INTEGER PRIMARY KEY, currentVersion TEXT)"; //Spacing in plans is a string of comma seperated int
             cmd.ExecuteNonQuery();
+
+            if (File.Exists(Database.Update.oldPath))
+            {
+                await Task.Run(() => Database.Update.UpdateDb());
+            }
         }
 
         private void Main_Load(object sender, RoutedEventArgs e)

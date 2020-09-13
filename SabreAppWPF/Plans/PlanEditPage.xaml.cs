@@ -174,13 +174,6 @@ namespace SabreAppWPF.Plans
             foreach (StudentPlaceDisplay studentPlace in studentPlaceList)
             {
                 Database.Insert.Place.One(planId, studentPlace.StudentId, studentPlace.Row, studentPlace.Column);
-                cmd.CommandText = "INSERT INTO places(planId, studentId, row, column) VALUES(@planId, @studentId, @row, @column)";
-                cmd.Parameters.AddWithValue("planId", planId);
-                cmd.Parameters.AddWithValue("studentId", studentPlace.StudentId);
-                cmd.Parameters.AddWithValue("row", studentPlace.Row);
-                cmd.Parameters.AddWithValue("column", studentPlace.Column);
-                cmd.Prepare();
-                cmd.ExecuteNonQuery();
             }
         }
 
