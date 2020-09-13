@@ -18,7 +18,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Border Grid.ColumnSpan="2" Grid.Column="0" BorderBrush="Black" BorderThickness="1">
-            <Grid ShowGridLines="True">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>

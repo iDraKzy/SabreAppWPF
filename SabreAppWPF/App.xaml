@@ -40,17 +40,6 @@
             </Style.Setters>
         </Style>
 
-        <Style x:Key="DataGridStyle" TargetType="{x:Type DataGrid}">
-            <Setter Property="Background" Value="{Binding Path=(external:AppTheme.BackgroundColor)}"/>
-            <Setter Property="Foreground" Value="{Binding Path=(external:AppTheme.TextColor)}"/>
-            <Setter Property="RowBackground" Value="{Binding Path=(external:AppTheme.BackgroundGridRowColor)}"/>
-            
-        </Style>
-
-        <Style x:Key="HeaderStyle" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
-            <Setter Property="Background" Value="{Binding (external:AppTheme.BackgroundGridRowColor)}"/>
-        </Style>
-
         <Style x:Key="BorderStyle1" TargetType="{x:Type Border}">
             <Style.Setters>
                 <Setter Property="Background" Value="{Binding Path=(external:AppTheme.BackgroundColor)}"/>
