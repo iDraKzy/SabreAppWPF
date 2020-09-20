@@ -43,7 +43,7 @@ namespace SabreAppWPF.AddPages
             {
                 ClassroomName = name,
                 ID = classroomId,
-                NextSession = "Aucun horraire défini",
+                NextSession = "Aucun horaire défini",
                 StudentsNumber = "0 étudiant(e)s"
             };
             ClassroomsPage.classroomCollection.Add(classroomDisplay);

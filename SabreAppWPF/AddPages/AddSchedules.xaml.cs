@@ -114,7 +114,7 @@ namespace SabreAppWPF.AddPages
             //TODO: Make this work but not mendatory for now            
             //ScheduleOption.scheduleDisplayCollection.Add(scheduleDisplay);
             error.Foreground = new SolidColorBrush(Colors.Green);
-            error.Content = "Horraire ajouté avec succès";
+            error.Content = "Horaire ajouté avec succès";
         }
 
         public class RoomEntry

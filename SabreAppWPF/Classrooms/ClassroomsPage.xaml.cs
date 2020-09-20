@@ -59,7 +59,7 @@ namespace SabreAppWPF.Classrooms
                 } 
                 else
                 {
-                    scheduleTime = "Aucun horraire défini";
+                    scheduleTime = "Aucun horaire défini";
                 }
 
 
