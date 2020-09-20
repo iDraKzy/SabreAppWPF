@@ -21,6 +21,7 @@ using SabreAppWPF.Plans;
 using Windows.Storage;
 using System.IO;
 using Windows.UI.Xaml.Automation.Peers;
+using System.Threading;
 
 namespace SabreAppWPF
 {
@@ -151,16 +152,92 @@ namespace SabreAppWPF
                                 places(placeId INTEGER PRIMARY KEY, planId INTEGER, studentId INTEGER, row INTEGER, column INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
-                                reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT, active BOOLEAN);
-
-                                CREATE TABLE IF NOT EXISTS --New in 1.1.0.0
-                                currentDbVersion(versionId INTEGER PRIMARY KEY, currentVersion TEXT)"; //Spacing in plans is a string of comma seperated int
+                                reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT, active BOOLEAN);"; //Spacing in plans is a string of comma seperated int
             cmd.ExecuteNonQuery();
 
-            if (File.Exists(Database.Update.oldPath))
+
+            List<string> columnList = ReadColumnName();
+            Thread.Sleep(100);
+
+            if (columnList.Contains("classroomId"))
             {
-                await Task.Run(() => Database.Update.UpdateDb());
+                cmd.CommandText = "SELECT * FROM students";
+                using SQLiteDataReader rdr = cmd.ExecuteReader();
+                List<StudentInfo> studentList = new List<StudentInfo>();
+                if (!columnList.Contains("mask"))
+                {
+                    while (rdr.Read())
+                    {
+                        StudentInfo student = new StudentInfo()
+                        {
+                            studentId = rdr.GetInt32(0),
+                            lastname = rdr.GetString(2),
+                            surname = rdr.GetString(3),
+                            gender = rdr.GetBoolean(4),
+                            board = rdr.GetBoolean(5),
+                            interrogation = rdr.GetBoolean(6),
+                            mask = 0
+                        };
+                        studentList.Add(student);
+                    }
+                    rdr.Close();
+
+                } else
+                {
+                    while (rdr.Read())
+                    {
+                        StudentInfo student = new StudentInfo()
+                        {
+                            studentId = rdr.GetInt32(0),
+                            lastname = rdr.GetString(2),
+                            surname = rdr.GetString(3),
+                            gender = rdr.GetBoolean(4),
+                            interrogation = rdr.GetBoolean(5),
+                            mask = rdr.GetInt32(6)
+                        };
+                        studentList.Add(student);
+                    }
+                    rdr.Close();
+                }
+                cmd.CommandText = "DROP TABLE students";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "CREATE TABLE students(studentId INTEGER PRIMARY KEY, lastname TEXT, surname TEXT, gender BOOLEAN, board BOOLEAN, interrogation BOOLEAN, mask INTEGER);";
+                cmd.ExecuteNonQuery();
+                foreach (StudentInfo student in studentList)
+                {
+                    cmd.CommandText = "INSERT INTO students(studentId, lastname, surname, gender, board, interrogation, mask) VALUES(@studentId, @lastname, @surname, @gender, @board, @interrogation, @mask)";
+                    cmd.Parameters.AddWithValue("studentId", student.studentId);
+                    cmd.Parameters.AddWithValue("lastname", student.lastname);
+                    cmd.Parameters.AddWithValue("surname", student.surname);
+                    cmd.Parameters.AddWithValue("gender", student.gender);
+                    cmd.Parameters.AddWithValue("board", student.board);
+                    cmd.Parameters.AddWithValue("interrogation", student.interrogation);
+                    cmd.Parameters.AddWithValue("mask", student.mask);
+                    cmd.Prepare();
+                    cmd.ExecuteNonQuery();
+                }
             }
+            columnList = ReadColumnName();
+            Thread.Sleep(100);
+            if (!columnList.Contains("mask"))
+            {
+                cmd.CommandText = "ALTER TABLE students ADD mask INTEGER";
+                cmd.ExecuteNonQuery();
+            }                              
+                                
+        }
+
+        private List<string> ReadColumnName()
+        {
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
+            cmd.CommandText = "PRAGMA table_info(students)";
+            using SQLiteDataReader rdr = cmd.ExecuteReader();
+            List<string> columnList = new List<string>();
+            while (rdr.Read())
+            {
+                columnList.Add(rdr.GetString(1));
+            }
+            return columnList;
         }
 
         private void Main_Load(object sender, RoutedEventArgs e)

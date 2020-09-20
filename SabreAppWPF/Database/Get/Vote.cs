@@ -9,10 +9,7 @@ namespace SabreAppWPF.Database.Get
     {
         public static List<VotesInfo> All(string type)
         {
-            string source = (type == "old") ? Update.oldPath : GlobalVariable.path;
-            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + source);
-            connection.Open();
-            using SQLiteCommand cmd = new SQLiteCommand(connection);
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = "SELECT * FROM votes";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
 

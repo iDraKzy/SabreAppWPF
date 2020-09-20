@@ -11,10 +11,7 @@ namespace SabreAppWPF.Database.Get
     {
         public static List<LinkStudentClassroomInfo> All(string type)
         {
-            string source = (type == "old") ? Update.oldPath : GlobalVariable.path;
-            using SQLiteConnection connection = new SQLiteConnection("Data Source=" + source);
-            connection.Open();
-            using SQLiteCommand cmd = new SQLiteCommand(connection);
+            using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
             cmd.CommandText = "SELECT * FROM linkStudentToClassroom";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
             List<LinkStudentClassroomInfo> links = new List<LinkStudentClassroomInfo>();

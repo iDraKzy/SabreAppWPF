@@ -111,7 +111,8 @@ namespace SabreAppWPF.AddPages
                 Room = Database.Get.Room.NameFromID(selectedRoom.ID)
             };
 
-            ScheduleOption.scheduleDisplayCollection.Add(scheduleDisplay);
+            //TODO: Make this work but not mendatory for now            
+            //ScheduleOption.scheduleDisplayCollection.Add(scheduleDisplay);
             error.Foreground = new SolidColorBrush(Colors.Green);
             error.Content = "Horraire ajouté avec succès";
         }
