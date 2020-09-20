@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
         <Button Style="{StaticResource ButtonStyle1}" Click="StudentButton_Click" Content="Etudiant" Grid.Column="0"/>
         <Button Style="{StaticResource ButtonStyle1}" Click="ClassroomButton_Click" Content="Classe" Grid.Column="1"/>
-        <Button Style="{StaticResource ButtonStyle1}" Click="ScheduleButton_Click" Content="Horriare" Grid.Column="2"/>
+        <Button Style="{StaticResource ButtonStyle1}" Click="ScheduleButton_Click" Content="Horaire" Grid.Column="2"/>
         <Button Style="{StaticResource ButtonStyle1}" Click="RoomButton_Click" Content="Salle" Grid.Column="3"/>
     </Grid>
 </UserControl>

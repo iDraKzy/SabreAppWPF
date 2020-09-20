@@ -10,7 +10,7 @@
   <Identity
     Name="0560a232-bd31-48e5-a4ca-e02a33803396"
     Publisher="CN=Youlan Collard"
-    Version="1.0.7.0" />
+    Version="1.1.0.0" />
 
   <Properties>
     <DisplayName>Classroominator</DisplayName>
