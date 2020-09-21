@@ -11,7 +11,7 @@ namespace SabreAppWPF
 
         static public SQLiteCommand OpenDbConnection()
         {
-            SQLiteConnection connection = new SQLiteConnection("Data Source=" + GlobalVariable.path);
+            SQLiteConnection connection = new SQLiteConnection("Data Source=" + GlobalVariable.path + ";UseUTF16Encoding=True;");
             connection.Open();
             SQLiteCommand cmd = new SQLiteCommand(connection);
             return cmd;
