@@ -16,7 +16,7 @@
         <local:BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
 
         <DataTemplate x:Key="DataTemplate_Level2">
-            <Border BorderBrush="White" BorderThickness="{Binding Thickness}" Height="{Binding ItemHeight}" Width="{Binding ItemWidth}" MouseEnter="Border_MouseEnter" MouseLeave="Border_MouseLeave">
+            <Border BorderBrush="{Binding BorderColor}" BorderThickness="{Binding Thickness}" Height="{Binding ItemHeight}" Width="{Binding ItemWidth}" MouseEnter="Border_MouseEnter" MouseLeave="Border_MouseLeave">
                 <Grid Background="{Binding Path=(external:AppTheme.BackgroundColor)}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>

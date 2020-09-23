@@ -18,6 +18,8 @@ using System.Runtime.CompilerServices;
 using Windows.UI.Xaml.Automation.Peers;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Windows.Phone.Notification.Management;
+using SabreAppWPF.Plans;
 
 namespace SabreAppWPF.MainMenu
 {
@@ -32,6 +34,7 @@ namespace SabreAppWPF.MainMenu
         private string _nextSessionClassroom;
         private int _classroomId;
         private bool _listEnabled = true;
+
         public MainMenuPage()
         {
             InitializeComponent();
@@ -41,8 +44,14 @@ namespace SabreAppWPF.MainMenu
 
             Populate_ScheduleDataGrid();
             Populate_ReminderDataGrid();
+            GetRandomPair(2);
         }
 
+        /// <summary>
+        /// Handle the loading of the main menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainMenuPage_Load(object sender, RoutedEventArgs e)
         {
             MainWindow window = GlobalFunction.GetMainWindow();
@@ -95,6 +104,112 @@ namespace SabreAppWPF.MainMenu
                 UpdateNextDate((int)scheduleInfoList[scheduleIndex].scheduleId, nextDateTime, (int)scheduleInfoList[scheduleIndex].repetitivity);
                 MainMenuPage_Load(sender, e);
             }
+        }
+
+        /// <summary>
+        /// Handle the click of the random plan button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RandomPlan_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow window = GlobalFunction.GetMainWindow();
+            List<PlaceInfo> placeList = GetRandomPlaces(ClassroomId, ScheduleId);
+            if (placeList.Count == 0) return;
+            window._mainFrame.Navigate(new PlanViewPage(placeList, ClassroomId, ScheduleId));
+        }
+        /// <summary>
+        /// Get random pair of students for random plan, if no pair are possible with the ones already on db returns an empty list
+        /// </summary>
+        /// <param name="classroomId">Id of the classroom</param>
+        /// <returns>List of array of 2 instances of StudentInfo</returns>
+        private List<StudentInfo[]> GetRandomPair(int classroomId)
+        {
+            List<StudentInfo[]> studentPairList = new List<StudentInfo[]>();
+            List<PairInfo> alreadyDonePair = Database.Get.Pair.GetAllPairsFromClassroomId(classroomId);
+            List<StudentInfo> allStudents = Database.Get.Student.AllFromClassroomId(classroomId);
+
+            if (allStudents.Count % 2 != 0)
+            {
+                MessageBox.Show("Le nombre d'élèves est impair");
+                return studentPairList;
+            }
+
+            int iterationWithoutSuccess = 0;
+            while (allStudents.Count > 1)
+            {
+                
+                Random random = new Random();
+
+                int randomIndex1 = random.Next(allStudents.Count);
+                int randomIndex2 = random.Next(allStudents.Count);
+                if (randomIndex1 == randomIndex2) continue;
+                int studentId1 = allStudents[randomIndex1].studentId;
+                int studentId2 = allStudents[randomIndex2].studentId;
+
+                PairInfo isPairDone = alreadyDonePair.Find(x => (x.StudentId1 == studentId1 || x.StudentId1 == studentId2) && (x.StudentId2 == studentId1 || x.StudentId2 == studentId2));
+                if (isPairDone != null)
+                {
+                    iterationWithoutSuccess++;
+                    continue;
+                }
+
+                iterationWithoutSuccess = 0;
+                Database.Insert.Pair.One(studentId1, studentId2, classroomId);
+
+                StudentInfo[] studentPair = new StudentInfo[] { allStudents[randomIndex1], allStudents[randomIndex2] };
+                studentPairList.Add(studentPair);
+
+                allStudents.RemoveAt(randomIndex1);
+                allStudents.RemoveAt(randomIndex2);
+
+                if (iterationWithoutSuccess > 10)
+                {
+                    Database.Remove.Pair.AllFromClassroomId(classroomId);
+                    return new List<StudentInfo[]>();
+                }
+
+            }
+            return studentPairList;
+
+        }
+
+        private List<PlaceInfo> GetRandomPlaces(int classroomId, int roomId)
+        {
+            List<PlaceInfo> placeList = new List<PlaceInfo>();
+            List<StudentInfo> allStudents = Database.Get.Student.AllFromClassroomId(classroomId);
+            RoomInfo room = Database.Get.Room.FromID(roomId);
+            int totalPlaces = room.Columns * room.Rows;
+            if (allStudents.Count > totalPlaces)
+            {
+                MessageBox.Show("Pas assez de place dans la salle pour tous les étudiants.");
+                return placeList;
+            }
+            int columns = room.Columns;
+            int currentColumn = 0;
+            int currentRow = 0;
+
+            while (allStudents.Count > 0)
+            {
+                Random rnd = new Random();
+                int randomIndex = rnd.Next(allStudents.Count);
+                StudentInfo student = allStudents[randomIndex];
+                PlaceInfo place = new PlaceInfo()
+                {
+                    StudentId = student.studentId,
+                    Column = currentColumn,
+                    Row = currentRow
+                };
+                placeList.Add(place);
+                allStudents.RemoveAt(randomIndex);
+                currentColumn++;
+                if (currentColumn >= columns)
+                {
+                    currentColumn = 0;
+                    currentRow++;
+                }
+            }
+            return placeList;
         }
 
         private void PlanButton_Click(object sender, RoutedEventArgs e)

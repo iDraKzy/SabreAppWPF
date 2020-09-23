@@ -141,6 +141,114 @@ namespace SabreAppWPF.Plans
             _lst.ItemsSource = studentPlanViewList;
         }
 
+        public PlanViewPage(List<PlaceInfo> studentPlaces, int roomId, int scheduleId)
+        {
+            RoomInfo room = Database.Get.Room.FromID(roomId);
+            ScheduleInfo schedule = Database.Get.Schedule.FromId(scheduleId);
+            classroomId = (int)schedule.classroomId;
+
+            List<int> seperationList = new List<int>();
+            List<string> separationStringList = new List<string>();
+            // Spacing, not handled as of rn in random plan
+            //if (plan.spacing != "")
+            //{
+            //    separationStringList = plan.spacing.Split(",").ToList();
+            //    for (int i = 0; i < separationStringList.Count; i++)
+            //    {
+            //        seperationList.Add(int.Parse(separationStringList[i]));
+            //    }
+            //}
+            int initItemHeight = 40;
+            int initItemWidth = 40;
+
+            //placeList.Find(x => x.Row == 1 && x.Column == 2)
+
+            rowNumber = room.Rows;
+            columnNumber = room.Columns + seperationList.Count;
+            columnCount = room.Columns;
+            columnSkip = seperationList.Count;
+
+            int currentColumn = 0;
+
+            for (int i = 0; i < rowNumber; i++)
+            {
+                //MessageBox.Show("Début de la row " + i.ToString());
+                studentPlanViewList.Add(new ObservableCollection<StudentPlanViewDisplay>());
+                currentColumn = 0;
+
+                for (int j = 0; j < columnNumber; j++)
+                {
+                    //MessageBox.Show("Colonne " + j.ToString());
+                    if (seperationList.Contains(j))
+                    {
+                        StudentPlanViewDisplay placeDisplay = new StudentPlanViewDisplay()
+                        {
+                            ItemHeight = initItemHeight,
+                            ItemWidth = initItemWidth,
+                            AbsoluteWidth = columnSkipSize,
+                            Name = "",
+                            BoardCheck = "",
+                            InterrogationCheck = "",
+                            ButtonVisible = false,
+                            Thickness = 0,
+                            BorderColor = "White",
+                            Enabled = false
+                        };
+                        studentPlanViewList[i].Add(placeDisplay);
+                    }
+                    else
+                    {
+                        PlaceInfo place = studentPlaces.Find(x => x.Row == i && x.Column == currentColumn);
+                        if (place == null)
+                        {
+                            StudentPlanViewDisplay placeDisplayNull = new StudentPlanViewDisplay()
+                            {
+                                ItemHeight = initItemHeight,
+                                ItemWidth = initItemHeight,
+                                AbsoluteWidth = 0,
+                                Name = "",
+                                Thickness = 1,
+                                BorderColor = "Red",
+                                ButtonVisible = false,
+                                BoardCheck = "",
+                                InterrogationCheck = "",
+                                Enabled = false
+                            };
+                            studentPlanViewList[i].Add(placeDisplayNull);
+                        }
+                        else
+                        {
+                            StudentInfo student = Database.Get.Student.FromId(place.StudentId);
+                            string[] name = Database.Get.Student.NameFromID(place.StudentId);
+                            string parsedName = name[1] + " " + name[0];
+
+                            StudentPlanViewDisplay placeDisplay = new StudentPlanViewDisplay()
+                            {
+                                ItemHeight = initItemHeight,
+                                ItemWidth = initItemWidth,
+                                AbsoluteWidth = 0,
+                                Name = parsedName,
+                                Thickness = 1,
+                                BorderColor = "White",
+                                StudentId = place.StudentId,
+                                BoardCheck = student.board ? GlobalVariable.specialCharacter["CheckMark"] : GlobalVariable.specialCharacter["Cross"],
+                                InterrogationCheck = student.interrogation ? GlobalVariable.specialCharacter["CheckMark"] : GlobalVariable.specialCharacter["Cross"],
+                                InterroEnabled = !student.interrogation,
+                                BoardEnabled = !student.board,
+                                ButtonVisible = false,
+                                Enabled = true
+                            };
+                            studentPlanViewList[i].Add(placeDisplay);
+                        }
+                        currentColumn++;
+                    }
+                }
+            }
+            InitializeComponent();
+
+            _lst.ItemsSource = studentPlanViewList;
+        }
+
         private void PlanViewPage_Load(object sender,  RoutedEventArgs e)
         {
             HandleResize();
@@ -393,6 +501,7 @@ namespace SabreAppWPF.Plans
             private bool _enabled;
             private bool _interroEnabled;
             private bool _boardEnabled;
+            private string _borderColor; 
 
             public int StudentId
             {
@@ -510,6 +619,16 @@ namespace SabreAppWPF.Plans
                 set
                 {
                     _boardEnabled = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public string BorderColor
+            {
+                get { return _borderColor; }
+                set
+                {
+                    _borderColor = value;
                     OnPropertyChanged();
                 }
             }

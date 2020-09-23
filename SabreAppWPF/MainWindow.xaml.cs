@@ -22,6 +22,7 @@ using Windows.Storage;
 using System.IO;
 using Windows.UI.Xaml.Automation.Peers;
 using System.Threading;
+using Windows.ApplicationModel.Contacts;
 
 namespace SabreAppWPF
 {
@@ -152,12 +153,18 @@ namespace SabreAppWPF
                                 places(placeId INTEGER PRIMARY KEY, planId INTEGER, studentId INTEGER, row INTEGER, column INTEGER);
 
                                 CREATE TABLE IF NOT EXISTS
+                                pairs(pairId INTEGER PRIMARY KEY, studentId1 INTEGER, studentId2 INTEGER, classroomId INTEGER);
+
+                                CREATE TABLE IF NOT EXISTS
                                 reminders(reminderId INTEGER PRIMARY KEY, creationDate INTEGER, reminderDate INTEGER, description TEXT, active BOOLEAN);"; //Spacing in plans is a string of comma seperated int
             cmd.ExecuteNonQuery();
 
+#if DEBUG
+            cmd.CommandText = "DELETE FROM schedules WHERE scheduleId = 1";
+            cmd.ExecuteNonQuery();
+#endif
 
-            List<string> columnList = ReadColumnName();
-            Thread.Sleep(100);
+            List<string> columnList = ReadColumnName("students");
 
             if (columnList.Contains("classroomId"))
             {
@@ -217,20 +224,26 @@ namespace SabreAppWPF
                     cmd.ExecuteNonQuery();
                 }
             }
-            columnList = ReadColumnName();
-            Thread.Sleep(100);
+            columnList = ReadColumnName("students");
             if (!columnList.Contains("mask"))
             {
                 cmd.CommandText = "ALTER TABLE students ADD mask INTEGER";
                 cmd.ExecuteNonQuery();
-            }                              
+            }
+
+            columnList = ReadColumnName("votes");
+            if (!columnList.Contains("active"))
+            {
+                cmd.CommandText = "ALTER TABLE votes ADD active BOOLEAN";
+                cmd.ExecuteNonQuery();
+            }
                                 
         }
 
-        private List<string> ReadColumnName()
+        private List<string> ReadColumnName(string table)
         {
             using SQLiteCommand cmd = GlobalFunction.OpenDbConnection();
-            cmd.CommandText = "PRAGMA table_info(students)";
+            cmd.CommandText = $"PRAGMA table_info({table})";
             using SQLiteDataReader rdr = cmd.ExecuteReader();
             List<string> columnList = new List<string>();
             while (rdr.Read())

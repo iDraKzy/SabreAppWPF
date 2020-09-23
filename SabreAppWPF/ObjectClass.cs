@@ -97,4 +97,12 @@ namespace SabreAppWPF
         public string Description { get; set; }
         public bool Active { get; set; }
     }
+
+    public class PairInfo
+    {
+        public int PairId { get; set; }
+        public int StudentId1 { get; set; }
+        public int StudentId2 { get; set; }
+        public int ClassroomId { get; set; }
+    }
 }
